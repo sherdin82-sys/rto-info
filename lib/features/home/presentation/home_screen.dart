@@ -10,9 +10,19 @@ import '../../../shared/widgets/vehicle_search_bar.dart';
 import '../../history/presentation/providers/history_provider.dart';
 
 /// HomeScreen serves as the primary automotive dashboard for RTO Info.
-/// Redesigned with compact premium layout, zero vertical waste, and precision alignment.
+/// Version 0.2.1: Balanced, compact layout with 125-145dp service cards,
+/// 2-line descriptions, and zero dead whitespace.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _HomeScreenContent();
+  }
+}
+
+class _HomeScreenContent extends ConsumerWidget {
+  const _HomeScreenContent();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,42 +34,54 @@ class HomeScreen extends ConsumerWidget {
     final quickTools = [
       {
         'title': isHindi ? 'आरसी विवरण' : 'RC Details',
-        'desc': isHindi ? 'वाहन स्वामित्व व फिटनेस' : 'Owner & fitness status',
-        'icon': Icons.verified_user_outlined,
+        'desc': isHindi
+            ? 'मालिक का नाम, मॉडल, फिटनेस व वाहन पंजीकरण स्थिति'
+            : 'Owner details, model, fitness & registration status',
+        'icon': Icons.directions_car_rounded,
         'color': AppColors.electricBlue,
         'route': '/rc',
       },
       {
         'title': isHindi ? 'ई-चालान' : 'e-Challan',
-        'desc': isHindi ? 'यातायात जुर्माना देखें' : 'Pending traffic fines',
+        'desc': isHindi
+            ? 'लंबित ट्रैफ़िक जुर्माना, चालान विवरण व भुगतान लिंक'
+            : 'Pending traffic fines, violation details & official portal',
         'icon': Icons.warning_amber_rounded,
         'color': AppColors.error,
         'route': '/challan',
       },
       {
         'title': isHindi ? 'डीएल सत्यापन' : 'DL Verify',
-        'desc': isHindi ? 'ड्राइविंग लाइसेंस स्थिति' : 'Driving licence check',
+        'desc': isHindi
+            ? 'सारथी ड्राइविंग लाइसेंस वैधता व अधिकृत वाहन श्रेणियाँ'
+            : 'Sarathi driving licence validity & vehicle endorsements',
         'icon': Icons.badge_outlined,
         'color': AppColors.success,
         'route': '/dl',
       },
       {
         'title': isHindi ? 'ईंधन दरें' : 'Fuel Rates',
-        'desc': isHindi ? 'दैनिक पेट्रोल व डीजल' : 'Daily petrol & diesel',
-        'icon': Icons.local_gas_station_outlined,
+        'desc': isHindi
+            ? 'दैनिक पेट्रोल, डीजल व सीएनजी दरें महानगरों के लिए'
+            : 'Daily petrol, diesel & CNG rates across Indian cities',
+        'icon': Icons.local_gas_station_rounded,
         'color': AppColors.warmOrange,
         'route': '/fuel',
       },
       {
         'title': isHindi ? 'पुनर्विक्रय मूल्य' : 'Resale & EMI',
-        'desc': isHindi ? 'वाहन मूल्यांकन व ऋण' : 'Market valuation & loan',
+        'desc': isHindi
+            ? 'वाहन का सही बाज़ार मूल्य व ऋण ईएमआई कैलकुलेटर'
+            : 'Fair market valuation estimator & loan EMI calculator',
         'icon': Icons.calculate_outlined,
         'color': const Color(0xFF8B5CF6),
         'route': '/resale',
       },
       {
         'title': isHindi ? 'आरटीओ निर्देशिका' : 'RTO Directory',
-        'desc': isHindi ? 'कार्यालय पता व संपर्क' : 'Offices & state codes',
+        'desc': isHindi
+            ? 'अखिल भारतीय आरटीओ कोड, कार्यालय पता व संपर्क'
+            : 'All-India RTO codes, office address & state helplines',
         'icon': Icons.business_outlined,
         'color': const Color(0xFF0284C7),
         'route': '/rto',
@@ -67,29 +89,35 @@ class HomeScreen extends ConsumerWidget {
       {
         'title': isHindi ? 'यातायात संकेत' : 'Traffic Signs',
         'desc': isHindi
-            ? 'सड़क सुरक्षा नियम व दंड'
-            : 'Road safety rules & fines',
+            ? 'अनिवार्य व चेतावनी सड़क संकेत और एमवी एक्ट जुर्माना'
+            : 'Road safety signs handbook & MV Act 2019 fine schedule',
         'icon': Icons.traffic_outlined,
         'color': AppColors.successDark,
         'route': '/signs',
       },
       {
         'title': isHindi ? 'आरटीओ परीक्षा' : 'Mock Exam',
-        'desc': isHindi ? 'लर्नर लाइसेंस अभ्यास' : 'Learner licence test',
+        'desc': isHindi
+            ? 'लर्नर लाइसेंस परीक्षा अभ्यास व आधिकारिक प्रश्नोत्तरी'
+            : 'Parivahan Sarathi learner licence test simulation',
         'icon': Icons.school_outlined,
         'color': const Color(0xFF0D9488),
         'route': '/exam',
       },
       {
         'title': isHindi ? 'यात्रा लागत' : 'Trip Cost',
-        'desc': isHindi ? 'माइलेज व यात्रा खर्च' : 'Estimate fuel expense',
+        'desc': isHindi
+            ? 'दूरी, माइलेज व ईंधन के आधार पर यात्रा खर्च अनुमान'
+            : 'Estimate fuel consumption & running cost per kilometer',
         'icon': Icons.route_outlined,
         'color': const Color(0xFFE11D48),
         'route': '/trip-calculator',
       },
       {
         'title': isHindi ? 'ऋण ईएमआई' : 'Loan EMI',
-        'desc': isHindi ? 'मासिक किस्त व ब्याज' : 'Monthly installment calc',
+        'desc': isHindi
+            ? 'मासिक किस्त, कुल ब्याज और ऋण भुगतान विवरण'
+            : 'Monthly installment, interest breakdown & loan schedule',
         'icon': Icons.payments_outlined,
         'color': AppColors.electricBlueDark,
         'route': '/loan-emi',
@@ -609,7 +637,9 @@ class HomeScreen extends ConsumerWidget {
 
                 const SizedBox(height: 14),
 
-                // Section: Essential RTO Services Header
+                // D. Essential RTO Services – MOST IMPORTANT
+                // Redesigned two-column service grid: Target card height 125-145dp,
+                // small icon, clear title, readable 2-line descriptions, no fake badges.
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -623,109 +653,107 @@ class HomeScreen extends ConsumerWidget {
                         color: isDark ? Colors.white : AppColors.primaryNavy,
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 1.5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.electricBlue.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        '10 TOOLS',
-                        style: TextStyle(
-                          color: AppColors.electricBlue,
-                          fontSize: 8.5,
-                          fontWeight: FontWeight.w800,
-                        ),
+                    Text(
+                      '10 SERVICES',
+                      style: TextStyle(
+                        color: AppColors.electricBlue,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
 
-                // 2-Column Compact Grid of 10 Tools
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
-                    childAspectRatio: 2.2,
-                  ),
-                  itemCount: quickTools.length,
-                  itemBuilder: (context, index) {
-                    final item = quickTools[index];
-                    final color = item['color'] as Color;
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Compute responsive childAspectRatio targeting ~130dp card height
+                    final itemWidth = (constraints.maxWidth - 10) / 2;
+                    const targetHeight = 132.0;
+                    final responsiveAspectRatio = itemWidth / targetHeight;
 
-                    return PremiumCard(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 8,
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: responsiveAspectRatio,
                       ),
-                      borderRadius: 10,
-                      onTap: () {
-                        context.push(item['route'] as String);
+                      itemCount: quickTools.length,
+                      itemBuilder: (context, index) {
+                        final item = quickTools[index];
+                        final color = item['color'] as Color;
+
+                        return PremiumCard(
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 12,
+                          onTap: () {
+                            context.push(item['route'] as String);
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // 1. Small service icon container
+                              Container(
+                                width: 34,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: color.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  item['icon'] as IconData,
+                                  color: color,
+                                  size: 18,
+                                ),
+                              ),
+
+                              // 2. Service title & 3. 2-line wrapped short description
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item['title'] as String,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppColors.lightTextPrimary,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    item['desc'] as String,
+                                    style: TextStyle(
+                                      fontSize: 10.5,
+                                      height: 1.3,
+                                      color: isDark
+                                          ? AppColors.darkTextMuted
+                                          : AppColors.lightTextMuted,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
                       },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: color.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                            child: Icon(
-                              item['icon'] as IconData,
-                              color: color,
-                              size: 17,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  item['title'] as String,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 11.5,
-                                    color: isDark
-                                        ? Colors.white
-                                        : AppColors.lightTextPrimary,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  item['desc'] as String,
-                                  style: TextStyle(
-                                    fontSize: 9.5,
-                                    color: isDark
-                                        ? AppColors.darkTextMuted
-                                        : AppColors.lightTextMuted,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                     );
                   },
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
 
-                // Compact Compliance Notice Card (Motor Vehicles Act Section 139)
+                // E. Information Banner (Motor Vehicles Act Section 139)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -743,17 +771,25 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.shield_outlined,
-                        color: AppColors.electricBlue,
-                        size: 18,
+                      Container(
+                        padding: const EdgeInsets.all(7),
+                        decoration: BoxDecoration(
+                          color: AppColors.electricBlue.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.shield_outlined,
+                          color: AppColors.electricBlue,
+                          size: 18,
+                        ),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               isHindi
@@ -770,11 +806,11 @@ class HomeScreen extends ConsumerWidget {
                             const SizedBox(height: 2),
                             Text(
                               isHindi
-                                  ? 'डिजिलॉकर व एम-परिवहन द्वारा प्रस्तुत डिजिटल आरसी और डीएल कानूनी रूप से भौतिक दस्तावेजों के समान मान्य हैं।'
-                                  : 'Digital RC and Driving Licences on DigiLocker / mParivahan are legally accepted at par with original physical documents across India.',
+                                  ? 'डिजिलॉकर व एम-परिवहन द्वारा प्रस्तुत डिजिटल आरसी और डीएल कानूनी रूप से मान्य हैं।'
+                                  : 'Digital RC & DL on DigiLocker / mParivahan are legally accepted at par with physical originals.',
                               style: TextStyle(
                                 fontSize: 10,
-                                height: 1.35,
+                                height: 1.3,
                                 color: isDark
                                     ? AppColors.darkTextSecondary
                                     : const Color(0xFF3B82F6),

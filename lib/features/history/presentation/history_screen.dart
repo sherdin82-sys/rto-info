@@ -57,10 +57,12 @@ class HistoryScreen extends ConsumerWidget {
                     : 'Searched vehicle registration numbers are saved locally for fast one-tap access.',
               )
             : ListView.separated(
-                padding: const EdgeInsets.all(AppSpacing.l),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 itemCount: historyItems.length,
-                separatorBuilder: (_, __) =>
-                    const SizedBox(height: AppSpacing.s),
+                separatorBuilder: (_, __) => const SizedBox(height: 6),
                 itemBuilder: (context, index) {
                   final item = historyItems[index];
                   final formattedTime = DateFormat('dd MMM yyyy, hh:mm a')
@@ -70,11 +72,11 @@ class HistoryScreen extends ConsumerWidget {
                     key: Key(item.id),
                     direction: DismissDirection.endToStart,
                     background: Container(
-                      padding: const EdgeInsets.only(right: AppSpacing.l),
+                      padding: const EdgeInsets.only(right: 14),
                       alignment: Alignment.centerRight,
                       decoration: BoxDecoration(
                         color: AppColors.error,
-                        borderRadius: BorderRadius.circular(AppRadius.card),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -82,15 +84,15 @@ class HistoryScreen extends ConsumerWidget {
                           Icon(
                             Icons.delete_outline_rounded,
                             color: Colors.white,
-                            size: 24,
+                            size: 20,
                           ),
-                          SizedBox(width: 8),
+                          SizedBox(width: 6),
                           Text(
                             'Delete',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -103,22 +105,26 @@ class HistoryScreen extends ConsumerWidget {
                       onTap: () {
                         context.push('/rc?plate=${item.registrationNumber}');
                       },
-                      padding: const EdgeInsets.all(AppSpacing.m),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      borderRadius: 10,
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(7),
                             decoration: BoxDecoration(
                               color: AppColors.electricBlue.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(AppRadius.s),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Icon(
                               Icons.directions_car_rounded,
                               color: AppColors.electricBlue,
-                              size: 24,
+                              size: 18,
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.m),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

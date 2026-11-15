@@ -79,16 +79,11 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.l,
-              AppSpacing.m,
-              AppSpacing.l,
-              AppSpacing.s,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             child: AppTextField(
               controller: _searchController,
               hint: 'Search by RTO code (e.g. DL-01, MH-12) or city...',
-              prefixIcon: const Icon(Icons.search, size: 20),
+              prefixIcon: const Icon(Icons.search, size: 18),
               onChanged: (_) => _filter(),
               onClear: () {
                 _searchController.clear();
@@ -99,16 +94,21 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
 
           // State filter horizontal scroll
           SizedBox(
-            height: 44,
+            height: 32,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               itemCount: _states.length,
-              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.s),
+              separatorBuilder: (_, __) => const SizedBox(width: 6),
               itemBuilder: (context, index) {
                 final st = _states[index];
                 final isSelected = st == _selectedState;
                 return ChoiceChip(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 0,
+                  ),
                   label: Text(st),
                   selected: isSelected,
                   onSelected: (_) {
@@ -119,7 +119,7 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                   },
                   selectedColor: AppColors.electricBlue.withOpacity(0.18),
                   labelStyle: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                     color: isSelected
                         ? AppColors.electricBlue
@@ -138,21 +138,22 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
               },
             ),
           ),
-          const SizedBox(height: AppSpacing.s),
+          const SizedBox(height: 6),
 
           // Count & Result List
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.l,
-              vertical: 4,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   '${_filteredOffices.length} Offices Listed',
-                  style: AppTypography.labelSmall(
-                    isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextMuted,
                   ),
                 ),
               ],
@@ -168,10 +169,12 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                         'No transport office matched "$_selectedState / ${_searchController.text}".',
                   )
                 : ListView.separated(
-                    padding: AppSpacing.edgeInsetsL,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     itemCount: _filteredOffices.length,
-                    separatorBuilder: (_, __) =>
-                        const SizedBox(height: AppSpacing.m),
+                    separatorBuilder: (_, __) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final office = _filteredOffices[index];
                       return _buildOfficeCard(office, isDark);
@@ -185,7 +188,8 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
 
   Widget _buildOfficeCard(RtoOfficeEntity office, bool isDark) {
     return PremiumCard(
-      padding: AppSpacing.edgeInsetsL,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      borderRadius: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,13 +197,10 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.electricBlue.withOpacity(0.12),
-                  borderRadius: AppRadius.radiusS,
+                  borderRadius: BorderRadius.circular(6),
                   border: Border.all(
                     color: AppColors.electricBlue.withOpacity(0.3),
                   ),
@@ -209,12 +210,12 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                   style: const TextStyle(
                     fontFamily: 'monospace',
                     fontWeight: FontWeight.w900,
-                    fontSize: 15,
+                    fontSize: 14,
                     color: AppColors.electricBlue,
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.m),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

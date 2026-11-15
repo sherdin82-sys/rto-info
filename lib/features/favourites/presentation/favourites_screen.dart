@@ -46,15 +46,18 @@ class FavouritesScreen extends ConsumerWidget {
                     : 'Bookmark personal and family vehicles to quickly monitor registration, insurance, and challans.',
               )
             : ListView.separated(
-                padding: const EdgeInsets.all(AppSpacing.l),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 itemCount: favouriteVehicles.length,
-                separatorBuilder: (_, __) =>
-                    const SizedBox(height: AppSpacing.m),
+                separatorBuilder: (_, __) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
                   final v = favouriteVehicles[index];
 
                   return PremiumCard(
-                    padding: const EdgeInsets.all(AppSpacing.l),
+                    padding: const EdgeInsets.all(12),
+                    borderRadius: 10,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

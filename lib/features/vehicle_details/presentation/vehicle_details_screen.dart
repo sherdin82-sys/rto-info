@@ -152,11 +152,11 @@ Check more on RTO Info App
           _recordHistoryOnce(vehicle);
 
           return ListView(
-            padding: AppSpacing.edgeInsetsL,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             children: [
               // Digital Smart Card RC Header
               _buildDigitalRcSmartCard(vehicle, isDark),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: 10),
 
               // Action Buttons Row
               Row(
@@ -166,10 +166,11 @@ Check more on RTO Info App
                       label: 'Check e-Challan',
                       icon: const Icon(
                         Icons.warning_amber_rounded,
-                        size: 18,
+                        size: 17,
                         color: Colors.white,
                       ),
                       variant: AppButtonVariant.danger,
+                      height: 38,
                       onPressed: () {
                         context.push(
                           '/challan?plate=${vehicle.cleanRegistrationNumber}',
@@ -177,18 +178,19 @@ Check more on RTO Info App
                       },
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.m),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: AppButton(
                       label: isFav ? 'Saved' : 'Bookmark',
                       icon: Icon(
                         isFav ? Icons.bookmark : Icons.bookmark_border,
-                        size: 18,
+                        size: 17,
                         color: isDark
                             ? AppColors.darkTextPrimary
                             : AppColors.lightTextPrimary,
                       ),
                       variant: AppButtonVariant.secondary,
+                      height: 38,
                       onPressed: () {
                         ref
                             .read(favouritesProvider.notifier)
@@ -198,12 +200,16 @@ Check more on RTO Info App
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 12),
 
               // Section 1: Registration Details
               _buildSectionTitle('REGISTRATION DETAILS', isDark),
-              const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: 6),
               PremiumCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Column(
                   children: [
                     _DetailRow(
@@ -211,32 +217,32 @@ Check more on RTO Info App
                       value: vehicle.registrationNumber,
                       isBold: true,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Registration Date',
                       value: vehicle.registrationDate,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Registering Authority',
                       value: vehicle.registrationAuthority,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'RTO Code & State',
                       value: '${vehicle.rtoCode} (${vehicle.state})',
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Vehicle Class',
                       value: vehicle.vehicleClass,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Registration Validity',
                       value: vehicle.registrationValidity,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Status',
                       value: vehicle.registrationStatus,
@@ -245,45 +251,53 @@ Check more on RTO Info App
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 12),
 
               // Section 2: Vehicle & Manufacturer Details
               _buildSectionTitle('VEHICLE & TECHNICAL SPECIFICATIONS', isDark),
-              const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: 6),
               PremiumCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Column(
                   children: [
                     _DetailRow(
                       title: 'Manufacturer / Maker',
                       value: vehicle.maker,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(title: 'Model & Variant', value: vehicle.model),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(title: 'Body Type', value: vehicle.bodyType),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(title: 'Fuel Type', value: vehicle.fuelType),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Engine Displacement',
                       value: vehicle.engineCapacity,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Seating Capacity',
                       value: '${vehicle.seatingCapacity} Persons',
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(title: 'Color', value: vehicle.color),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 12),
 
               // Section 3: Compliance & Validity
               _buildSectionTitle('INSURANCE, FITNESS & PUC COMPLIANCE', isDark),
-              const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: 6),
               PremiumCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Column(
                   children: [
                     _DetailRow(
@@ -292,32 +306,32 @@ Check more on RTO Info App
                       isSuccess:
                           vehicle.insuranceStatus.toUpperCase() == 'ACTIVE',
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Insurance Provider',
                       value: vehicle.insuranceCompany,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Insurance Valid Upto',
                       value: vehicle.insuranceValidity,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Fitness Valid Upto',
                       value: vehicle.fitnessValidity,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'PUC Valid Upto',
                       value: vehicle.pucValidity,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Road Tax Status',
                       value: vehicle.roadTaxPaidUpto,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Emission Norms',
                       value: vehicle.emissionStandard,
@@ -325,34 +339,38 @@ Check more on RTO Info App
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 12),
 
               // Section 4: Statutory Compliance & Ownership Details
               _buildSectionTitle('STATUTORY COMPLIANCE & OWNERSHIP', isDark),
-              const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: 6),
               PremiumCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Column(
                   children: [
                     _DetailRow(
                       title: 'Owner Name (Sec 6 Privacy)',
                       value: vehicle.maskedOwnerName,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Owner Serial / Count',
                       value: vehicle.ownershipSerial,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Chassis Number (Masked)',
                       value: vehicle.maskedChassisNumber,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Engine Number (Masked)',
                       value: vehicle.maskedEngineNumber,
                     ),
-                    const Divider(height: 20),
+                    const Divider(height: 12, thickness: 0.8),
                     _DetailRow(
                       title: 'Hypothecation / Financier',
                       value:
@@ -362,7 +380,7 @@ Check more on RTO Info App
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: 16),
             ],
           );
         },
@@ -372,14 +390,14 @@ Check more on RTO Info App
 
   Widget _buildDigitalRcSmartCard(VehicleEntity v, bool isDark) {
     return Container(
-      padding: AppSpacing.edgeInsetsXl,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [AppColors.primaryNavyDark, AppColors.primaryNavyLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: AppRadius.radiusXl,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppColors.electricBlue.withOpacity(0.4),
           width: 1.5,

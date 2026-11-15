@@ -56,11 +56,12 @@ class _DlScreenState extends ConsumerState<DlScreen> {
         subtitle: 'Sarathi National Register Portal',
       ),
       body: ListView(
-        padding: AppSpacing.edgeInsetsL,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         children: [
           // DL Search Box
           PremiumCard(
-            padding: AppSpacing.edgeInsetsL,
+            padding: const EdgeInsets.all(12),
+            borderRadius: 12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -68,34 +69,35 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                   controller: _dlController,
                   label: 'DRIVING LICENCE NUMBER',
                   hint: 'e.g. DL0420110149632',
-                  prefixIcon: const Icon(Icons.badge_outlined, size: 20),
+                  prefixIcon: const Icon(Icons.badge_outlined, size: 18),
                   textCapitalization: TextCapitalization.characters,
                   onSubmitted: (_) => _search(),
                   onClear: () => _dlController.clear(),
                 ),
-                const SizedBox(height: AppSpacing.m),
+                const SizedBox(height: 8),
                 AppTextField(
                   controller: _dobController,
                   label: 'DATE OF BIRTH (YYYY-MM-DD)',
                   hint: '1990-05-14',
                   prefixIcon: const Icon(
                     Icons.calendar_today_outlined,
-                    size: 20,
+                    size: 18,
                   ),
                   onSubmitted: (_) => _search(),
                 ),
-                const SizedBox(height: AppSpacing.l),
+                const SizedBox(height: 10),
                 AppButton(
                   label: 'Verify Licence with Sarathi',
                   icon: const Icon(
                     Icons.verified,
-                    size: 18,
+                    size: 17,
                     color: Colors.white,
                   ),
                   variant: AppButtonVariant.primary,
+                  height: 38,
                   onPressed: _search,
                 ),
-                const SizedBox(height: AppSpacing.m),
+                const SizedBox(height: 8),
                 // Quick Sample Pills
                 Wrap(
                   spacing: 6,
@@ -104,8 +106,10 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                   children: [
                     Text(
                       'Sample:',
-                      style: AppTypography.labelSmall(
-                        isDark
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w600,
+                        color: isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,
                       ),
@@ -118,7 +122,7 @@ class _DlScreenState extends ConsumerState<DlScreen> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: 12),
 
           // DL Results
           dlAsync.when(

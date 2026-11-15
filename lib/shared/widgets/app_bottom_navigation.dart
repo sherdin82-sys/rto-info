@@ -15,7 +15,7 @@ class AppNavigationItem {
 }
 
 /// AppBottomNavigation provides a sleek, modern Material 3 bottom navigation
-/// bar with subtle glass shadow and responsive item indicators.
+/// bar with subtle glass shadow, consistent icon alignment, and refined selected state.
 class AppBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onItemSelected;
@@ -41,34 +41,65 @@ class AppBottomNavigation extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(isDark ? 0.25 : 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, -3),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
       child: SafeArea(
         top: false,
-        child: NavigationBar(
-          height: 58,
-          selectedIndex: currentIndex,
-          onDestinationSelected: onItemSelected,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          indicatorColor: AppColors.electricBlue.withOpacity(
-            isDark ? 0.22 : 0.12,
+        child: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            indicatorColor: AppColors.electricBlue.withOpacity(
+              isDark ? 0.22 : 0.12,
+            ),
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((
+              states,
+            ) {
+              if (states.contains(WidgetState.selected)) {
+                return const TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.electricBlue,
+                );
+              }
+              return TextStyle(
+                fontSize: 10.5,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? AppColors.darkTextMuted
+                    : AppColors.lightTextMuted,
+              );
+            }),
           ),
-          destinations: items.map((item) {
-            return NavigationDestination(
-              icon: Icon(item.icon, size: 20),
-              selectedIcon: Icon(
-                item.selectedIcon,
-                color: AppColors.electricBlue,
-                size: 20,
-              ),
-              label: item.label,
-            );
-          }).toList(),
+          child: NavigationBar(
+            height: 56,
+            selectedIndex: currentIndex,
+            onDestinationSelected: onItemSelected,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            destinations: items.map((item) {
+              return NavigationDestination(
+                icon: Icon(
+                  item.icon,
+                  size: 20,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
+                selectedIcon: Icon(
+                  item.selectedIcon,
+                  color: AppColors.electricBlue,
+                  size: 20,
+                ),
+                label: item.label,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

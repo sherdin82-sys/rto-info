@@ -112,9 +112,9 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
     }
 
     return ListView.separated(
-      padding: AppSpacing.edgeInsetsL,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       itemCount: filtered.length,
-      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.m),
+      separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         final sign = filtered[index];
         return _buildSignCard(sign);
@@ -148,18 +148,19 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
     }
 
     return PremiumCard(
-      padding: AppSpacing.edgeInsetsL,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      borderRadius: 10,
       accentColor: badgeFg,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(color: badgeBg, shape: BoxShape.circle),
-            child: Icon(icon, color: badgeFg, size: 24),
+            child: Icon(icon, color: badgeFg, size: 20),
           ),
-          const SizedBox(width: AppSpacing.m),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

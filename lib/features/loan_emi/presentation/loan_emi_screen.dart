@@ -80,12 +80,13 @@ class _LoanEmiScreenState extends ConsumerState<LoanEmiScreen> {
             : 'Monthly installment calculator',
       ),
       body: SingleChildScrollView(
-        padding: AppSpacing.edgeInsetsL,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PremiumCard(
-              padding: AppSpacing.edgeInsetsL,
+              padding: const EdgeInsets.all(12),
+              borderRadius: 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -93,49 +94,51 @@ class _LoanEmiScreenState extends ConsumerState<LoanEmiScreen> {
                     controller: _amountController,
                     label: isHindi ? 'ऋण राशि (₹)' : 'Loan Amount (₹)',
                     hint: '500000',
-                    prefixIcon: const Icon(Icons.currency_rupee, size: 20),
+                    prefixIcon: const Icon(Icons.currency_rupee, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.m),
+                  const SizedBox(height: 8),
                   AppTextField(
                     controller: _rateController,
                     label: isHindi
                         ? 'वार्षिक ब्याज दर (%)'
                         : 'Annual Interest Rate (%)',
                     hint: '9.5',
-                    prefixIcon: const Icon(Icons.percent, size: 20),
+                    prefixIcon: const Icon(Icons.percent, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.m),
+                  const SizedBox(height: 8),
                   AppTextField(
                     controller: _tenureController,
                     label: isHindi
                         ? 'अवधि (महीनों में)'
                         : 'Loan Tenure (Months)',
                     hint: '60',
-                    prefixIcon: const Icon(Icons.calendar_month, size: 20),
+                    prefixIcon: const Icon(Icons.calendar_month, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.l),
+                  const SizedBox(height: 10),
                   AppButton(
                     label: isHindi
                         ? 'ईएमआई की गणना करें'
                         : 'Calculate Monthly EMI',
                     variant: AppButtonVariant.primary,
+                    height: 38,
                     onPressed: _calculate,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 12),
 
             if (_result != null) ...[
               PremiumCard(
                 accentColor: AppColors.electricBlue,
-                padding: AppSpacing.edgeInsetsXl,
+                padding: const EdgeInsets.all(12),
+                borderRadius: 10,
                 child: Column(
                   children: [
                     Text(

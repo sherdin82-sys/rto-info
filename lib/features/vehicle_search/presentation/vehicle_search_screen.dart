@@ -30,7 +30,7 @@ class VehicleSearchScreen extends ConsumerWidget {
             : 'Verify Indian registration plates',
       ),
       body: SingleChildScrollView(
-        padding: AppSpacing.edgeInsetsL,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,25 +39,26 @@ class VehicleSearchScreen extends ConsumerWidget {
                 context.push('/rc?plate=$plate');
               },
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 12),
             Text(
               isHindi ? 'उदाहरण नंबर प्लेट' : 'Sample Number Plates',
               style: AppTypography.titleSmall(
                 isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
-            const SizedBox(height: AppSpacing.m),
+            const SizedBox(height: 8),
             ...AppConstants.sampleVehicles.map(
               (sample) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: PremiumCard(
                   onTap: () {
                     context.push('/rc?plate=${sample['plate']}');
                   },
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.l,
-                    vertical: AppSpacing.m,
+                    horizontal: 12,
+                    vertical: 8,
                   ),
+                  borderRadius: 10,
                   child: Row(
                     children: [
                       Container(

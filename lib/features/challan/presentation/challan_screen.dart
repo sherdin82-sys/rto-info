@@ -72,11 +72,15 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
           }
 
           return ListView(
-            padding: AppSpacing.edgeInsetsL,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             children: [
               // Summary Banner
               PremiumCard(
-                padding: AppSpacing.edgeInsetsL,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                borderRadius: 10,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -89,7 +93,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                     ),
                     Container(
                       width: 1,
-                      height: 36,
+                      height: 30,
                       color: isDark
                           ? AppColors.darkBorder
                           : AppColors.lightBorder,
@@ -103,7 +107,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                     ),
                     Container(
                       width: 1,
-                      height: 36,
+                      height: 30,
                       color: isDark
                           ? AppColors.darkBorder
                           : AppColors.lightBorder,
@@ -116,19 +120,19 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: 10),
 
               // Filter Chips
               Row(
                 children: [
                   _buildFilterChip(0, 'All (${challans.length})', isDark),
-                  const SizedBox(width: AppSpacing.s),
+                  const SizedBox(width: 6),
                   _buildFilterChip(
                     1,
                     'Pending (${pendingChallans.length})',
                     isDark,
                   ),
-                  const SizedBox(width: AppSpacing.s),
+                  const SizedBox(width: 6),
                   _buildFilterChip(
                     2,
                     'Settled (${paidChallans.length})',
@@ -136,7 +140,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: 10),
 
               // Official Portal Notice (Section 7 compliance: No fake payment simulation)
               if (pendingChallans.isNotEmpty) ...[
@@ -260,7 +264,8 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
 
     return PremiumCard(
       accentColor: isPending ? AppColors.error : AppColors.success,
-      padding: AppSpacing.edgeInsetsL,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      borderRadius: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -272,7 +277,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                   c.violationDescription,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    fontSize: 14,
+                    fontSize: 13,
                     color: isDark ? Colors.white : AppColors.primaryNavy,
                   ),
                 ),
@@ -283,25 +288,25 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s),
+          const SizedBox(height: 4),
           Text(
             'Challan No: ${c.challanNumber}',
             style: const TextStyle(
               fontFamily: 'monospace',
-              fontSize: 11,
+              fontSize: 10.5,
               color: Colors.grey,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           Row(
             children: [
-              const Icon(Icons.place_outlined, size: 14, color: Colors.grey),
+              const Icon(Icons.place_outlined, size: 13, color: Colors.grey),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   c.location,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  style: const TextStyle(fontSize: 10.5, color: Colors.grey),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -313,17 +318,17 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
             children: [
               const Icon(
                 Icons.calendar_today_outlined,
-                size: 14,
+                size: 13,
                 color: Colors.grey,
               ),
               const SizedBox(width: 4),
               Text(
                 c.challanDate,
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                style: const TextStyle(fontSize: 10.5, color: Colors.grey),
               ),
             ],
           ),
-          const Divider(height: 20),
+          const Divider(height: 12, thickness: 0.8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -333,7 +338,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                   const Text(
                     'Penalty Amount',
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 9.5,
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
                     ),
@@ -341,7 +346,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                   Text(
                     '₹${c.challanAmount.toStringAsFixed(0)}',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w900,
                       color: isPending ? AppColors.error : AppColors.success,
                     ),
@@ -352,7 +357,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                 AppButton(
                   label: 'Pay on Parivahan',
                   variant: AppButtonVariant.primary,
-                  height: 36,
+                  height: 32,
                   isFullWidth: false,
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(

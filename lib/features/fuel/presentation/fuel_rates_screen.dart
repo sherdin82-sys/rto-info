@@ -145,10 +145,12 @@ class _FuelRatesScreenState extends State<FuelRatesScreen>
                   ),
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.all(AppSpacing.l),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   itemCount: _filteredCities.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: AppSpacing.m),
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final item = _filteredCities[index];
                     return _buildCityFuelCard(item, isDark);
@@ -161,7 +163,8 @@ class _FuelRatesScreenState extends State<FuelRatesScreen>
 
   Widget _buildCityFuelCard(FuelPriceEntity item, bool isDark) {
     return PremiumCard(
-      padding: const EdgeInsets.all(AppSpacing.l),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      borderRadius: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -171,18 +174,18 @@ class _FuelRatesScreenState extends State<FuelRatesScreen>
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: AppColors.electricBlue.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(AppRadius.xs),
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Icon(
                       Icons.location_city_rounded,
-                      size: 20,
+                      size: 16,
                       color: AppColors.electricBlue,
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.m),
+                  const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -190,7 +193,7 @@ class _FuelRatesScreenState extends State<FuelRatesScreen>
                         item.city,
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          fontSize: 16,
+                          fontSize: 14,
                           color: isDark
                               ? Colors.white
                               : AppColors.lightTextPrimary,
@@ -199,7 +202,7 @@ class _FuelRatesScreenState extends State<FuelRatesScreen>
                       Text(
                         item.state,
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 10.5,
                           color: isDark
                               ? AppColors.darkTextMuted
                               : AppColors.lightTextMuted,

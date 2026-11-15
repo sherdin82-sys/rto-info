@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.1] - 2026-11-15
+
+### Changed & Optimized
+- **Compact Premium Flutter UI & Global Layout Refinement**:
+  - Completely audited and refined component hierarchy and spacing across all 15 application modules, eliminating oversized elements, excessive whitespace, and truncated descriptions.
+- **Home Screen Redesign**:
+  - **Header**: Compact 52dp height with aligned 32x32 logo, app title, automotive subtitle, and compact language/theme switches.
+  - **HSRP Plate Search**: Sleek 48dp height container, 38px IND strip with blue Ashoka chakra dot, monospace plate styling, and aligned search action.
+  - **Sample Registration Chips**: Single-row horizontal scrollable ribbon (24dp height) for quick demo plate selection.
+  - **Fuel Rates Banner**: Compact ticker card (~48dp height) with live indicator dot, fuel pump icon, high-contrast prices, and direct navigation to Fuel screen.
+  - **Essential RTO Services Grid**: Fully overhauled 2-column grid using `LayoutBuilder` targeting 125–145 dp card height (`aspectRatio ~ 1.32`). Cards feature compact 34x34 icon containers, readable 13sp titles, and 2-line wrapped descriptions without truncation. Removed uninformative status badges (VERIFIED, PORTAL, CALC, DAILY, etc.).
+  - **Section 139 Compliance Banner**: Compact card with 10dp padding, 18px shield icon, and clear statutory legal text.
+  - **Bottom Navigation**: M3 `NavigationBar` height reduced to 56dp with refined selected indicator pill and 10.5sp labels.
+- **Global Layout & Component-Level Optimization**:
+  - `VehicleDetailsScreen`: Compacted 4-section layout (12px divider spacing, 14/10 screen padding, compact EMV chip RC Smart Card).
+  - `ChallanScreen`: Compact summary banner, 10/12 violation cards, and 32dp action buttons.
+  - `DlScreen`: Compact search card, 8px field spacing, 38dp verify button, and compact Sarathi Smart Card.
+  - `FuelRatesScreen` & `TripCalculatorScreen`: Compact city rate cards, 8px separators, and refined trip expense calculator forms.
+  - `ResaleScreen` & `LoanEmiScreen`: Compact inputs, 8px gaps, 38dp calculation buttons, and compact breakdown cards.
+  - `RtoDirectoryScreen`: Compact 32dp state filter chips and compact office cards.
+  - `TrafficSignsScreen`: Compact 36x36 sign icon circles, 10/12 card padding, and 8px list separators.
+  - `MockExamScreen`: Compact 4dp progress indicator, 12dp question card, and 9dp vertical padding on option cards.
+  - `HistoryScreen` & `FavouritesScreen`: Compact list items (10/8 padding, 32x32 icons, 6px separators).
+  - `SettingsScreen`: Compact `RadioListTile` items with `VisualDensity.compact` and 4px card padding.
+- **Architecture Integrity**:
+  - 100% Flutter/Dart Native UI with zero web or React dependencies.
+  - Strict zero-authentication flow preserved.
+  - All 18 unit tests verified passing.
+
+---
+
 ## [0.2.0] - 2026-11-15
 
 ### Added & Redesigned

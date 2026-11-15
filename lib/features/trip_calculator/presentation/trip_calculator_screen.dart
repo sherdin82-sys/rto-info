@@ -69,12 +69,13 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
             : 'Estimate fuel & travel budget',
       ),
       body: SingleChildScrollView(
-        padding: AppSpacing.edgeInsetsL,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PremiumCard(
-              padding: AppSpacing.edgeInsetsL,
+              padding: const EdgeInsets.all(12),
+              borderRadius: 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -84,47 +85,49 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
                         ? 'दूरी (किलोमीटर में)'
                         : 'Trip Distance (km)',
                     hint: '120',
-                    prefixIcon: const Icon(Icons.route, size: 20),
+                    prefixIcon: const Icon(Icons.route, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.m),
+                  const SizedBox(height: 8),
                   AppTextField(
                     controller: _mileageController,
                     label: isHindi
                         ? 'वाहन माइलेज (किमी/लीटर)'
                         : 'Vehicle Mileage (km/L)',
                     hint: '18',
-                    prefixIcon: const Icon(Icons.speed, size: 20),
+                    prefixIcon: const Icon(Icons.speed, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.m),
+                  const SizedBox(height: 8),
                   AppTextField(
                     controller: _fuelPriceController,
                     label: isHindi
                         ? 'ईंधन मूल्य (₹/लीटर)'
                         : 'Fuel Price (₹/Litre)',
                     hint: '94.72',
-                    prefixIcon: const Icon(Icons.local_gas_station, size: 20),
+                    prefixIcon: const Icon(Icons.local_gas_station, size: 18),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
                   ),
-                  const SizedBox(height: AppSpacing.l),
+                  const SizedBox(height: 10),
                   AppButton(
                     label: isHindi ? 'लागत गणना करें' : 'Calculate Fuel Cost',
                     variant: AppButtonVariant.primary,
+                    height: 38,
                     onPressed: _calculate,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: 12),
 
             if (_result != null) ...[
               PremiumCard(
                 accentColor: AppColors.warmOrange,
-                padding: AppSpacing.edgeInsetsXl,
+                padding: const EdgeInsets.all(12),
+                borderRadius: 10,
                 child: Column(
                   children: [
                     Text(

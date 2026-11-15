@@ -55,7 +55,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.l),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           children: [
             // Section: Appearance
             _buildSectionHeader(
@@ -63,16 +63,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               isDark,
             ),
             PremiumCard(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              borderRadius: 10,
               child: Column(
                 children: [
                   RadioListTile<ThemeMode>(
                     activeColor: AppColors.electricBlue,
+                    visualDensity: VisualDensity.compact,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 0,
+                    ),
                     title: Text(
                       isHindi ? 'सिस्टम थीम' : 'System Default',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     subtitle: Text(
@@ -80,7 +86,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ? 'डिवाइस सेटिंग्स का पालन करें'
                           : 'Follow device OS dark/light mode',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10.5,
                         color: isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,
@@ -102,11 +108,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   RadioListTile<ThemeMode>(
                     activeColor: AppColors.electricBlue,
+                    visualDensity: VisualDensity.compact,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 0,
+                    ),
                     title: Text(
                       isHindi ? 'लाइट मोड' : 'Light Theme',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     value: ThemeMode.light,
@@ -125,11 +136,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   RadioListTile<ThemeMode>(
                     activeColor: AppColors.electricBlue,
+                    visualDensity: VisualDensity.compact,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 0,
+                    ),
                     title: Text(
                       isHindi ? 'डार्क मोड' : 'Dark Theme',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     ),
                     subtitle: Text(
@@ -137,7 +153,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ? 'ऑटोमोटिव डीप नेवी डिस्प्ले'
                           : 'Automotive deep navy aesthetic',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10.5,
                         color: isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,

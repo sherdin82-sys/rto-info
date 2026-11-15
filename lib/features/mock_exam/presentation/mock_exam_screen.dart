@@ -282,10 +282,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
       children: [
         // Progress header
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.l,
-            vertical: AppSpacing.m,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
             border: Border(
@@ -304,16 +301,16 @@ class _MockExamScreenState extends State<MockExamScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
-                          vertical: 3,
+                          vertical: 2,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.electricBlue.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           'Question ${_currentIndex + 1} / ${_questions.length}',
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 10.5,
                             fontWeight: FontWeight.w800,
                             color: AppColors.electricBlue,
                           ),
@@ -322,9 +319,9 @@ class _MockExamScreenState extends State<MockExamScreen> {
                     ],
                   ),
                   Text(
-                    '${(progress * 100).toInt()}% Completed',
+                    '${(progress * 100).toInt()}% Done',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.w700,
                       color: isDark
                           ? AppColors.darkTextSecondary
@@ -333,12 +330,12 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.s),
+              const SizedBox(height: 6),
               ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.xs),
+                borderRadius: BorderRadius.circular(2),
                 child: LinearProgressIndicator(
                   value: progress,
-                  minHeight: 6,
+                  minHeight: 4,
                   backgroundColor: isDark
                       ? AppColors.darkSurfaceAlt
                       : AppColors.lightSurfaceAlt,
@@ -354,30 +351,31 @@ class _MockExamScreenState extends State<MockExamScreen> {
         // Question & Options List
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(AppSpacing.l),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             children: [
               // Question Card
               PremiumCard(
-                padding: const EdgeInsets.all(AppSpacing.l),
+                padding: const EdgeInsets.all(12),
+                borderRadius: 10,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'QUESTION ${_currentIndex + 1}',
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: const TextStyle(
+                        fontSize: 10.5,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.8,
                         color: AppColors.saffron,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.s),
+                    const SizedBox(height: 6),
                     Text(
                       question.question,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14.5,
                         fontWeight: FontWeight.w700,
-                        height: 1.4,
+                        height: 1.35,
                         color: isDark
                             ? Colors.white
                             : AppColors.lightTextPrimary,
@@ -386,7 +384,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: 10),
 
               // Options
               ...List.generate(question.options.length, (optIndex) {
@@ -417,6 +415,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
                     trailingIcon = const Icon(
                       Icons.check_circle_rounded,
                       color: AppColors.success,
+                      size: 18,
                     );
                   } else if (isSelected && !isCorrect) {
                     cardColor = AppColors.error.withOpacity(0.12);
@@ -426,6 +425,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
                     trailingIcon = const Icon(
                       Icons.cancel_rounded,
                       color: AppColors.error,
+                      size: 18,
                     );
                   }
                 } else if (isSelected) {
@@ -435,18 +435,18 @@ class _MockExamScreenState extends State<MockExamScreen> {
                 }
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.s),
+                  padding: const EdgeInsets.only(bottom: 6),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(AppRadius.card),
+                    borderRadius: BorderRadius.circular(10),
                     onTap: () => _selectOption(optIndex),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.m,
-                        vertical: 14,
+                        horizontal: 10,
+                        vertical: 9,
                       ),
                       decoration: BoxDecoration(
                         color: cardColor,
-                        borderRadius: BorderRadius.circular(AppRadius.card),
+                        borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: borderColor,
                           width: isSelected || (_answeredCurrent && isCorrect)
