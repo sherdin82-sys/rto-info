@@ -5,9 +5,9 @@ import '../../app/localization/app_locale.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_typography.dart';
+import '../../core/theme/theme_provider.dart';
 
-/// AppAppBar provides a standardized, premium automotive AppBar with
+/// AppAppBar provides a standardized, compact automotive AppBar with
 /// bilingual language toggle, theme toggle, and optional Indian Tricolor accent.
 class AppAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
@@ -33,9 +33,7 @@ class AppAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(
-    kToolbarHeight +
-        (subtitle != null ? 14 : 0) +
-        (bottom?.preferredSize.height ?? 0),
+    (subtitle != null ? 52.0 : 48.0) + (bottom?.preferredSize.height ?? 0),
   );
 
   @override
@@ -45,62 +43,116 @@ class AppAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final isHindi = locale.languageCode == 'hi';
 
     return AppBar(
+      toolbarHeight: subtitle != null ? 52.0 : 48.0,
       leading: leading,
       centerTitle: false,
+      titleSpacing: leading == null ? AppSpacing.m : 0,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             title,
-            style: AppTypography.titleLarge(
-              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            ).copyWith(fontWeight: FontWeight.w800),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           if (subtitle != null) ...[
-            const SizedBox(height: 2),
+            const SizedBox(height: 1),
             Text(
               subtitle!,
-              style: AppTypography.labelMedium(
-                isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+              style: TextStyle(
+                fontSize: 10.5,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? AppColors.darkTextMuted
+                    : AppColors.lightTextMuted,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ],
       ),
       actions: [
         if (showLanguageToggle)
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.darkSurfaceAlt
-                    : AppColors.lightSurfaceAlt,
-                borderRadius: AppRadius.radiusS,
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                ),
-              ),
-              child: Text(
-                isHindi ? 'EN' : 'हिं',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 12,
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => ref.read(localeProvider.notifier).toggleLocale(),
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  height: 28,
+                  padding: const EdgeInsets.symmetric(horizontal: 7),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceAlt
+                        : AppColors.lightSurfaceAlt,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
+                  ),
+                  child: Text(
+                    isHindi ? 'EN' : 'हिं',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
               ),
             ),
-            onPressed: () => ref.read(localeProvider.notifier).toggleLocale(),
-            tooltip: 'Toggle Language',
           ),
         if (showThemeToggle)
-          IconButton(
-            icon: Icon(
-              isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-              size: 22,
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => ref.read(themeModeProvider.notifier).toggleTheme(),
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceAlt
+                        : AppColors.lightSurfaceAlt,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
+                  ),
+                  child: Icon(
+                    isDark
+                        ? Icons.light_mode_outlined
+                        : Icons.dark_mode_outlined,
+                    size: 16,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
             ),
-            onPressed: () => ref.read(themeModeProvider.notifier).toggleTheme(),
-            tooltip: 'Toggle Theme',
           ),
         if (actions != null) ...actions!,
         const SizedBox(width: AppSpacing.s),

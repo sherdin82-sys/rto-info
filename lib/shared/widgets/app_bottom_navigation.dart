@@ -49,19 +49,22 @@ class AppBottomNavigation extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: NavigationBar(
+          height: 58,
           selectedIndex: currentIndex,
           onDestinationSelected: onItemSelected,
           backgroundColor: Colors.transparent,
           elevation: 0,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           indicatorColor: AppColors.electricBlue.withOpacity(
             isDark ? 0.22 : 0.12,
           ),
           destinations: items.map((item) {
             return NavigationDestination(
-              icon: Icon(item.icon),
+              icon: Icon(item.icon, size: 20),
               selectedIcon: Icon(
                 item.selectedIcon,
                 color: AppColors.electricBlue,
+                size: 20,
               ),
               label: item.label,
             );
