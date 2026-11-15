@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.4] - 2026-11-15
+
+### Added & Enhanced
+- **Daily Fuel Rates Horizontal Section**:
+  - Restored high-visibility horizontal carousel with city cards displaying city name, state, petrol price (₹/L), diesel price (₹/L), CNG price (₹/kg), and last-updated timestamp.
+  - Price increase/decrease indicators (`▲ +₹0.12`, `▼ -₹0.05`, `▬ 0.00`) verified via IOCL, BPCL & HPCL data.
+  - Prioritizes user's currently selected city first in the list.
+  - Header with `View all` action navigating directly to [FuelRatesScreen](file:///data/data/com.termux/files/home/gravity-project/rto-info/lib/features/fuel/presentation/fuel_rates_screen.dart) (`/fuel`).
+- **Top New Cars Marketplace Hub**:
+  - Replaced legacy used-cars section with authentic **Top New Cars** horizontal marketplace cards.
+  - Uses genuine vehicle photographs of Indian 2026 models (Mahindra Thar ROXX, Hyundai Creta Facelift, Tata Nexon, Maruti Suzuki Swift 4th Gen, Honda Elevate, Volkswagen Virtus, Kia Seltos, Toyota Innova Hycross).
+  - Displays verified starting ex-showroom prices (`From ₹ 12.99 Lakh*`), manufacturer, model, category pills (`4x4 Off-Road SUV`, `Mid-Size SUV`, etc.), and `NEW`/`HOT`/`HYBRID` badges.
+- **Explore New Cars by Brand**:
+  - Replaced used-cars brand badges with genuine transparent automotive manufacturer logos across 15 major Indian-market manufacturers:
+    - Maruti Suzuki, Hyundai, Tata Motors, Mahindra, Toyota, Honda, Kia, Volkswagen, Skoda, MG Motor, Renault, Nissan, BMW, Mercedes-Benz, Audi.
+    - Card displays official logo, brand name, and total available model count.
+    - Interactive modal bottom sheet on tap detailing popular models with direct routes to search and valuation.
+    - `View all` navigation to vehicle search.
+- **Optimized Section Hierarchy**:
+  - 1. Top App Bar with location selector & garage shortcut.
+  - 2. Promotional automotive hero banner.
+  - 3. Floating HSRP plate search & demo chips.
+  - 4. Essential RTO quick services (8 primary + 4 driver utilities).
+  - 5. Daily Fuel Rates horizontal carousel.
+  - 6. Buy / Explore New Cars quick actions.
+  - 7. Top New Cars marketplace cards.
+  - 8. Explore New Cars by Brand.
+  - 9. Offers for you promo banners.
+  - 10. Trending Videos & road rules.
+  - 11. Trending new bikes, Section 139 CMVR compliance, testimonials.
+  - 12. Parivahan FAQs accordion.
+  - 13. RTO Info branded footer.
+  - 14. Preserved bottom navigation.
+- **Unit & Architecture Tests**:
+  - Added test suites for `NewCarEntity` and `CarBrandEntity` verifying asset existence, prices, and manufacturer mappings.
+  - All 20 unit tests verified passing.
+
+---
+
 ## [0.2.3] - 2026-11-15
 
 ### Enhanced & Restored

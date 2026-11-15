@@ -18,6 +18,7 @@ import '../../lib/features/rto_directory/data/rto_directory_data.dart';
 import '../../lib/features/traffic_signs/data/traffic_signs_data.dart';
 import '../../lib/features/mock_exam/data/quiz_questions_data.dart';
 import '../../lib/core/database/local_rto_repository.dart';
+import '../../lib/features/home/domain/models/new_car_entity.dart';
 
 Future<void> main() async {
   print('=====================================================');
@@ -495,7 +496,53 @@ Future<void> main() async {
     }
   });
 
+  // 15. Top New Cars & Indian Automotive Marketplace Data
+  test('NewCarEntity contains top Indian 2026 models with verified assets & prices', () {
+    assert(NewCarEntity.topNewCars.length >= 8);
+    for (final car in NewCarEntity.topNewCars) {
+      assert(car.id.isNotEmpty);
+      assert(car.name.isNotEmpty);
+      assert(car.manufacturer.isNotEmpty);
+      assert(car.category.isNotEmpty);
+      assert(car.exShowroomPrice.startsWith('₹'));
+      assert(car.imageAsset.startsWith('assets/images/cars/'));
+      assert(File(car.imageAsset).existsSync(), 'Car image asset missing: ${car.imageAsset}');
+    }
+  });
+
+  // 16. Explore New Cars by Brand & Manufacturer Assets
+  test('CarBrandEntity contains 15 popular Indian manufacturers with verified logos', () {
+    assert(CarBrandEntity.allBrands.length == 15);
+    final expectedBrands = [
+      'Maruti Suzuki',
+      'Hyundai',
+      'Tata Motors',
+      'Mahindra',
+      'Toyota',
+      'Honda',
+      'Kia',
+      'Volkswagen',
+      'Skoda',
+      'MG Motor',
+      'Renault',
+      'Nissan',
+      'BMW',
+      'Mercedes-Benz',
+      'Audi',
+    ];
+
+    for (final expected in expectedBrands) {
+      final brand = CarBrandEntity.allBrands.firstWhere(
+        (b) => b.name == expected,
+        orElse: () => throw Exception('Missing expected brand: $expected'),
+      );
+      assert(brand.modelCount > 0);
+      assert(brand.logoAsset.startsWith('assets/images/brands/'));
+      assert(File(brand.logoAsset).existsSync(), 'Brand logo asset missing: ${brand.logoAsset}');
+    }
+  });
+
   print('\n-----------------------------------------------------');
-  print('Result: $totalPassed/18 Unit Tests Passed Successfully! ✓');
+  print('Result: $totalPassed/20 Unit Tests Passed Successfully! ✓');
   print('=====================================================');
 }

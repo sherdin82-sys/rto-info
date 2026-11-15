@@ -10,10 +10,12 @@ import '../../../core/utils/vehicle_number_validator.dart';
 import '../../fuel/data/fuel_mock_datasource.dart';
 import '../../fuel/domain/models/fuel_price_entity.dart';
 import '../../history/presentation/providers/history_provider.dart';
+import '../domain/models/new_car_entity.dart';
 
-/// HomeScreen provides a comprehensive, automotive-grade homepage for RTO Info,
+/// HomeScreen serves as the primary automotive dashboard for RTO Info,
 /// built strictly with native Flutter widgets and modeled after the CarInfo reference.
-/// Combines high-density information architecture with complete feature accessibility.
+/// Features a high-density, automotive marketplace experience with restored fuel rates,
+/// genuine new-car catalogues, and manufacturer brand discoveries.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -252,13 +254,247 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  void _showTestDriveDialog(BuildContext context, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withOpacity(0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.car_rental_rounded,
+                color: Color(0xFF10B981),
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Book Test Drive',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Select any verified new car model across authorized dealerships in your city.',
+              style: TextStyle(fontSize: 12.5, height: 1.4),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.electricBlue.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.electricBlue.withOpacity(0.2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_city, color: AppColors.electricBlue, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'City: $_selectedCity • Doorstep test drive available.',
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.push('/search');
+            },
+            child: const Text('Browse Dealerships'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBrandDetailsSheet(
+    BuildContext context,
+    CarBrandEntity brand,
+    bool isDark,
+    bool isHindi,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 38,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                        ),
+                      ),
+                      child: Image.asset(
+                        brand.logoAsset,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.directions_car_rounded,
+                          color: Color(0xFF0066FF),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            brand.name,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? Colors.white : const Color(0xFF0F172A),
+                            ),
+                          ),
+                          Text(
+                            '${brand.modelCount} Models Available in India',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF10B981),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  isHindi ? 'लोकप्रिय मॉडल:' : 'Popular Models:',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    brand.popularModel,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                          context.push('/resale');
+                        },
+                        child: Text(isHindi ? 'मूल्यांकन देखें' : 'Resale Value'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF0066FF),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                          context.push('/search');
+                        },
+                        child: Text(isHindi ? 'मॉडल खोजें' : 'Explore Models'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = ref.watch(localeProvider);
     final isHindi = locale.languageCode == 'hi';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final historyItems = ref.watch(historyProvider);
-    final currentFuelPrice = _getFuelPriceForCity(_selectedCity);
 
     return Scaffold(
       backgroundColor: isDark
@@ -266,7 +502,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           : const Color(0xFFF7F9FC),
       body: CustomScrollView(
         slivers: [
-          // 1. CARINFO-STYLE TOP APP BAR
+          // 1. RTO INFO HEADER (CARINFO-STYLE TOP APP BAR)
           SliverAppBar(
             pinned: true,
             floating: false,
@@ -474,7 +710,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
 
-          // 2. HERO PROMOTIONAL BANNER & FLOATING HSRP SEARCH BOX
+          // 2. PROMOTIONAL AUTOMOTIVE HERO BANNER
           SliverToBoxAdapter(
             child: Stack(
               clipBehavior: Clip.none,
@@ -730,7 +966,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 3. SAMPLE REGISTRATION CHIPS
+          // 3. VEHICLE REGISTRATION NUMBER SEARCH (SAMPLE CHIPS & RECENT SEARCHES)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
@@ -877,16 +1113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-          // 4. RESTORED: LIVE CITY FUEL RATES TICKER CARD
-          SliverToBoxAdapter(
-            child: _buildFuelRatesBanner(
-              fuel: currentFuelPrice,
-              isHindi: isHindi,
-              isDark: isDark,
-            ),
-          ),
-
-          // 5. RESTORED & ENHANCED: PRIMARY 4x2 QUICK SERVICES GRID (8 Core Features)
+          // 4. ESSENTIAL RTO QUICK SERVICES (PRIMARY 4x2 GRID & DRIVER UTILITIES)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
@@ -967,10 +1194,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 6. RESTORED: DRIVER UTILITIES & SAFETY STRIP (2x2 Grid)
+          // DRIVER UTILITIES STRIP (2x2 Grid)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
               child: Row(
                 children: [
                   Expanded(
@@ -1029,10 +1256,292 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 7. RESTORED: SECTION 139 CMVR STATUTORY COMPLIANCE BANNER
+          // 5. RESTORED: DAILY FUEL RATES SECTION (HORIZONTALLY ACCESSIBLE CARDS)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 18),
+              child: _buildDailyFuelRatesSection(
+                context: context,
+                isHindi: isHindi,
+                isDark: isDark,
+                selectedCity: _selectedCity,
+              ),
+            ),
+          ),
+
+          // 6. BUY & EXPLORE NEW CARS HUB
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isHindi ? 'नई कारें खरीदें व खोजें' : 'Buy / Explore New Cars',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildBuySellCard(
+                          title: isHindi ? 'नई कारें' : 'Buy new car',
+                          icon: Icons.directions_car_filled_rounded,
+                          accentColor: const Color(0xFF0066FF),
+                          onTap: () => context.push('/search'),
+                          isDark: isDark,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildBuySellCard(
+                          title: isHindi ? 'टेस्ट ड्राइव' : 'Test drive',
+                          icon: Icons.car_rental_rounded,
+                          accentColor: const Color(0xFF10B981),
+                          onTap: () => _showTestDriveDialog(context, isDark),
+                          isDark: isDark,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildBuySellCard(
+                          title: isHindi ? 'कार ऋण' : 'Car loan EMI',
+                          icon: Icons.account_balance_wallet_rounded,
+                          accentColor: const Color(0xFF8B5CF6),
+                          onTap: () => context.push('/loan-emi'),
+                          isDark: isDark,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildBuySellCard(
+                          title: isHindi ? 'एक्सचेंज' : 'Sell / Exchange',
+                          icon: Icons.published_with_changes_rounded,
+                          accentColor: const Color(0xFFFF7A00),
+                          onTap: () => context.push('/resale'),
+                          isDark: isDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 7. TOP NEW CARS (REPLACED USED CARS SECTION WITH GENUINE PHOTOGRAPHS)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 22),
+              child: _buildTopNewCarsSection(
+                context: context,
+                isHindi: isHindi,
+                isDark: isDark,
+              ),
+            ),
+          ),
+
+          // 8. EXPLORE NEW CARS BY BRAND (GENUINE LOGOS OF 15 INDIAN MANUFACTURERS)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 22),
+              child: _buildExploreNewCarsByBrandSection(
+                context: context,
+                isHindi: isHindi,
+                isDark: isDark,
+              ),
+            ),
+          ),
+
+          // 9. AUTOMOTIVE PROMOTIONAL BANNERS ("OFFERS FOR YOU")
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isHindi ? 'विशेष ऑफ़र' : 'Offers for you',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 95,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildPromoOfferBanner(
+                          title: isHindi
+                              ? 'फास्टैग रिचार्ज पर कैशबैक\nराष्ट्रीय राजमार्ग टोल पर मान्य'
+                              : 'Recharge FASTag instantly\nGet assured cashback at toll plazas',
+                          actionText: isHindi ? 'रिचार्ज करें' : 'Recharge now',
+                          gradient: const [
+                            Color(0xFF1E3A8A),
+                            Color(0xFF3B82F6),
+                          ],
+                          icon: Icons.toll_rounded,
+                          onTap: () => _showFastagDialog(context, isDark),
+                        ),
+                        const SizedBox(width: 10),
+                        _buildPromoOfferBanner(
+                          title: isHindi
+                              ? 'ई-चालान समय पर भरें\nकोर्ट नोटिस व अतिरिक्त दंड से बचें'
+                              : 'Pay e-Challan on time\nAvoid court summons & extra fines',
+                          actionText: isHindi ? 'चालान जांचें' : 'Check status',
+                          gradient: const [
+                            Color(0xFF7F1D1D),
+                            Color(0xFFDC2626),
+                          ],
+                          icon: Icons.warning_rounded,
+                          onTap: () => context.push('/challan'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 10. TRENDING VIDEOS & ROAD SAFETY RULES
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isHindi
+                        ? 'यातायात नियम व महत्वपूर्ण वीडियो'
+                        : 'Trending videos & Traffic Rules',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 180,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildTrendingVideoCard(
+                          title: '🚦 3 TRAFFIC RULES\nTHAT YOU MUST KNOW!',
+                          category: 'Road Safety 2026',
+                          color: const Color(0xFF0F766E),
+                          onTap: () => context.push('/signs'),
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 10),
+                        _buildTrendingVideoCard(
+                          title: '⚠️ HOW TO CLEAR\nPENDING E-CHALLANS',
+                          category: 'Court & Virtual RTO',
+                          color: const Color(0xFF0369A1),
+                          onTap: () => context.push('/challan'),
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 10),
+                        _buildTrendingVideoCard(
+                          title: '📋 PASS RTO EXAM\nIN FIRST ATTEMPT',
+                          category: 'Sarathi Parivahan',
+                          color: const Color(0xFF7C3AED),
+                          onTap: () => context.push('/exam'),
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 11. LATEST AUTOMOTIVE INFORMATION (NEW BIKES, COMPLIANCE BANNER, TESTIMONIALS)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        isHindi ? 'लोकप्रिय नई बाइक' : 'Trending new bikes',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF0F172A),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => context.push('/search'),
+                        child: Text(
+                          isHindi ? 'सभी देखें' : 'View all',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0066FF),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 115,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        _buildBikeCard(
+                          name: 'S1 X Electric',
+                          price: '₹ 84,999',
+                          brand: 'Ola Electric',
+                          icon: Icons.electric_scooter_rounded,
+                          onTap: () => context.push('/search'),
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 10),
+                        _buildBikeCard(
+                          name: 'Bullet 350',
+                          price: '₹ 1,73,564',
+                          brand: 'Royal Enfield',
+                          icon: Icons.two_wheeler_rounded,
+                          onTap: () => context.push('/search'),
+                          isDark: isDark,
+                        ),
+                        const SizedBox(width: 10),
+                        _buildBikeCard(
+                          name: 'Pulsar NS200',
+                          price: '₹ 1,42,000',
+                          brand: 'Bajaj Auto',
+                          icon: Icons.motorcycle_rounded,
+                          onTap: () => context.push('/search'),
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // SECTION 139 CMVR STATUTORY COMPLIANCE BANNER
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+              margin: const EdgeInsets.fromLTRB(14, 18, 14, 0),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
                 color: isDark
@@ -1099,436 +1608,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 8. SECTION: "Buy & sell car"
+          // CUSTOMER TESTIMONIALS
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isHindi ? 'कार खरीदें व बेचें' : 'Buy & sell car',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.white : const Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildBuySellCard(
-                          title: isHindi ? 'पुरानी कार खरीदें' : 'Buy used car',
-                          icon: Icons.directions_car_filled_rounded,
-                          accentColor: const Color(0xFF0066FF),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildBuySellCard(
-                          title: isHindi ? 'नई कार खरीदें' : 'Buy new car',
-                          icon: Icons.car_rental_rounded,
-                          accentColor: const Color(0xFF10B981),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildBuySellCard(
-                          title: isHindi ? 'कार बेचें' : 'Sell your car',
-                          icon: Icons.sell_rounded,
-                          accentColor: const Color(0xFFFF7A00),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildBuySellCard(
-                          title: isHindi ? 'कार ऋण' : 'Car loan',
-                          icon: Icons.account_balance_wallet_rounded,
-                          accentColor: const Color(0xFF8B5CF6),
-                          onTap: () => context.push('/loan-emi'),
-                          isDark: isDark,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 9. SECTION: "Top 10 trending used cars"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isHindi
-                            ? 'लोकप्रिय पुरानी कारें'
-                            : 'Top 10 trending used cars',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? Colors.white
-                              : const Color(0xFF0F172A),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => context.push('/resale'),
-                        child: Text(
-                          isHindi ? 'सभी देखें' : 'View all',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0066FF),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 115,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildTrendingCarCard(
-                          rank: '01',
-                          model: 'Verna 1.0 Turbo',
-                          brand: 'Hyundai • 2021',
-                          color: const Color(0xFF0066FF),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildTrendingCarCard(
-                          rank: '02',
-                          model: 'Creta SX(O)',
-                          brand: 'Hyundai • 2022',
-                          color: const Color(0xFF10B981),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildTrendingCarCard(
-                          rank: '03',
-                          model: 'Thar LX 4x4',
-                          brand: 'Mahindra • 2023',
-                          color: const Color(0xFFFF7A00),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildTrendingCarCard(
-                          rank: '04',
-                          model: 'City ZX CVT',
-                          brand: 'Honda • 2020',
-                          color: const Color(0xFF8B5CF6),
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 10. SECTION: "Explore used car by brand"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isHindi
-                            ? 'ब्रांड द्वारा कार खोजें'
-                            : 'Explore used car by brand',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? Colors.white
-                              : const Color(0xFF0F172A),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => context.push('/search'),
-                        child: Text(
-                          isHindi ? 'सभी देखें' : 'View all',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0066FF),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 78,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildBrandCircle(
-                          name: 'Maruti',
-                          code: 'MS',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Hyundai',
-                          code: 'HY',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Tata',
-                          code: 'TA',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Honda',
-                          code: 'HO',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Mahindra',
-                          code: 'MH',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Toyota',
-                          code: 'TY',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 14),
-                        _buildBrandCircle(
-                          name: 'Kia',
-                          code: 'KA',
-                          onTap: () => context.push('/search'),
-                          isDark: isDark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 11. SECTION: "Offers for you"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isHindi ? 'विशेष ऑफ़र' : 'Offers for you',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.white : const Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 95,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildPromoOfferBanner(
-                          title: isHindi
-                              ? 'फास्टैग रिचार्ज पर कैशबैक\nराष्ट्रीय राजमार्ग टोल पर मान्य'
-                              : 'Recharge FASTag instantly\nGet assured cashback at toll plazas',
-                          actionText: isHindi ? 'रिचार्ज करें' : 'Recharge now',
-                          gradient: const [
-                            Color(0xFF1E3A8A),
-                            Color(0xFF3B82F6),
-                          ],
-                          icon: Icons.toll_rounded,
-                          onTap: () => _showFastagDialog(context, isDark),
-                        ),
-                        const SizedBox(width: 10),
-                        _buildPromoOfferBanner(
-                          title: isHindi
-                              ? 'ई-चालान समय पर भरें\nकोर्ट नोटिस व अतिरिक्त दंड से बचें'
-                              : 'Pay e-Challan on time\nAvoid court summons & extra fines',
-                          actionText: isHindi ? 'चालान जांचें' : 'Check status',
-                          gradient: const [
-                            Color(0xFF7F1D1D),
-                            Color(0xFFDC2626),
-                          ],
-                          icon: Icons.warning_rounded,
-                          onTap: () => context.push('/challan'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 12. SECTION: "Trending videos & Traffic Rules"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    isHindi
-                        ? 'यातायात नियम व महत्वपूर्ण वीडियो'
-                        : 'Trending videos & Traffic Rules',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.white : const Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 180,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildTrendingVideoCard(
-                          title: '🚦 3 TRAFFIC RULES\nTHAT YOU MUST KNOW!',
-                          category: 'Road Safety 2026',
-                          color: const Color(0xFF0F766E),
-                          onTap: () => context.push('/signs'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildTrendingVideoCard(
-                          title: '⚠️ HOW TO CLEAR\nPENDING E-CHALLANS',
-                          category: 'Court & Virtual RTO',
-                          color: const Color(0xFF0369A1),
-                          onTap: () => context.push('/challan'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildTrendingVideoCard(
-                          title: '📋 PASS RTO EXAM\nIN FIRST ATTEMPT',
-                          category: 'Sarathi Parivahan',
-                          color: const Color(0xFF7C3AED),
-                          onTap: () => context.push('/exam'),
-                          isDark: isDark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 13. SECTION: "Trending new bikes"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        isHindi ? 'लोकप्रिय नई बाइक' : 'Trending new bikes',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? Colors.white
-                              : const Color(0xFF0F172A),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () => context.push('/resale'),
-                        child: Text(
-                          isHindi ? 'सभी देखें' : 'View all',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0066FF),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    height: 115,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildBikeCard(
-                          name: 'S1 X Electric',
-                          price: '₹ 84,999',
-                          brand: 'Ola Electric',
-                          icon: Icons.electric_scooter_rounded,
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildBikeCard(
-                          name: 'Bullet 350',
-                          price: '₹ 1,73,564',
-                          brand: 'Royal Enfield',
-                          icon: Icons.two_wheeler_rounded,
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 10),
-                        _buildBikeCard(
-                          name: 'Pulsar NS200',
-                          price: '₹ 1,42,000',
-                          brand: 'Bajaj Auto',
-                          icon: Icons.motorcycle_rounded,
-                          onTap: () => context.push('/resale'),
-                          isDark: isDark,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 14. SECTION: "What our customers say"
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1550,7 +1633,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       children: [
                         _buildTestimonialCard(
                           quote:
-                              'Checked my vehicle challans and verified my RC within 10 seconds. Extremely clean and fast experience.',
+                              'Found my new Thar ROXX ex-showroom price and verified RC within 10 seconds. Extremely clean and fast experience.',
                           name: 'Manish Bhatia',
                           subtitle: 'Verified User • Delhi',
                           isDark: isDark,
@@ -1558,7 +1641,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const SizedBox(width: 10),
                         _buildTestimonialCard(
                           quote:
-                              'The used car resale calculator gave me the exact market rate. Highly recommend for used car buyers!',
+                              'Daily fuel prices for Bengaluru are always accurate at 6 AM. Love the instant trip cost calculator!',
                           name: 'Priya Sharma',
                           subtitle: 'Verified User • Bengaluru',
                           isDark: isDark,
@@ -1571,7 +1654,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 15. SECTION: "FAQs" (Accordion)
+          // 12. FAQS (ACCORDION)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 20, 14, 0),
@@ -1636,7 +1719,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 16. FOOTER BRAND BANNER
+          // 13. RTO INFO BRANDED FOOTER
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(14, 24, 14, 24),
@@ -1714,178 +1797,275 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   // WIDGET HELPERS
-  Widget _buildFuelRatesBanner({
-    required FuelPriceEntity fuel,
+
+  // 1. Daily Fuel Rates Section
+  Widget _buildDailyFuelRatesSection({
+    required BuildContext context,
     required bool isHindi,
     required bool isDark,
+    required String selectedCity,
   }) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => context.push('/fuel'),
-          borderRadius: BorderRadius.circular(14),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF7A00).withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: const Icon(
-                            Icons.local_gas_station_rounded,
-                            size: 16,
-                            color: Color(0xFFFF7A00),
-                          ),
+    // Reorder so currently selected city appears first
+    final activeFuel = _getFuelPriceForCity(selectedCity);
+    final cities = List<FuelPriceEntity>.from(FuelMockDataSource.allCities);
+    cities.removeWhere((c) => c.city == activeFuel.city);
+    cities.insert(0, activeFuel);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 22,
+                        height: 22,
+                        margin: const EdgeInsets.only(right: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF7A00).withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  isHindi
-                                      ? '${fuel.city} ईंधन दरें'
-                                      : '${fuel.city} Fuel Rates',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
-                                    color: isDark
-                                        ? Colors.white
-                                        : const Color(0xFF0F172A),
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 1.5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF10B981)
-                                        .withOpacity(0.12),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 5,
-                                        height: 5,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFF10B981),
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 3),
-                                      const Text(
-                                        'LIVE',
-                                        style: TextStyle(
-                                          fontSize: 8.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF10B981),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              fuel.lastUpdated,
-                              style: TextStyle(
-                                fontSize: 9.5,
-                                color: isDark
-                                    ? Colors.white54
-                                    : Colors.grey.shade600,
-                              ),
-                            ),
-                          ],
+                        child: const Icon(
+                          Icons.local_gas_station_rounded,
+                          size: 14,
+                          color: Color(0xFFFF7A00),
                         ),
-                      ],
+                      ),
+                      Text(
+                        isHindi ? 'दैनिक ईंधन दरें' : 'Daily Fuel Rates',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isHindi
+                        ? 'आईओसीएल, बीपीसीएल व एचपीसीएल द्वारा सत्यापित दैनिक दरें'
+                        : 'Updated daily at 6:00 AM • Verified by IOCL, BPCL & HPCL',
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      color: isDark ? Colors.white54 : Colors.grey.shade600,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          isHindi ? 'सभी शहर' : 'All cities',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0066FF),
-                          ),
-                        ),
-                        const Icon(
-                          Icons.chevron_right_rounded,
-                          size: 16,
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () => context.push('/fuel'),
+                borderRadius: BorderRadius.circular(6),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: Row(
+                    children: [
+                      Text(
+                        isHindi ? 'सभी देखें' : 'View all',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
                           color: Color(0xFF0066FF),
                         ),
+                      ),
+                      const SizedBox(width: 2),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 16,
+                        color: Color(0xFF0066FF),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 122,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            itemCount: cities.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            itemBuilder: (ctx, idx) {
+              final fuel = cities[idx];
+              final isCurrent = idx == 0;
+              return _buildFuelCityCard(
+                fuel: fuel,
+                isHighlight: isCurrent,
+                isDark: isDark,
+                isHindi: isHindi,
+                onTap: () => context.push('/fuel'),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFuelCityCard({
+    required FuelPriceEntity fuel,
+    required bool isHighlight,
+    required bool isDark,
+    required bool isHindi,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          width: 250,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E293B) : Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: isHighlight
+                  ? const Color(0xFF0066FF)
+                  : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+              width: isHighlight ? 1.4 : 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        size: 13,
+                        color: Color(0xFF0066FF),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${fuel.city}, ${fuel.state}',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF10B981).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF10B981),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        const Text(
+                          'LIVE',
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF10B981),
+                          ),
+                        ),
                       ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildFuelPricePill(
-                        label: isHindi ? 'पेट्रोल' : 'Petrol',
-                        price: '₹${fuel.petrolPrice.toStringAsFixed(2)}',
-                        unit: '/L',
-                        change: fuel.petrolChange,
-                        accentColor: const Color(0xFFEF4444),
-                        isDark: isDark,
-                      ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildFuelPricePill(
+                      label: isHindi ? 'पेट्रोल' : 'Petrol',
+                      price: '₹${fuel.petrolPrice.toStringAsFixed(2)}',
+                      unit: '/L',
+                      change: fuel.petrolChange,
+                      accentColor: const Color(0xFFEF4444),
+                      isDark: isDark,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildFuelPricePill(
-                        label: isHindi ? 'डीजल' : 'Diesel',
-                        price: '₹${fuel.dieselPrice.toStringAsFixed(2)}',
-                        unit: '/L',
-                        change: fuel.dieselChange,
-                        accentColor: const Color(0xFF3B82F6),
-                        isDark: isDark,
-                      ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: _buildFuelPricePill(
+                      label: isHindi ? 'डीजल' : 'Diesel',
+                      price: '₹${fuel.dieselPrice.toStringAsFixed(2)}',
+                      unit: '/L',
+                      change: fuel.dieselChange,
+                      accentColor: const Color(0xFF3B82F6),
+                      isDark: isDark,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _buildFuelPricePill(
-                        label: isHindi ? 'सीएनजी' : 'CNG',
-                        price: '₹${fuel.cngPrice.toStringAsFixed(2)}',
-                        unit: '/kg',
-                        change: fuel.cngChange,
-                        accentColor: const Color(0xFF10B981),
-                        isDark: isDark,
-                      ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: _buildFuelPricePill(
+                      label: isHindi ? 'सीएनजी' : 'CNG',
+                      price: '₹${fuel.cngPrice.toStringAsFixed(2)}',
+                      unit: '/kg',
+                      change: fuel.cngChange,
+                      accentColor: const Color(0xFF10B981),
+                      isDark: isDark,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    fuel.lastUpdated,
+                    style: TextStyle(
+                      fontSize: 8.5,
+                      color: isDark ? Colors.white38 : Colors.grey.shade500,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        isHindi ? 'यात्रा खर्च' : 'Trip cost',
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF0066FF),
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 12,
+                        color: Color(0xFF0066FF),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -1910,7 +2090,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         : (change < 0 ? const Color(0xFF10B981) : Colors.grey);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(8),
@@ -1927,14 +2107,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 9,
                   fontWeight: FontWeight.w700,
                   color: isDark ? Colors.white70 : Colors.black87,
                 ),
               ),
               Container(
-                width: 6,
-                height: 6,
+                width: 5,
+                height: 5,
                 decoration: BoxDecoration(
                   color: accentColor,
                   shape: BoxShape.circle,
@@ -1942,14 +2122,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 1),
           RichText(
             text: TextSpan(
               children: [
                 TextSpan(
                   text: price,
                   style: TextStyle(
-                    fontSize: 12.5,
+                    fontSize: 11,
                     fontWeight: FontWeight.w900,
                     color: isDark ? Colors.white : const Color(0xFF0F172A),
                   ),
@@ -1957,23 +2137,404 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 TextSpan(
                   text: unit,
                   style: TextStyle(
-                    fontSize: 8.5,
+                    fontSize: 7.5,
                     color: isDark ? Colors.white54 : Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 1),
           Text(
             changeText,
             style: TextStyle(
-              fontSize: 8.5,
+              fontSize: 7.5,
               fontWeight: FontWeight.w600,
               color: changeColor,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // 2. Top New Cars Section
+  Widget _buildTopNewCarsSection({
+    required BuildContext context,
+    required bool isHindi,
+    required bool isDark,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isHindi ? 'लोकप्रिय नई कारें' : 'Top New Cars',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isHindi
+                        ? 'भारतीय बाज़ार के नवीनतम मॉडल व सत्यापित एक्स-शोरूम दरें'
+                        : 'Trending Indian-market 2026 models with verified pricing',
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      color: isDark ? Colors.white54 : Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () => context.push('/search'),
+                child: Text(
+                  isHindi ? 'सभी देखें' : 'View all',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0066FF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 232,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            itemCount: NewCarEntity.topNewCars.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (ctx, idx) {
+              final car = NewCarEntity.topNewCars[idx];
+              return _buildNewCarCard(
+                car: car,
+                isDark: isDark,
+                onTap: () => context.push('/rc'),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNewCarCard({
+    required NewCarEntity car,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        width: 250,
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Vehicle Photograph
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
+              child: Stack(
+                children: [
+                  Image.asset(
+                    car.imageAsset,
+                    height: 124,
+                    width: 250,
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, err, _) => Container(
+                      height: 124,
+                      width: 250,
+                      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+                      child: const Center(
+                        child: Icon(
+                          Icons.directions_car_rounded,
+                          size: 40,
+                          color: Color(0xFF0066FF),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Badge (NEW / HOT / HYBRID)
+                  if (car.badge != null)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 2.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(car.badgeColorValue ?? 0xFF0066FF),
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          car.badge!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8.5,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  // Category pill
+                  Positioned(
+                    bottom: 6,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.65),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        car.category,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Card Content
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${car.manufacturer} ${car.name}',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? Colors.white : const Color(0xFF0F172A),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Text(
+                        '${car.verifiedPricePrefix} ',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: isDark ? Colors.white54 : Colors.grey.shade600,
+                        ),
+                      ),
+                      Text(
+                        car.exShowroomPrice,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF10B981),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    '${car.fuelType} • ${car.transmission}',
+                    style: TextStyle(
+                      fontSize: 8.5,
+                      color: isDark ? Colors.white38 : Colors.grey.shade600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 3. Explore New Cars by Brand Section
+  Widget _buildExploreNewCarsByBrandSection({
+    required BuildContext context,
+    required bool isHindi,
+    required bool isDark,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isHindi ? 'ब्रांड द्वारा नई कारें देखें' : 'Explore New Cars by Brand',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isHindi
+                        ? 'भारत के प्रमुख वाहन निर्माता व ब्रांड कैटलॉग'
+                        : 'Official Indian automobile manufacturers',
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      color: isDark ? Colors.white54 : Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () => context.push('/search'),
+                child: Text(
+                  isHindi ? 'सभी देखें' : 'View all',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0066FF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 98,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            itemCount: CarBrandEntity.allBrands.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (ctx, idx) {
+              final brand = CarBrandEntity.allBrands[idx];
+              return _buildBrandLogoCard(
+                brand: brand,
+                isDark: isDark,
+                onTap: () => _showBrandDetailsSheet(context, brand, isDark, isHindi),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBrandLogoCard({
+    required CarBrandEntity brand,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: SizedBox(
+          width: 74,
+          child: Column(
+            children: [
+              Container(
+                width: 58,
+                height: 58,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  brand.logoAsset,
+                  fit: BoxFit.contain,
+                  errorBuilder: (ctx, err, _) => const Icon(
+                    Icons.directions_car_rounded,
+                    color: Color(0xFF0066FF),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                brand.name,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
+              Text(
+                '${brand.modelCount} models',
+                style: TextStyle(
+                  fontSize: 8.5,
+                  color: isDark ? Colors.white38 : Colors.grey.shade500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -2250,136 +2811,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildTrendingCarCard({
-    required String rank,
-    required String model,
-    required String brand,
-    required Color color,
-    required VoidCallback onTap,
-    required bool isDark,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 150,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E293B) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isDark
-                ? const Color(0xFF334155)
-                : const Color(0xFFE2E8F0),
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Watermark rank
-            Positioned(
-              left: 4,
-              bottom: -6,
-              child: Text(
-                rank,
-                style: TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.w900,
-                  color: color.withOpacity(0.12),
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model,
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white : const Color(0xFF0F172A),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      brand,
-                      style: TextStyle(
-                        fontSize: 9.5,
-                        color: isDark ? Colors.white54 : Colors.grey.shade600,
-                      ),
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Icon(
-                    Icons.directions_car_rounded,
-                    size: 38,
-                    color: color,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBrandCircle({
-    required String name,
-    required String code,
-    required VoidCallback onTap,
-    required bool isDark,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(25),
-        child: Column(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E293B) : Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark
-                      ? const Color(0xFF334155)
-                      : const Color(0xFFCBD5E1),
-                ),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                code,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 14,
-                  color: Color(0xFF0066FF),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white70 : Colors.black87,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildPromoOfferBanner({
     required String title,
     required String actionText,
@@ -2595,9 +3026,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF334155)
-              : const Color(0xFFE2E8F0),
+          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
         ),
       ),
       child: Column(
