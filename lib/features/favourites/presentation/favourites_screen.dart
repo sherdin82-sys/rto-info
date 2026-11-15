@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/status_badge.dart';
+import 'providers/favourites_provider.dart';
 
-/// FavouritesScreen lists bookmarked personal and family vehicles.
+/// FavouritesScreen manages bookmarked personal and family vehicles.
 class FavouritesScreen extends ConsumerWidget {
   const FavouritesScreen({super.key});
 
@@ -15,24 +16,7 @@ class FavouritesScreen extends ConsumerWidget {
     final isHindi = locale.languageCode == 'hi';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final favouriteVehicles = [
-      {
-        'plate': 'DL01AB1234',
-        'display': 'DL 01 AB 1234',
-        'maker': 'Maruti Suzuki Swift VXI',
-        'fuel': 'PETROL',
-        'insuranceStatus': 'ACTIVE',
-        'fitnessUpto': '2038-04-11',
-      },
-      {
-        'plate': 'KA05MJ5005',
-        'display': 'KA 05 MJ 5005',
-        'maker': 'Tata Nexon EV Long Range',
-        'fuel': 'ELECTRIC',
-        'insuranceStatus': 'ACTIVE',
-        'fitnessUpto': '2039-02-13',
-      },
-    ];
+    final favouriteVehicles = ref.watch(favouritesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +45,7 @@ class FavouritesScreen extends ConsumerWidget {
                   Text(
                     isHindi
                         ? 'किसी वाहन को देखने के बाद "पसंदीदा में जोड़ें" दबाएं'
-                        : 'Search any vehicle and tap "Save to Favourites"',
+                        : 'Search any vehicle and tap the bookmark icon',
                     style: TextStyle(
                       fontSize: 12,
                       color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
@@ -96,7 +80,7 @@ class FavouritesScreen extends ConsumerWidget {
                                 ),
                               ),
                               child: Text(
-                                v['display']!,
+                                v.formattedPlate,
                                 style: const TextStyle(
                                   fontFamily: 'monospace',
                                   fontWeight: FontWeight.w900,
@@ -104,15 +88,27 @@ class FavouritesScreen extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            StatusBadge(
-                              label: v['insuranceStatus']!,
-                              type: BadgeType.active,
+                            Row(
+                              children: [
+                                StatusBadge(
+                                  label: v.insuranceStatus,
+                                  type: v.insuranceStatus == 'ACTIVE' ? BadgeType.active : BadgeType.expired,
+                                ),
+                                const SizedBox(width: 4),
+                                IconButton(
+                                  icon: const Icon(Icons.bookmark, color: AppColors.saffron),
+                                  tooltip: 'Remove from Favourites',
+                                  onPressed: () {
+                                    ref.read(favouritesProvider.notifier).removeFavourite(v.registrationNumber);
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          v['maker']!,
+                          v.makerModel,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -121,10 +117,18 @@ class FavouritesScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${v['fuel']} • Fitness valid upto: ${v['fitnessUpto']}',
+                          '${v.vehicleClass} • ${v.fuelType}',
                           style: TextStyle(
                             fontSize: 12,
                             color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Insurance: ${v.insuranceValidity} • Fitness: ${v.fitnessValidity}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -138,7 +142,7 @@ class FavouritesScreen extends ConsumerWidget {
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 onPressed: () {
-                                  context.push('/challan?plate=${v['plate']}');
+                                  context.push('/challan?plate=${v.registrationNumber}');
                                 },
                               ),
                             ),
@@ -151,7 +155,7 @@ class FavouritesScreen extends ConsumerWidget {
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 onPressed: () {
-                                  context.push('/rc?plate=${v['plate']}');
+                                  context.push('/rc?plate=${v.registrationNumber}');
                                 },
                               ),
                             ),

@@ -1,0 +1,186 @@
+import '../domain/models/quiz_question_entity.dart';
+
+class QuizQuestionsData {
+  static const List<QuizQuestion> questions = [
+    QuizQuestion(
+      id: 1,
+      question: 'When an emergency vehicle (Ambulance or Fire Engine) approaches from behind with siren on, you should:',
+      options: [
+        'Speed up to clear the way ahead',
+        'Immediately steer to the left side of the road and stop to let it pass',
+        'Sound your horn to alert vehicles in front',
+        'Continue driving at your normal speed',
+      ],
+      correctIndex: 1,
+      explanation: 'Under Section 194E of the Motor Vehicles Act, every driver must provide an unobstructed passage to emergency vehicles by steering to the side.',
+    ),
+    QuizQuestion(
+      id: 2,
+      question: 'Near a pedestrian (Zebra) crossing, when pedestrians are waiting to cross, the driver should:',
+      options: [
+        'Sound horn and press forward',
+        'Slow down, stop the vehicle before the stop line, and allow pedestrians to cross',
+        'Speed up to cross before pedestrians step on the road',
+        'Flash headlights and pass through',
+      ],
+      correctIndex: 1,
+      explanation: 'Pedestrians always have the legal right of way at marked zebra crossings.',
+    ),
+    QuizQuestion(
+      id: 3,
+      question: 'Overtaking a vehicle is strictly prohibited:',
+      options: [
+        'On wide national four-lane highways',
+        'At narrow bridges, blind corners, and pedestrian crossings',
+        'When the vehicle ahead is moving slowly',
+        'During early morning hours',
+      ],
+      correctIndex: 1,
+      explanation: 'Overtaking at curves, hills, narrow bridges, and intersections is dangerous and punishable under the MV Act.',
+    ),
+    QuizQuestion(
+      id: 4,
+      question: 'What is the minimum legal age for obtaining a Driving Licence for a Light Motor Vehicle (Car) in India?',
+      options: [
+        '16 years',
+        '18 years',
+        '21 years',
+        '20 years',
+      ],
+      correctIndex: 1,
+      explanation: 'The minimum age for an LMV licence is 18 years (16 years for gearless two-wheelers up to 50cc with parental consent).',
+    ),
+    QuizQuestion(
+      id: 5,
+      question: 'What is the validity period of a Learner’s Licence issued in India?',
+      options: [
+        '3 months',
+        '6 months',
+        '1 year',
+        '30 days',
+      ],
+      correctIndex: 1,
+      explanation: 'A Learner’s Licence is valid for 6 months from the date of issue across India.',
+    ),
+    QuizQuestion(
+      id: 6,
+      question: 'When driving on a multi-lane highway, the extreme right lane is reserved for:',
+      options: [
+        'Heavy commercial trucks',
+        'Two-wheelers and auto rickshaws',
+        'Overtaking and emergency maneuvers only',
+        'Slow cruising vehicles',
+      ],
+      correctIndex: 2,
+      explanation: 'The rightmost lane is designated as the fast/overtaking lane. Drivers must return to the center/left lane after overtaking.',
+    ),
+    QuizQuestion(
+      id: 7,
+      question: 'What is the legal Blood Alcohol Concentration (BAC) limit permitted for drivers in India?',
+      options: [
+        '50 mg per 100 ml of blood',
+        '30 mg per 100 ml of blood',
+        '80 mg per 100 ml of blood',
+        'Zero tolerance for all drivers',
+      ],
+      correctIndex: 1,
+      explanation: 'Under Section 185 of the MV Act, BAC exceeding 30 mg per 100 ml of blood constitutes drunken driving.',
+    ),
+    QuizQuestion(
+      id: 8,
+      question: 'A continuous solid white line along the center of the road indicates:',
+      options: [
+        'Overtaking is allowed at any time',
+        'Lane changing and overtaking are strictly forbidden',
+        'Speed limit is 40 km/h',
+        'Parking is permitted on the line',
+      ],
+      correctIndex: 1,
+      explanation: 'A solid unbroken white/yellow centerline prohibits crossing or straddling for overtaking.',
+    ),
+    QuizQuestion(
+      id: 9,
+      question: 'Which documents must a driver carry while operating a motor vehicle?',
+      options: [
+        'Only original Aadhaar Card',
+        'Driving Licence, Registration Certificate, Insurance, and PUC Certificate',
+        'Sales invoice and pan card only',
+        'Only driving licence is required',
+      ],
+      correctIndex: 1,
+      explanation: 'Drivers must carry DL, RC, valid third-party insurance, and PUC certificate (physical or DigiLocker/mParivahan).',
+    ),
+    QuizQuestion(
+      id: 10,
+      question: 'When approaching a roundabout / traffic circle, who has the right of way?',
+      options: [
+        'Traffic entering the roundabout',
+        'Traffic already moving inside the roundabout from your right',
+        'The larger or heavier vehicle',
+        'Vehicle sounding horn loudest',
+      ],
+      correctIndex: 1,
+      explanation: 'Drivers must give way to traffic already circulating inside the roundabout on their right.',
+    ),
+    QuizQuestion(
+      id: 11,
+      question: 'What does a flashing amber (yellow) traffic signal indicate?',
+      options: [
+        'Stop immediately and wait for green',
+        'Slow down, look in both directions, and proceed with caution',
+        'Speed up before the signal turns red',
+        'U-turn is permitted freely',
+      ],
+      correctIndex: 1,
+      explanation: 'A flashing amber signal instructs drivers to reduce speed and proceed through the junction with utmost care.',
+    ),
+    QuizQuestion(
+      id: 12,
+      question: 'Parking in front of a hospital entrance or fire station gate is:',
+      options: [
+        'Permitted for up to 10 minutes',
+        'Strictly prohibited at all times',
+        'Permitted with hazard lights flashing',
+        'Allowed on Sundays and holidays',
+      ],
+      correctIndex: 1,
+      explanation: 'Blocking hospital, ambulance, or fire emergency gates is strictly prohibited and subject to immediate impounding.',
+    ),
+    QuizQuestion(
+      id: 13,
+      question: 'During fog or heavy rainfall, which lights should be used?',
+      options: [
+        'High beam headlights only',
+        'Low beam headlights and fog lights',
+        'Interior dome lights',
+        'Keep all lights turned off to conserve battery',
+      ],
+      correctIndex: 1,
+      explanation: 'High beams reflect off water droplets causing glare and blinding the driver. Low beams provide superior ground illumination.',
+    ),
+    QuizQuestion(
+      id: 14,
+      question: 'The minimum safe following distance behind another vehicle at 60 km/h should be:',
+      options: [
+        'At least 1 meter',
+        'The 2-second rule distance (approx. 33-35 meters)',
+        'Half car length',
+        'Directly bumper to bumper to prevent other cars cutting in',
+      ],
+      correctIndex: 1,
+      explanation: 'The 2-second rule (doubled to 4 seconds in wet conditions) ensures sufficient braking reaction distance.',
+    ),
+    QuizQuestion(
+      id: 15,
+      question: 'Wearing a certified helmet on a two-wheeler is mandatory for:',
+      options: [
+        'The rider only',
+        'Both the rider and pillion passenger',
+        'Riders driving on highways only',
+        'Only riders above 40 years of age',
+      ],
+      correctIndex: 1,
+      explanation: 'Section 129 of the MV Act makes BIS-certified helmet wearing mandatory for both the driver and the pillion rider.',
+    ),
+  ];
+}

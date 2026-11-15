@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
+import 'providers/history_provider.dart';
 
-/// HistoryScreen shows recently searched vehicle records.
+/// HistoryScreen provides chronological search history with individual delete and clear-all.
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
 
@@ -14,30 +16,7 @@ class HistoryScreen extends ConsumerWidget {
     final isHindi = locale.languageCode == 'hi';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Demo recent history items
-    final historyItems = [
-      {
-        'plate': 'DL01AB1234',
-        'display': 'DL 01 AB 1234',
-        'maker': 'Maruti Suzuki Swift VXI',
-        'time': 'Today, 10:30 AM',
-        'class': 'Motor Car (LMV)'
-      },
-      {
-        'plate': 'MH12DE1433',
-        'display': 'MH 12 DE 1433',
-        'maker': 'Hyundai Creta CRDi',
-        'time': 'Yesterday, 04:15 PM',
-        'class': 'Motor Car (LMV)'
-      },
-      {
-        'plate': 'KA05MJ5005',
-        'display': 'KA 05 MJ 5005',
-        'maker': 'Tata Nexon EV Long Range',
-        'time': '12 Nov 2026',
-        'class': 'Electric Car'
-      },
-    ];
+    final historyItems = ref.watch(historyProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -46,14 +25,9 @@ class HistoryScreen extends ConsumerWidget {
           if (historyItems.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_sweep_outlined),
-              tooltip: isHindi ? 'इतिहास साफ़ करें' : 'Clear History',
+              tooltip: isHindi ? 'इतिहास साफ़ करें' : 'Clear All History',
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(isHindi ? 'इतिहास साफ़ किया गया' : 'History cleared'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
+                _showClearHistoryDialog(context, ref, isHindi);
               },
             ),
         ],
@@ -80,8 +54,8 @@ class HistoryScreen extends ConsumerWidget {
                   const SizedBox(height: 6),
                   Text(
                     isHindi
-                      ? 'आपकी हालिया खोजें यहाँ दिखाई देंगी'
-                      : 'Your recent vehicle lookups will appear here',
+                        ? 'खोजे गए वाहन स्वचालित रूप से यहाँ दिखाई देंगे'
+                        : 'Searched vehicles will appear here for fast access',
                     style: TextStyle(
                       fontSize: 12,
                       color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
@@ -96,69 +70,125 @@ class HistoryScreen extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = historyItems[index];
+                final formattedTime = DateFormat('dd MMM yyyy, hh:mm a').format(item.searchedAt);
 
-                return Card(
-                  child: InkWell(
-                    onTap: () {
-                      context.push('/rc?plate=${item['plate']}');
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryNavy.withOpacity(0.08),
-                              borderRadius: BorderRadius.circular(12),
+                return Dismissible(
+                  key: Key(item.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    padding: const EdgeInsets.only(right: 20),
+                    alignment: Alignment.centerRight,
+                    decoration: BoxDecoration(
+                      color: AppColors.error,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(Icons.delete_outline, color: Colors.white),
+                  ),
+                  onDismissed: (_) {
+                    ref.read(historyProvider.notifier).removeSearch(item.id);
+                  },
+                  child: Card(
+                    child: InkWell(
+                      onTap: () {
+                        context.push('/rc?plate=${item.registrationNumber}');
+                      },
+                      borderRadius: BorderRadius.circular(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryNavy.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.directions_car,
+                                color: AppColors.electricBlue,
+                                size: 24,
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.directions_car,
-                              color: AppColors.electricBlue,
-                              size: 24,
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.formattedPlate,
+                                    style: const TextStyle(
+                                      fontFamily: 'monospace',
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    item.makerModel,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    formattedTime,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['display']!,
-                                  style: const TextStyle(
-                                    fontFamily: 'monospace',
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  item['maker']!,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  item['time']!,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
-                                  ),
-                                ),
-                              ],
+                            IconButton(
+                              icon: const Icon(Icons.close, size: 18),
+                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                              onPressed: () {
+                                ref.read(historyProvider.notifier).removeSearch(item.id);
+                              },
                             ),
-                          ),
-                          const Icon(Icons.chevron_right, size: 20),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 );
               },
             ),
+    );
+  }
+
+  void _showClearHistoryDialog(BuildContext context, WidgetRef ref, bool isHindi) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: Text(isHindi ? 'इतिहास साफ़ करें?' : 'Clear Search History?'),
+        content: Text(
+          isHindi
+              ? 'क्या आप सभी खोज इतिहास रिकॉर्ड हटाना चाहते हैं?'
+              : 'This will remove all recent vehicle search history.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogCtx),
+            child: Text(isHindi ? 'रद्द करें' : 'Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            onPressed: () {
+              Navigator.pop(dialogCtx);
+              ref.read(historyProvider.notifier).clearAll();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(isHindi ? 'इतिहास साफ़ किया गया' : 'Search history cleared'),
+                ),
+              );
+            },
+            child: Text(isHindi ? 'साफ़ करें' : 'Clear'),
+          ),
+        ],
+      ),
     );
   }
 }

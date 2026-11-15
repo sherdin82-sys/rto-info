@@ -9,7 +9,11 @@ import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/vehicle_details/presentation/vehicle_details_screen.dart';
 import '../../features/challan/presentation/challan_screen.dart';
 import '../../features/dl/presentation/dl_screen.dart';
-import '../../features/tools/presentation/tools_placeholder_screens.dart';
+import '../../features/fuel/presentation/fuel_rates_screen.dart';
+import '../../features/resale/presentation/resale_screen.dart';
+import '../../features/rto_directory/presentation/rto_directory_screen.dart';
+import '../../features/traffic_signs/presentation/traffic_signs_screen.dart';
+import '../../features/mock_exam/presentation/mock_exam_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHome = GlobalKey<NavigatorState>(debugLabel: 'shellHome');

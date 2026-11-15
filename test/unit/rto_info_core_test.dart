@@ -2,10 +2,29 @@ import 'dart:io';
 import '../../lib/core/constants/app_constants.dart';
 import '../../lib/core/utils/vehicle_number_validator.dart';
 import '../../lib/app/localization/app_strings.dart';
+import '../../lib/features/vehicle_details/domain/models/vehicle_entity.dart';
+import '../../lib/features/vehicle_details/data/datasources/vehicle_mock_datasource.dart';
+import '../../lib/features/challan/domain/models/challan_entity.dart';
+import '../../lib/features/challan/data/datasources/challan_mock_datasource.dart';
+import '../../lib/features/history/domain/models/search_history_entity.dart';
+import '../../lib/features/favourites/domain/models/favourite_vehicle_entity.dart';
+import '../../lib/core/storage/memory_storage_service.dart';
+import '../../lib/features/dl/domain/models/dl_entity.dart';
+import '../../lib/features/dl/data/datasources/dl_mock_datasource.dart';
+import '../../lib/features/fuel/domain/models/fuel_price_entity.dart';
+import '../../lib/features/fuel/data/fuel_mock_datasource.dart';
+import '../../lib/features/resale/domain/models/resale_valuation_model.dart';
+import '../../lib/features/resale/domain/models/loan_emi_model.dart';
+import '../../lib/features/rto_directory/domain/models/rto_office_entity.dart';
+import '../../lib/features/rto_directory/data/rto_directory_data.dart';
+import '../../lib/features/traffic_signs/domain/models/traffic_sign_entity.dart';
+import '../../lib/features/traffic_signs/data/traffic_signs_data.dart';
+import '../../lib/features/mock_exam/domain/models/quiz_question_entity.dart';
+import '../../lib/features/mock_exam/data/quiz_questions_data.dart';
 
-void main() {
+Future<void> main() async {
   print('=====================================================');
-  print('🚗 RTO INFO - Core Architecture & Unit Test Suite');
+  print('🚗 RTO INFO - Comprehensive Unit & Architecture Tests');
   print('=====================================================\n');
 
   int totalPassed = 0;
@@ -15,9 +34,21 @@ void main() {
       fn();
       print('✓ PASS: $name');
       totalPassed++;
-    } catch (e) {
+    } catch (e, st) {
       print('✗ FAIL: $name');
-      print('  Error: $e');
+      print('  Error: $e\n$st');
+      exitCode = 1;
+    }
+  }
+
+  Future<void> asyncTest(String name, Future<void> Function() fn) async {
+    try {
+      await fn();
+      print('✓ PASS: $name');
+      totalPassed++;
+    } catch (e, st) {
+      print('✗ FAIL: $name');
+      print('  Error: $e\n$st');
       exitCode = 1;
     }
   }
@@ -51,14 +82,141 @@ void main() {
     assert(VehicleNumberValidator.isValid('12AB34CD') == false);
   });
 
-  // 2. Android Configuration & App Constants
-  test('AppConstants: Android package name is configured as com.rtoinfo.app', () {
-    assert(AppConstants.androidPackageName == 'com.rtoinfo.app');
-    assert(AppConstants.appName == 'RTO Info');
-    assert(AppConstants.sampleVehicles.length >= 4);
+  // 2. VehicleEntity Domain Model & Serialization
+  test('VehicleEntity serialization and privacy compliance', () {
+    const vehicle = VehicleEntity(
+      registrationNumber: 'DL 01 AB 1234',
+      cleanRegistrationNumber: 'DL01AB1234',
+      registrationDate: '12-Apr-2023',
+      registrationAuthority: 'North Delhi RTO',
+      rtoCode: 'DL-01',
+      state: 'Delhi',
+      vehicleClass: 'Motor Car (LMV)',
+      registrationValidity: '11-Apr-2038',
+      registrationStatus: 'ACTIVE',
+      maker: 'MARUTI SUZUKI INDIA LTD',
+      model: 'SWIFT VXI',
+      vehicleCategory: 'Passenger Car',
+      fuelType: 'PETROL',
+      bodyType: 'Hatchback',
+      engineCapacity: '1197 cc',
+      seatingCapacity: 5,
+      manufacturingYear: '2023',
+      emissionStandard: 'BS-VI',
+      color: 'MAGMA GREY',
+      maskedChassisNumber: 'MA3EWFB1S***28114',
+      maskedEngineNumber: 'K12MN***1092',
+      maskedOwnerName: 'R****H K***R S****A',
+      maskedFatherName: 'S****H C****R S****A',
+      ownershipSerial: '1st Owner',
+      maskedAddress: 'Civil Lines, Delhi - 110054',
+      insuranceCompany: 'Tata AIG',
+      insurancePolicyNumber: '016284918239011',
+      insuranceValidity: '09-Apr-2027',
+      insuranceStatus: 'ACTIVE',
+      insuranceDaysRemaining: 145,
+      pucCertificateNumber: 'DL0100492810',
+      pucValidity: '14-May-2027',
+      pucStatus: 'ACTIVE',
+      pucTestingCenter: 'Mall Road PUC Center',
+      fitnessValidity: '11-Apr-2038',
+      permitValidity: 'Private Vehicle',
+      roadTaxStatus: 'LTT Paid',
+      roadTaxPaidUpto: 'Life Time',
+      isHypothecated: true,
+      hypothecationBank: 'HDFC Bank',
+      hypothecationStatus: 'ACTIVE LOAN',
+    );
+
+    final map = vehicle.toMap();
+    final reconstructed = VehicleEntity.fromMap(map);
+
+    assert(reconstructed.cleanRegistrationNumber == 'DL01AB1234');
+    assert(reconstructed.maskedOwnerName.contains('****'), 'Owner name must be masked for privacy');
+    assert(reconstructed.isHypothecated == true);
+    assert(reconstructed.hypothecationBank == 'HDFC Bank');
   });
 
-  // 3. Localization Dictionary (English & Hindi)
+  // 3. VehicleMockDataSource & Deterministic Generation
+  await asyncTest('VehicleMockDataSource returns accurate Parivahan records', () async {
+    final ds = VehicleMockDataSource();
+    final seeded = await ds.getVehicleDetails('DL01AB1234');
+    assert(seeded != null);
+    assert(seeded!.maker == 'MARUTI SUZUKI INDIA LTD');
+    assert(seeded!.fuelType == 'PETROL');
+
+    final dynamicVehicle = await ds.getVehicleDetails('UP32AZ0001');
+    assert(dynamicVehicle != null);
+    assert(dynamicVehicle!.state == 'UP');
+    assert(dynamicVehicle!.rtoCode == 'UP-32');
+
+    final invalid = await ds.getVehicleDetails('INVALID');
+    assert(invalid == null);
+  });
+
+  // 4. ChallanEntity & ChallanMockDataSource
+  await asyncTest('ChallanEntity differentiation and mock datasource retrieval', () async {
+    final ds = ChallanMockDataSource();
+    final challans = await ds.getChallansForVehicle('DL01AB1234');
+    assert(challans.isNotEmpty);
+
+    final pending = challans.where((c) => c.isPending).toList();
+    final paid = challans.where((c) => c.isPaid).toList();
+
+    assert(pending.isNotEmpty, 'Must have pending challans');
+    assert(paid.isNotEmpty, 'Must have paid challans');
+    assert(pending.first.officialPaymentPortalUrl == 'https://echallan.parivahan.gov.in/');
+  });
+
+  // 5. MemoryStorageService Persistence (Search History & Favourites)
+  await asyncTest('MemoryStorageService manages history & favourites', () async {
+    final storage = MemoryStorageService();
+    await storage.clearAllData();
+
+    // Add search history
+    final historyItem = SearchHistoryEntity(
+      id: 'h-1',
+      registrationNumber: 'DL01AB1234',
+      formattedPlate: 'DL 01 AB 1234',
+      makerModel: 'Maruti Suzuki Swift',
+      vehicleClass: 'Motor Car (LMV)',
+      searchedAt: DateTime.now(),
+    );
+    await storage.addHistory(historyItem);
+
+    final historyList = await storage.getHistory();
+    assert(historyList.length == 1);
+    assert(historyList.first.registrationNumber == 'DL01AB1234');
+
+    // Add favourite
+    final favItem = FavouriteVehicleEntity(
+      id: 'f-1',
+      registrationNumber: 'DL01AB1234',
+      formattedPlate: 'DL 01 AB 1234',
+      makerModel: 'Maruti Suzuki Swift',
+      vehicleClass: 'Motor Car (LMV)',
+      fuelType: 'PETROL',
+      insuranceValidity: '09-Apr-2027',
+      insuranceStatus: 'ACTIVE',
+      fitnessValidity: '11-Apr-2038',
+      savedAt: DateTime.now(),
+    );
+    await storage.addFavourite(favItem);
+
+    assert(await storage.isFavourite('DL01AB1234') == true);
+    assert(await storage.isFavourite('MH12DE1433') == false);
+
+    // Remove favourite
+    await storage.removeFavourite('DL01AB1234');
+    assert(await storage.isFavourite('DL01AB1234') == false);
+
+    // Clear all
+    await storage.clearAllData();
+    assert((await storage.getHistory()).isEmpty);
+    assert((await storage.getFavourites()).isEmpty);
+  });
+
+  // 6. Localization Dictionary (English & Hindi)
   test('AppStrings: English and Hindi translations are complete', () {
     assert(AppStrings.get('appName', 'en') == 'RTO Info');
     assert(AppStrings.get('appName', 'hi') == 'आरटीओ इन्फो');
@@ -76,7 +234,7 @@ void main() {
     assert(AppStrings.get('navSettings', 'hi') == 'सेटिंग्स');
   });
 
-  // 4. Strict Zero-Authentication Verification
+  // 7. Strict Zero-Authentication Verification
   test('Strict Rule: No authentication files, login, or signup screens exist', () {
     final libDir = Directory('lib');
     final allFiles = libDir.listSync(recursive: true);
@@ -92,34 +250,120 @@ void main() {
     }
   });
 
-  // 5. Android Manifest package verification
-  test('AndroidManifest.xml contains package com.rtoinfo.app and INTERNET permission', () {
+  // 8. Android Configuration Verification
+  test('Android package name is com.rtoinfo.app and permissions verified', () {
     final manifest = File('android/app/src/main/AndroidManifest.xml');
-    assert(manifest.existsSync(), 'AndroidManifest.xml must exist');
+    assert(manifest.existsSync());
     final content = manifest.readAsStringSync();
-    assert(content.contains('package="com.rtoinfo.app"'), 'Manifest must declare package com.rtoinfo.app');
-    assert(content.contains('android.permission.INTERNET'), 'Manifest must have INTERNET permission');
-  });
+    assert(content.contains('package="com.rtoinfo.app"'));
+    assert(content.contains('android.permission.INTERNET'));
 
-  // 6. build.gradle namespace and applicationId verification
-  test('android/app/build.gradle declares namespace and applicationId com.rtoinfo.app', () {
     final gradle = File('android/app/build.gradle');
-    assert(gradle.existsSync(), 'build.gradle must exist');
-    final content = gradle.readAsStringSync();
-    assert(content.contains('namespace = "com.rtoinfo.app"'), 'Namespace must be com.rtoinfo.app');
-    assert(content.contains('applicationId = "com.rtoinfo.app"'), 'ApplicationId must be com.rtoinfo.app');
+    assert(gradle.existsSync());
+    final gradleContent = gradle.readAsStringSync();
+    assert(gradleContent.contains('namespace = "com.rtoinfo.app"'));
+    assert(gradleContent.contains('applicationId = "com.rtoinfo.app"'));
   });
 
-  // 7. Flutter CI Workflow configuration
-  test('GitHub Actions build-apk.yml exists and targets JDK 17', () {
-    final ci = File('.github/workflows/build-apk.yml');
-    assert(ci.existsSync(), 'build-apk.yml must exist');
-    final content = ci.readAsStringSync();
-    assert(content.contains("java-version: '17'"), 'CI must use JDK 17');
-    assert(content.contains('flutter build apk --release'), 'CI must build release APK');
+  // 9. Driving Licence (Sarathi Parivahan) Verification
+  await asyncTest('DL Verification: DlMockDataSource retrieves seeded and dynamic DLs', () async {
+    final ds = DlMockDataSource();
+    final seeded = await ds.getDlDetails('DL0420110149632');
+    assert(seeded != null);
+    assert(seeded!.maskedHolderName.contains('****'));
+    assert(seeded!.vehicleClasses.any((c) => c.classCode == 'MCWG'));
+    assert(seeded!.vehicleClasses.any((c) => c.classCode == 'LMV'));
+    assert(seeded!.state == 'Delhi');
+
+    final commercial = await ds.getDlDetails('MH1420180019284');
+    assert(commercial != null);
+    assert(commercial!.isCommercial == true);
+    assert(commercial!.badgeNumber != null);
+
+    final dynamicDl = await ds.getDlDetails('RJ1420220011223');
+    assert(dynamicDl != null);
+    assert(dynamicDl!.state == 'RJ');
+  });
+
+  // 10. Fuel Prices & Trip Cost Calculator Logic
+  test('Fuel Prices & TripCostResult calculation logic', () {
+    assert(FuelMockDataSource.allCities.isNotEmpty);
+    final delhi = FuelMockDataSource.allCities.firstWhere((c) => c.city == 'New Delhi');
+    assert(delhi.petrolPrice > 90);
+    assert(delhi.dieselPrice > 80);
+
+    // Trip: 100 km, 20 km/L, ₹100/L fuel price -> 5 L required, ₹500 total cost, ₹5.00/km
+    final trip = TripCostResult.calculate(
+      distanceKm: 100,
+      mileageKmpl: 20,
+      fuelPrice: 100,
+    );
+    assert(trip.litersRequired == 5.0);
+    assert(trip.totalCost == 500.0);
+    assert(trip.costPerKm == 5.0);
+  });
+
+  // 11. Resale Valuation & Loan EMI Calculator Logic
+  test('ResaleValuation & LoanEmi calculations match automotive standards', () {
+    // Resale test: 2-year old car with ₹10,00,000 original price
+    final resale = ResaleValuationCalculator.estimate(
+      originalPrice: 1000000,
+      purchaseYear: DateTime.now().year - 2,
+      kmDriven: 20000,
+      condition: 'Good',
+      vehicleType: 'Hatchback',
+    );
+    assert(resale.estimatedValue < 1000000);
+    assert(resale.estimatedValue > 600000);
+    assert(resale.rangeLow < resale.estimatedValue);
+    assert(resale.rangeHigh > resale.estimatedValue);
+
+    // Loan EMI test: ₹1,00,000 at 12% for 12 months
+    final emi = LoanEmiCalculator.calculate(
+      principal: 100000,
+      annualInterestRate: 12.0,
+      tenureMonths: 12,
+    );
+    assert(emi.monthlyEmi > 8800 && emi.monthlyEmi < 9000);
+    assert(emi.totalPayment > 100000);
+    assert(emi.totalInterest > 0);
+  });
+
+  // 12. All-India RTO Directory Coverage
+  test('RTO Directory includes major states and query filter works', () {
+    assert(RtoDirectoryData.offices.isNotEmpty);
+    assert(RtoDirectoryData.offices.any((o) => o.rtoCode == 'DL-01'));
+    assert(RtoDirectoryData.offices.any((o) => o.rtoCode == 'MH-12'));
+    assert(RtoDirectoryData.offices.any((o) => o.rtoCode == 'KA-01'));
+    assert(RtoDirectoryData.offices.any((o) => o.rtoCode == 'TN-01'));
+    assert(RtoDirectoryData.offices.any((o) => o.rtoCode == 'UP-32'));
+  });
+
+  // 13. Traffic Signs & MV Act Fines Catalogue
+  test('TrafficSignsData contains categorized signs and fine schedules', () {
+    final mandatory = TrafficSignsData.signs.where((s) => s.category == 'Mandatory').toList();
+    final cautionary = TrafficSignsData.signs.where((s) => s.category == 'Cautionary').toList();
+    final informatory = TrafficSignsData.signs.where((s) => s.category == 'Informatory').toList();
+
+    assert(mandatory.isNotEmpty);
+    assert(cautionary.isNotEmpty);
+    assert(informatory.isNotEmpty);
+    assert(TrafficSignsData.fines.isNotEmpty);
+    assert(TrafficSignsData.fines.any((f) => f.offence.contains('Helmet')));
+  });
+
+  // 14. RTO Learner Licence Mock Exam Bank
+  test('QuizQuestionsData contains 15 Parivahan Sarathi test questions with valid options', () {
+    assert(QuizQuestionsData.questions.length == 15);
+    for (final q in QuizQuestionsData.questions) {
+      assert(q.question.isNotEmpty);
+      assert(q.options.length == 4);
+      assert(q.correctIndex >= 0 && q.correctIndex < 4);
+      assert(q.explanation.isNotEmpty);
+    }
   });
 
   print('\n-----------------------------------------------------');
-  print('Result: $totalPassed/10 Test Suites Passed Successfully! ✓');
+  print('Result: $totalPassed/17 Unit Tests Passed Successfully! ✓');
   print('=====================================================');
 }

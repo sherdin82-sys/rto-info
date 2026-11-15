@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../history/presentation/providers/history_provider.dart';
+import '../../favourites/presentation/providers/favourites_provider.dart';
 
 /// SettingsScreen provides theme, language, about, and data management options.
 class SettingsScreen extends ConsumerWidget {
@@ -117,7 +119,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               onTap: () {
-                _showClearDataDialog(context, isHindi);
+                _showClearDataDialog(context, ref, isHindi);
               },
             ),
           ),
@@ -201,7 +203,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showClearDataDialog(BuildContext context, bool isHindi) {
+  void _showClearDataDialog(BuildContext context, WidgetRef ref, bool isHindi) {
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
@@ -220,6 +222,8 @@ class SettingsScreen extends ConsumerWidget {
             style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             onPressed: () {
               Navigator.pop(dialogCtx);
+              ref.read(historyProvider.notifier).clearAll();
+              ref.read(favouritesProvider.notifier).clearAll();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(isHindi ? 'डेटा सफलतापूर्वक साफ़ किया गया' : 'Local data cleared'),

@@ -6,6 +6,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../core/widgets/vehicle_search_bar.dart';
+import '../../history/presentation/providers/history_provider.dart';
 
 /// HomeScreen serves as the primary automotive dashboard for RTO Info.
 class HomeScreen extends ConsumerWidget {
@@ -16,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
     final isHindi = locale.languageCode == 'hi';
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final historyItems = ref.watch(historyProvider);
 
     final quickTools = [
       {
@@ -251,7 +253,57 @@ class HomeScreen extends ConsumerWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: 28),
+                if (historyItems.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        isHindi ? 'हाल की खोजें' : 'Recent Searches',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => context.go('/history'),
+                        child: Text(
+                          isHindi ? 'सभी देखें' : 'View All',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.electricBlue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final h in historyItems.take(4))
+                        ActionChip(
+                          avatar: const Icon(Icons.history, size: 14, color: AppColors.electricBlue),
+                          label: Text(
+                            h.formattedPlate,
+                            style: const TextStyle(
+                              fontFamily: 'monospace',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.push('/rc?plate=${h.registrationNumber}');
+                          },
+                        ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 24),
 
                 // Section: Quick RTO Tools
                 Row(
