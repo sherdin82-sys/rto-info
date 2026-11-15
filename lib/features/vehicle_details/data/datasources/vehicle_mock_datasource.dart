@@ -10,7 +10,8 @@ class VehicleMockDataSource implements VehicleDataSource {
       'registrationNumber': 'DL 01 AB 1234',
       'cleanRegistrationNumber': 'DL01AB1234',
       'registrationDate': '12-Apr-2023',
-      'registrationAuthority': 'Regional Transport Office, Mall Road, Civil Lines',
+      'registrationAuthority':
+          'Regional Transport Office, Mall Road, Civil Lines',
       'rtoCode': 'DL-01',
       'state': 'Delhi',
       'vehicleClass': 'Motor Car (LMV)',
@@ -229,7 +230,9 @@ class VehicleMockDataSource implements VehicleDataSource {
       registrationAuthority: 'Regional Transport Office ($state-$rtoNum)',
       rtoCode: '$state-$rtoNum',
       state: state,
-      vehicleClass: isTwoWheeler ? 'Two Wheeler (MCWG)' : (isEv ? 'Motor Car (Electric)' : 'Motor Car (LMV)'),
+      vehicleClass: isTwoWheeler
+          ? 'Two Wheeler (MCWG)'
+          : (isEv ? 'Motor Car (Electric)' : 'Motor Car (LMV)'),
       registrationValidity: '14-May-${regYear + 15}',
       registrationStatus: 'ACTIVE',
       maker: maker,
@@ -237,7 +240,9 @@ class VehicleMockDataSource implements VehicleDataSource {
       vehicleCategory: isTwoWheeler ? 'Two Wheeler' : 'Passenger Car',
       fuelType: isEv ? 'ELECTRIC' : 'PETROL',
       bodyType: isTwoWheeler ? 'Motorcycle' : 'Hatchback / Sedan',
-      engineCapacity: isEv ? '60 kW Motor' : (isTwoWheeler ? '199 cc' : '1197 cc'),
+      engineCapacity: isEv
+          ? '60 kW Motor'
+          : (isTwoWheeler ? '199 cc' : '1197 cc'),
       seatingCapacity: isTwoWheeler ? 2 : 5,
       manufacturingYear: '$regYear',
       emissionStandard: isEv ? 'ZERO EMISSION (EV)' : 'BHARAT STAGE VI (BS-VI)',
@@ -253,7 +258,9 @@ class VehicleMockDataSource implements VehicleDataSource {
       insuranceValidity: '14-May-2027',
       insuranceStatus: 'ACTIVE',
       insuranceDaysRemaining: 180,
-      pucCertificateNumber: isEv ? 'EXEMPTED (BEV)' : 'PUC-$state-${hash % 90000}',
+      pucCertificateNumber: isEv
+          ? 'EXEMPTED (BEV)'
+          : 'PUC-$state-${hash % 90000}',
       pucValidity: isEv ? 'Permanent Exemption' : '14-May-2027',
       pucStatus: isEv ? 'EXEMPTED' : 'ACTIVE',
       pucTestingCenter: 'Government Authorized Testing Station',
@@ -263,7 +270,9 @@ class VehicleMockDataSource implements VehicleDataSource {
       roadTaxPaidUpto: 'Life Time',
       isHypothecated: hash % 2 == 0,
       hypothecationBank: hash % 2 == 0 ? 'State Bank of India' : null,
-      hypothecationStatus: hash % 2 == 0 ? 'ACTIVE LOAN' : 'NO HYPOTHECATION (CLEAN TITLE)',
+      hypothecationStatus: hash % 2 == 0
+          ? 'ACTIVE LOAN'
+          : 'NO HYPOTHECATION (CLEAN TITLE)',
       isBlacklisted: false,
     );
   }

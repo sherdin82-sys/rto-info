@@ -51,9 +51,14 @@ class ChallanMockDataSource implements ChallanDataSource {
   };
 
   @override
-  Future<List<ChallanEntity>> getChallansForVehicle(String registrationNumber) async {
+  Future<List<ChallanEntity>> getChallansForVehicle(
+    String registrationNumber,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    final clean = registrationNumber.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = registrationNumber.toUpperCase().replaceAll(
+      RegExp(r'[^A-Z0-9]'),
+      '',
+    );
 
     if (_seededChallans.containsKey(clean)) {
       return _seededChallans[clean]!;
@@ -74,7 +79,8 @@ class ChallanMockDataSource implements ChallanDataSource {
         challanDate: '18-Sep-2026, 10:15 AM',
         challanAmount: 1000.0,
         paymentStatus: (hash % 2 == 0) ? 'PENDING' : 'PAID',
-        location: 'Main Traffic Signal Corridor, ${clean.substring(0, 2)} State',
+        location:
+            'Main Traffic Signal Corridor, ${clean.substring(0, 2)} State',
         trafficPoliceUnit: 'State Automated Traffic Enforcement Branch',
         cameraCode: 'ITMS-CAM-${hash % 90 + 10}',
         paymentReceiptNumber: (hash % 2 == 0) ? null : 'RCP-2026-${hash}',

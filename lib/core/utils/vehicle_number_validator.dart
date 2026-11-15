@@ -17,7 +17,8 @@ class VehicleNumberValidator {
 
     final state = clean.substring(0, 2);
     final remaining = clean.substring(2);
-    final match = RegExp(r'^([0-9]{1,2})([A-Z]{0,3})([0-9]{1,4})$').firstMatch(remaining);
+    final match = RegExp(r'^([0-9]{1,2})([A-Z]{0,3})([0-9]{1,4})$')
+        .firstMatch(remaining);
 
     if (match != null) {
       final rtoCode = match.group(1) ?? '';

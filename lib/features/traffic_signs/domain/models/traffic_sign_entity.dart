@@ -25,14 +25,15 @@ class TrafficSignEntity {
     'fineForViolation': fineForViolation,
   };
 
-  factory TrafficSignEntity.fromMap(Map<String, dynamic> map) => TrafficSignEntity(
-    id: map['id'] ?? '',
-    title: map['title'] ?? '',
-    category: map['category'] ?? 'Mandatory',
-    description: map['description'] ?? '',
-    shape: map['shape'] ?? 'Circle',
-    fineForViolation: map['fineForViolation'],
-  );
+  factory TrafficSignEntity.fromMap(Map<String, dynamic> map) =>
+      TrafficSignEntity(
+        id: map['id'] ?? '',
+        title: map['title'] ?? '',
+        category: map['category'] ?? 'Mandatory',
+        description: map['description'] ?? '',
+        shape: map['shape'] ?? 'Circle',
+        fineForViolation: map['fineForViolation'],
+      );
 }
 
 /// Official MV Act penalty item

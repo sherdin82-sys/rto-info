@@ -9,7 +9,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   final VehicleDataSource _dataSource;
 
   VehicleRepositoryImpl({required VehicleDataSource dataSource})
-      : _dataSource = dataSource;
+    : _dataSource = dataSource;
 
   @override
   Future<VehicleEntity?> getVehicleDetails(String registrationNumber) {

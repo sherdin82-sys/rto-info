@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -64,7 +65,9 @@ class HomeScreen extends ConsumerWidget {
       },
       {
         'title': isHindi ? 'यातायात संकेत' : 'Traffic Signs',
-        'desc': isHindi ? 'सड़क सुरक्षा नियम व दंड' : 'Road safety rules & fines',
+        'desc': isHindi
+            ? 'सड़क सुरक्षा नियम व दंड'
+            : 'Road safety rules & fines',
         'icon': Icons.traffic_outlined,
         'color': AppColors.successDark,
         'route': '/signs',
@@ -85,7 +88,9 @@ class HomeScreen extends ConsumerWidget {
           SliverAppBar(
             floating: true,
             pinned: false,
-            backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            backgroundColor: isDark
+                ? AppColors.darkSurface
+                : AppColors.lightSurface,
             elevation: 0,
             title: Row(
               children: [
@@ -95,10 +100,17 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: AppColors.primaryNavy,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.electricBlue, width: 1.5),
+                    border: Border.all(
+                      color: AppColors.electricBlue,
+                      width: 1.5,
+                    ),
                   ),
                   child: const Center(
-                    child: Icon(Icons.directions_car, color: Colors.amber, size: 20),
+                    child: Icon(
+                      Icons.directions_car,
+                      color: Colors.amber,
+                      size: 20,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -113,12 +125,17 @@ class HomeScreen extends ConsumerWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.5,
-                            color: isDark ? Colors.white : AppColors.primaryNavy,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.primaryNavy,
                           ),
                         ),
                         const SizedBox(width: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 1,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.electricBlue.withOpacity(0.12),
                             borderRadius: BorderRadius.circular(4),
@@ -135,10 +152,14 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      isHindi ? 'भारतीय वाहन सूचना पोर्टल' : 'Parivahan Vehicle Intelligence',
+                      isHindi
+                          ? 'भारतीय वाहन सूचना पोर्टल'
+                          : 'Parivahan Vehicle Intelligence',
                       style: TextStyle(
                         fontSize: 10,
-                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                        color: isDark
+                            ? AppColors.darkTextMuted
+                            : AppColors.lightTextMuted,
                       ),
                     ),
                   ],
@@ -149,9 +170,13 @@ class HomeScreen extends ConsumerWidget {
               IconButton(
                 icon: Text(
                   isHindi ? 'EN' : 'हिं',
-                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                  ),
                 ),
-                onPressed: () => ref.read(localeProvider.notifier).toggleLocale(),
+                onPressed: () =>
+                    ref.read(localeProvider.notifier).toggleLocale(),
                 tooltip: 'Toggle Language',
               ),
               IconButton(
@@ -159,7 +184,8 @@ class HomeScreen extends ConsumerWidget {
                   isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                   size: 22,
                 ),
-                onPressed: () => ref.read(themeModeProvider.notifier).toggleTheme(),
+                onPressed: () =>
+                    ref.read(themeModeProvider.notifier).toggleTheme(),
                 tooltip: 'Toggle Theme',
               ),
               const SizedBox(width: 8),
@@ -178,7 +204,11 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFFF9933), Colors.white, Color(0xFF138808)],
+                      colors: [
+                        Color(0xFFFF9933),
+                        Colors.white,
+                        Color(0xFF138808),
+                      ],
                     ),
                   ),
                 ),
@@ -200,7 +230,9 @@ class HomeScreen extends ConsumerWidget {
                       : 'Verify RC, insurance, PUC status, and pending challans instantly',
                   style: TextStyle(
                     fontSize: 13,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 const SizedBox(height: 18),
@@ -223,7 +255,9 @@ class HomeScreen extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                        color: isDark
+                            ? AppColors.darkTextMuted
+                            : AppColors.lightTextMuted,
                       ),
                     ),
                     for (final s in AppConstants.sampleVehicles)
@@ -233,12 +267,19 @@ class HomeScreen extends ConsumerWidget {
                         },
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurfaceAlt : AppColors.lightSurfaceAlt,
+                            color: isDark
+                                ? AppColors.darkSurfaceAlt
+                                : AppColors.lightSurfaceAlt,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
                             ),
                           ),
                           child: Text(
@@ -263,7 +304,9 @@ class HomeScreen extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                          color: isDark
+                              ? AppColors.darkTextMuted
+                              : AppColors.lightTextMuted,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -287,7 +330,11 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       for (final h in historyItems.take(4))
                         ActionChip(
-                          avatar: const Icon(Icons.history, size: 14, color: AppColors.electricBlue),
+                          avatar: const Icon(
+                            Icons.history,
+                            size: 14,
+                            color: AppColors.electricBlue,
+                          ),
                           label: Text(
                             h.formattedPlate,
                             style: const TextStyle(
@@ -310,7 +357,9 @@ class HomeScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      isHindi ? 'त्वरित आरटीओ सेवाएँ' : 'Essential RTO Services',
+                      isHindi
+                          ? 'त्वरित आरटीओ सेवाएँ'
+                          : 'Essential RTO Services',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -355,7 +404,11 @@ class HomeScreen extends ConsumerWidget {
                                   color: color.withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Icon(item['icon'] as IconData, color: color, size: 20),
+                                child: Icon(
+                                  item['icon'] as IconData,
+                                  color: color,
+                                  size: 20,
+                                ),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,7 +418,9 @@ class HomeScreen extends ConsumerWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 13,
-                                      color: isDark ? Colors.white : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppColors.lightTextPrimary,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -373,7 +428,9 @@ class HomeScreen extends ConsumerWidget {
                                     item['desc'] as String,
                                     style: TextStyle(
                                       fontSize: 10,
-                                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                                      color: isDark
+                                          ? AppColors.darkTextMuted
+                                          : AppColors.lightTextMuted,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -393,16 +450,24 @@ class HomeScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceAlt : const Color(0xFFEFF6FF),
+                    color: isDark
+                        ? AppColors.darkSurfaceAlt
+                        : const Color(0xFFEFF6FF),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : const Color(0xFFBFDBFE),
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : const Color(0xFFBFDBFE),
                     ),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.shield_outlined, color: AppColors.electricBlue, size: 22),
+                      const Icon(
+                        Icons.shield_outlined,
+                        color: AppColors.electricBlue,
+                        size: 22,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -415,7 +480,9 @@ class HomeScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : const Color(0xFF1E3A8A),
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF1E3A8A),
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -426,7 +493,9 @@ class HomeScreen extends ConsumerWidget {
                               style: TextStyle(
                                 fontSize: 11,
                                 height: 1.4,
-                                color: isDark ? AppColors.darkTextSecondary : const Color(0xFF3B82F6),
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : const Color(0xFF3B82F6),
                               ),
                             ),
                           ],

@@ -58,14 +58,18 @@ class ChallanEntity {
       violationDescription: map['violationDescription'] ?? '',
       legalSection: map['legalSection'] ?? '',
       challanDate: map['challanDate'] ?? '',
-      challanAmount: (map['challanAmount'] is num) ? (map['challanAmount'] as num).toDouble() : 0.0,
+      challanAmount: (map['challanAmount'] is num)
+          ? (map['challanAmount'] as num).toDouble()
+          : 0.0,
       paymentStatus: map['paymentStatus'] ?? 'PENDING',
       location: map['location'] ?? '',
       trafficPoliceUnit: map['trafficPoliceUnit'] ?? '',
       cameraCode: map['cameraCode'] ?? '',
       paymentReceiptNumber: map['paymentReceiptNumber'],
       paidAt: map['paidAt'],
-      officialPaymentPortalUrl: map['officialPaymentPortalUrl'] ?? 'https://echallan.parivahan.gov.in/',
+      officialPaymentPortalUrl:
+          map['officialPaymentPortalUrl'] ??
+          'https://echallan.parivahan.gov.in/',
     );
   }
 }

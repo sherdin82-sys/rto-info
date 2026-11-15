@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../core/widgets/status_badge.dart';
@@ -17,7 +18,8 @@ class VehicleDetailsScreen extends ConsumerStatefulWidget {
   const VehicleDetailsScreen({super.key, this.initialPlate});
 
   @override
-  ConsumerState<VehicleDetailsScreen> createState() => _VehicleDetailsScreenState();
+  ConsumerState<VehicleDetailsScreen> createState() =>
+      _VehicleDetailsScreenState();
 }
 
 class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
@@ -27,12 +29,14 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
     if (_historyRecorded) return;
     _historyRecorded = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(historyProvider.notifier).addSearch(
-        registrationNumber: vehicle.cleanRegistrationNumber,
-        formattedPlate: vehicle.registrationNumber,
-        makerModel: '${vehicle.maker} ${vehicle.model}',
-        vehicleClass: vehicle.vehicleClass,
-      );
+      ref
+          .read(historyProvider.notifier)
+          .addSearch(
+            registrationNumber: vehicle.cleanRegistrationNumber,
+            formattedPlate: vehicle.registrationNumber,
+            makerModel: '${vehicle.maker} ${vehicle.model}',
+            vehicleClass: vehicle.vehicleClass,
+          );
     });
   }
 
@@ -50,7 +54,10 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
       appBar: AppBar(
         title: Text(
           VehicleNumberValidator.formatForDisplay(cleanPlate),
-          style: const TextStyle(fontWeight: FontWeight.w800, fontFamily: 'monospace'),
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            fontFamily: 'monospace',
+          ),
         ),
         actions: [
           vehicleAsync.when(
@@ -61,12 +68,20 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                   isFav ? Icons.bookmark : Icons.bookmark_border,
                   color: isFav ? AppColors.saffron : null,
                 ),
-                tooltip: isFav ? 'Remove from Favourites' : 'Save to Favourites',
+                tooltip: isFav
+                    ? 'Remove from Favourites'
+                    : 'Save to Favourites',
                 onPressed: () {
-                  ref.read(favouritesProvider.notifier).toggleFavourite(vehicle);
+                  ref
+                      .read(favouritesProvider.notifier)
+                      .toggleFavourite(vehicle);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(isFav ? 'Removed from Favourites' : 'Added to Favourites'),
+                      content: Text(
+                        isFav
+                            ? 'Removed from Favourites'
+                            : 'Added to Favourites',
+                      ),
                       duration: const Duration(seconds: 1),
                     ),
                   );
@@ -81,7 +96,9 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
             tooltip: 'Share Details',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Vehicle details ready for sharing')),
+                const SnackBar(
+                  content: Text('Vehicle details ready for sharing'),
+                ),
               );
             },
           ),
@@ -107,7 +124,11 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.error,
+                ),
                 const SizedBox(height: 12),
                 const Text(
                   'Record Not Found',
@@ -147,14 +168,28 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      icon: const Icon(Icons.warning_amber_rounded, size: 18, color: AppColors.error),
-                      label: const Text('Check Challans', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      icon: const Icon(
+                        Icons.warning_amber_rounded,
+                        size: 18,
+                        color: AppColors.error,
+                      ),
+                      label: const Text(
+                        'Check Challans',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        side: BorderSide(color: AppColors.error.withOpacity(0.5)),
+                        side: BorderSide(
+                          color: AppColors.error.withOpacity(0.5),
+                        ),
                       ),
                       onPressed: () {
-                        context.push('/challan?plate=${vehicle.cleanRegistrationNumber}');
+                        context.push(
+                          '/challan?plate=${vehicle.cleanRegistrationNumber}',
+                        );
                       },
                     ),
                   ),
@@ -170,19 +205,42 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _DetailRow(title: 'Registration Number', value: vehicle.registrationNumber, isBold: true),
+                      _DetailRow(
+                        title: 'Registration Number',
+                        value: vehicle.registrationNumber,
+                        isBold: true,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Registration Date', value: vehicle.registrationDate),
+                      _DetailRow(
+                        title: 'Registration Date',
+                        value: vehicle.registrationDate,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Registering Authority', value: vehicle.registrationAuthority),
+                      _DetailRow(
+                        title: 'Registering Authority',
+                        value: vehicle.registrationAuthority,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'RTO Code & State', value: '${vehicle.rtoCode} (${vehicle.state})'),
+                      _DetailRow(
+                        title: 'RTO Code & State',
+                        value: '${vehicle.rtoCode} (${vehicle.state})',
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Vehicle Class', value: vehicle.vehicleClass),
+                      _DetailRow(
+                        title: 'Vehicle Class',
+                        value: vehicle.vehicleClass,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Registration Validity', value: vehicle.registrationValidity),
+                      _DetailRow(
+                        title: 'Registration Validity',
+                        value: vehicle.registrationValidity,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Status', value: vehicle.registrationStatus, isSuccess: true),
+                      _DetailRow(
+                        title: 'Status',
+                        value: vehicle.registrationStatus,
+                        isSuccess: true,
+                      ),
                     ],
                   ),
                 ),
@@ -197,27 +255,56 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _DetailRow(title: 'Manufacturer / Maker', value: vehicle.maker),
+                      _DetailRow(
+                        title: 'Manufacturer / Maker',
+                        value: vehicle.maker,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Commercial Model', value: vehicle.model, isBold: true),
+                      _DetailRow(
+                        title: 'Commercial Model',
+                        value: vehicle.model,
+                        isBold: true,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Category & Body Type', value: '${vehicle.vehicleCategory} • ${vehicle.bodyType}'),
+                      _DetailRow(
+                        title: 'Category & Body Type',
+                        value:
+                            '${vehicle.vehicleCategory} • ${vehicle.bodyType}',
+                      ),
                       const Divider(height: 16),
                       _DetailRow(title: 'Fuel Type', value: vehicle.fuelType),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Engine / Power Capacity', value: vehicle.engineCapacity),
+                      _DetailRow(
+                        title: 'Engine / Power Capacity',
+                        value: vehicle.engineCapacity,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Seating Capacity', value: '${vehicle.seatingCapacity} Persons'),
+                      _DetailRow(
+                        title: 'Seating Capacity',
+                        value: '${vehicle.seatingCapacity} Persons',
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Manufacturing Year', value: vehicle.manufacturingYear),
+                      _DetailRow(
+                        title: 'Manufacturing Year',
+                        value: vehicle.manufacturingYear,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Emission Norms', value: vehicle.emissionStandard),
+                      _DetailRow(
+                        title: 'Emission Norms',
+                        value: vehicle.emissionStandard,
+                      ),
                       const Divider(height: 16),
                       _DetailRow(title: 'Color', value: vehicle.color),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Chassis No (Masked)', value: vehicle.maskedChassisNumber),
+                      _DetailRow(
+                        title: 'Chassis No (Masked)',
+                        value: vehicle.maskedChassisNumber,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Engine No (Masked)', value: vehicle.maskedEngineNumber),
+                      _DetailRow(
+                        title: 'Engine No (Masked)',
+                        value: vehicle.maskedEngineNumber,
+                      ),
                     ],
                   ),
                 ),
@@ -225,20 +312,36 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
               const SizedBox(height: 20),
 
               // Section 3: Owner Details (Privacy-protected)
-              _buildSectionTitle('OWNER INFORMATION (PRIVACY PROTECTED)', isDark),
+              _buildSectionTitle(
+                'OWNER INFORMATION (PRIVACY PROTECTED)',
+                isDark,
+              ),
               const SizedBox(height: 8),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _DetailRow(title: 'Owner Name (Masked)', value: vehicle.maskedOwnerName, isBold: true),
+                      _DetailRow(
+                        title: 'Owner Name (Masked)',
+                        value: vehicle.maskedOwnerName,
+                        isBold: true,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Father / Husband Name', value: vehicle.maskedFatherName),
+                      _DetailRow(
+                        title: 'Father / Husband Name',
+                        value: vehicle.maskedFatherName,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Ownership Serial', value: vehicle.ownershipSerial),
+                      _DetailRow(
+                        title: 'Ownership Serial',
+                        value: vehicle.ownershipSerial,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Jurisdiction Area', value: vehicle.maskedAddress),
+                      _DetailRow(
+                        title: 'Jurisdiction Area',
+                        value: vehicle.maskedAddress,
+                      ),
                     ],
                   ),
                 ),
@@ -260,24 +363,45 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                         isError: vehicle.insuranceStatus == 'EXPIRED',
                       ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Insurance Provider', value: vehicle.insuranceCompany),
+                      _DetailRow(
+                        title: 'Insurance Provider',
+                        value: vehicle.insuranceCompany,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Policy Expiry Date', value: vehicle.insuranceValidity),
+                      _DetailRow(
+                        title: 'Policy Expiry Date',
+                        value: vehicle.insuranceValidity,
+                      ),
                       const Divider(height: 16),
                       _DetailRow(
                         title: 'PUC Certificate Status',
                         value: vehicle.pucStatus,
-                        isSuccess: vehicle.pucStatus == 'ACTIVE' || vehicle.pucStatus == 'EXEMPTED',
+                        isSuccess:
+                            vehicle.pucStatus == 'ACTIVE' ||
+                            vehicle.pucStatus == 'EXEMPTED',
                         isError: vehicle.pucStatus == 'EXPIRED',
                       ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'PUC Expiry Date', value: vehicle.pucValidity),
+                      _DetailRow(
+                        title: 'PUC Expiry Date',
+                        value: vehicle.pucValidity,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Fitness Validity Upto', value: vehicle.fitnessValidity),
+                      _DetailRow(
+                        title: 'Fitness Validity Upto',
+                        value: vehicle.fitnessValidity,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Permit Details', value: vehicle.permitValidity),
+                      _DetailRow(
+                        title: 'Permit Details',
+                        value: vehicle.permitValidity,
+                      ),
                       const Divider(height: 16),
-                      _DetailRow(title: 'Road Tax Details', value: '${vehicle.roadTaxStatus} (${vehicle.roadTaxPaidUpto})'),
+                      _DetailRow(
+                        title: 'Road Tax Details',
+                        value:
+                            '${vehicle.roadTaxStatus} (${vehicle.roadTaxPaidUpto})',
+                      ),
                       const Divider(height: 16),
                       _DetailRow(
                         title: 'Hypothecation (Financier)',
@@ -340,7 +464,46 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
               StatusBadge(label: v.registrationStatus, type: BadgeType.active),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 6),
+          // Demo vs Verified Gateway Data Indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: v.isDemoData
+                  ? Colors.amber.withOpacity(0.2)
+                  : Colors.green.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: v.isDemoData ? Colors.amberAccent : Colors.greenAccent,
+                width: 0.8,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  v.isDemoData ? Icons.science_outlined : Icons.verified_user,
+                  size: 12,
+                  color: v.isDemoData ? Colors.amberAccent : Colors.greenAccent,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  v.isDemoData
+                      ? 'DEMONSTRATION RECORD'
+                      : 'VERIFIED PARIVAHAN RECORD',
+                  style: TextStyle(
+                    color: v.isDemoData
+                        ? Colors.amberAccent
+                        : Colors.greenAccent,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -376,7 +539,11 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.amber.shade200),
                 ),
-                child: const Icon(Icons.memory, color: Colors.black87, size: 20),
+                child: const Icon(
+                  Icons.memory,
+                  color: Colors.black87,
+                  size: 20,
+                ),
               ),
             ],
           ),
@@ -385,9 +552,15 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _CardInfoItem(label: 'FUEL', value: v.fuelType),
-              _CardInfoItem(label: 'CLASS', value: v.vehicleClass.split(' ')[0]),
+              _CardInfoItem(
+                label: 'CLASS',
+                value: v.vehicleClass.split(' ')[0],
+              ),
               _CardInfoItem(label: 'REG DATE', value: v.registrationDate),
-              _CardInfoItem(label: 'FITNESS', value: v.fitnessValidity.split('-').last),
+              _CardInfoItem(
+                label: 'FITNESS',
+                value: v.fitnessValidity.split('-').last,
+              ),
             ],
           ),
         ],
@@ -418,9 +591,23 @@ class _CardInfoItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 9, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white54,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ],
     );
   }
@@ -443,7 +630,8 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color textColor = Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87;
+    Color textColor =
+        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87;
     if (isSuccess) textColor = AppColors.success;
     if (isError) textColor = AppColors.error;
 
@@ -454,7 +642,7 @@ class _DetailRow extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            value,
+            VehicleEntity.safeValue(value),
             textAlign: TextAlign.end,
             style: TextStyle(
               fontSize: 12,

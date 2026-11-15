@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'app_colors.dart';
 import 'app_typography.dart';
 
@@ -59,7 +60,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightSurface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.lightBorder),
@@ -101,7 +105,10 @@ class AppTheme {
           if (states.contains(MaterialState.selected)) {
             return const IconThemeData(color: AppColors.primaryNavy, size: 24);
           }
-          return const IconThemeData(color: AppColors.lightTextSecondary, size: 24);
+          return const IconThemeData(
+            color: AppColors.lightTextSecondary,
+            size: 24,
+          );
         }),
       ),
     );
@@ -159,7 +166,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSurfaceAlt,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.darkBorder),
@@ -199,9 +209,15 @@ class AppTheme {
         }),
         iconTheme: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.selected)) {
-            return const IconThemeData(color: AppColors.electricBlueLight, size: 24);
+            return const IconThemeData(
+              color: AppColors.electricBlueLight,
+              size: 24,
+            );
           }
-          return const IconThemeData(color: AppColors.darkTextSecondary, size: 24);
+          return const IconThemeData(
+            color: AppColors.darkTextSecondary,
+            size: 24,
+          );
         }),
       ),
     );

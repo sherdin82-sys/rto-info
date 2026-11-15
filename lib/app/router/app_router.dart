@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../core/widgets/app_scaffold_with_nav_bar.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
@@ -17,9 +18,15 @@ import '../../features/mock_exam/presentation/mock_exam_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHome = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
-final _shellNavigatorHistory = GlobalKey<NavigatorState>(debugLabel: 'shellHistory');
-final _shellNavigatorFavourites = GlobalKey<NavigatorState>(debugLabel: 'shellFavourites');
-final _shellNavigatorSettings = GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
+final _shellNavigatorHistory = GlobalKey<NavigatorState>(
+  debugLabel: 'shellHistory',
+);
+final _shellNavigatorFavourites = GlobalKey<NavigatorState>(
+  debugLabel: 'shellFavourites',
+);
+final _shellNavigatorSettings = GlobalKey<NavigatorState>(
+  debugLabel: 'shellSettings',
+);
 
 /// AppRouter defines all GoRouter paths for RTO Info.
 /// Launches directly into the Home Dashboard without any authentication guards.

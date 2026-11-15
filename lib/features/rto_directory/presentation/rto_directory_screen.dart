@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../domain/models/rto_office_entity.dart';
 import '../data/rto_directory_data.dart';
@@ -43,7 +44,8 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
     final q = _searchController.text.toUpperCase().replaceAll('-', '').trim();
     setState(() {
       _filteredOffices = RtoDirectoryData.offices.where((office) {
-        final stateMatch = _selectedState == 'All' || office.state == _selectedState;
+        final stateMatch =
+            _selectedState == 'All' || office.state == _selectedState;
         if (!stateMatch) return false;
 
         if (q.isEmpty) return true;
@@ -60,9 +62,7 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('All-India RTO Directory'),
-      ),
+      appBar: AppBar(title: const Text('All-India RTO Directory')),
       body: Column(
         children: [
           // Search Bar
@@ -83,8 +83,13 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                         },
                       )
                     : null,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -101,7 +106,15 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                 final state = _states[index];
                 final isSelected = _selectedState == state;
                 return ChoiceChip(
-                  label: Text(state, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                  label: Text(
+                    state,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
                   selected: isSelected,
                   onSelected: (val) {
                     if (val) {
@@ -123,7 +136,11 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
               children: [
                 Text(
                   '${_filteredOffices.length} RTO Offices Found',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -162,7 +179,10 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
               children: [
                 // RTO Code Pill
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryNavy,
                     borderRadius: BorderRadius.circular(8),
@@ -184,12 +204,19 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
                     children: [
                       Text(
                         office.officeName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         '${office.city}, ${office.state}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.electricBlue, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.electricBlue,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -201,7 +228,11 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 16,
+                  color: Colors.grey,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -218,21 +249,33 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.phone_outlined, size: 16, color: Colors.grey),
+                    const Icon(
+                      Icons.phone_outlined,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       office.phone,
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.copy, size: 14),
-                  label: const Text('Copy Code', style: TextStyle(fontSize: 11)),
+                  label: const Text(
+                    'Copy Code',
+                    style: TextStyle(fontSize: 11),
+                  ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: office.rtoCode));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Copied ${office.rtoCode} to clipboard')),
+                      SnackBar(
+                        content: Text('Copied ${office.rtoCode} to clipboard'),
+                      ),
                     );
                   },
                 ),

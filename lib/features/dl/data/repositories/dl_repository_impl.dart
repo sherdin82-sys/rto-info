@@ -9,7 +9,7 @@ class DlRepositoryImpl implements DlRepository {
   final DlMockDataSource _dataSource;
 
   DlRepositoryImpl({DlMockDataSource? dataSource})
-      : _dataSource = dataSource ?? DlMockDataSource();
+    : _dataSource = dataSource ?? DlMockDataSource();
 
   @override
   Future<DlEntity?> getDlDetails(String dlNumber) {

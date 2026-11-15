@@ -7,7 +7,8 @@ class ResaleValuationCalculator {
     required int purchaseYear,
     required double kmDriven,
     required String condition, // 'Excellent', 'Good', 'Fair'
-    required String vehicleType, // 'Two Wheeler', 'Hatchback', 'Sedan', 'SUV', 'Electric'
+    required String
+    vehicleType, // 'Two Wheeler', 'Hatchback', 'Sedan', 'SUV', 'Electric'
   }) {
     if (originalPrice <= 0) {
       return const ResaleValuationResult(
@@ -54,13 +55,21 @@ class ResaleValuationCalculator {
     if (condition == 'Excellent') conditionMultiplier = 1.05;
     if (condition == 'Fair') conditionMultiplier = 0.92;
 
-    final totalDepreciation = (baseDepreciation + kmAdjustment).clamp(0.05, 0.85);
-    final depreciatedValue = originalPrice * (1.0 - totalDepreciation) * conditionMultiplier;
+    final totalDepreciation = (baseDepreciation + kmAdjustment).clamp(
+      0.05,
+      0.85,
+    );
+    final depreciatedValue =
+        originalPrice * (1.0 - totalDepreciation) * conditionMultiplier;
 
-    final estimatedValue = depreciatedValue.clamp(10000.0, originalPrice * 0.95);
+    final estimatedValue = depreciatedValue.clamp(
+      10000.0,
+      originalPrice * 0.95,
+    );
     final rangeLow = estimatedValue * 0.93;
     final rangeHigh = estimatedValue * 1.07;
-    final actualDepreciationPct = ((originalPrice - estimatedValue) / originalPrice) * 100;
+    final actualDepreciationPct =
+        ((originalPrice - estimatedValue) / originalPrice) * 100;
 
     return ResaleValuationResult(
       originalPrice: originalPrice,

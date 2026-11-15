@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../domain/models/dl_entity.dart';
@@ -39,15 +40,15 @@ class _DlScreenState extends ConsumerState<DlScreen> {
     final dlAsync = ref.watch(dlDetailsProvider(_activeSearchDl));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Driving Licence Verification'),
-      ),
+      appBar: AppBar(title: const Text('Driving Licence Verification')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // DL Search Box
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             elevation: 1,
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -56,13 +57,21 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                 children: [
                   const Text(
                     'DRIVING LICENCE NUMBER',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   TextField(
                     controller: _dlController,
                     textCapitalization: TextCapitalization.characters,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', letterSpacing: 1.1),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'monospace',
+                      letterSpacing: 1.1,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'e.g. DL-0420110149632',
                       prefixIcon: const Icon(Icons.badge_outlined),
@@ -70,13 +79,19 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                         icon: const Icon(Icons.clear),
                         onPressed: () => _dlController.clear(),
                       ),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   const Text(
                     'DATE OF BIRTH (DD-MM-YYYY)',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   TextField(
@@ -84,7 +99,9 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                     decoration: InputDecoration(
                       hintText: '14-05-1990',
                       prefixIcon: const Icon(Icons.calendar_today_outlined),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -94,7 +111,9 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                     label: const Text('Verify Licence with Sarathi'),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -104,7 +123,14 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                     runSpacing: 4,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      const Text('Try:', style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Try:',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       _sampleChip('DL-0420110149632', 'Delhi (LMV+Bike)'),
                       _sampleChip('MH-1420180019284', 'Maharashtra (Cab)'),
                       _sampleChip('KA-0120150038192', 'Karnataka (Car)'),
@@ -140,9 +166,15 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                       children: const [
                         Icon(Icons.search_off, size: 48, color: Colors.grey),
                         SizedBox(height: 8),
-                        Text('No Driving Licence found', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          'No Driving Licence found',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         SizedBox(height: 4),
-                        Text('Please check the DL number and format.', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text(
+                          'Please check the DL number and format.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
                       ],
                     ),
                   ),
@@ -159,7 +191,10 @@ class _DlScreenState extends ConsumerState<DlScreen> {
 
   Widget _sampleChip(String dlNum, String label) {
     return ActionChip(
-      label: Text('$dlNum ($label)', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+      label: Text(
+        '$dlNum ($label)',
+        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+      ),
       padding: EdgeInsets.zero,
       onPressed: () {
         _dlController.text = dlNum;
@@ -201,17 +236,32 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Text('IND', style: TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.w900)),
+                        child: const Text(
+                          'IND',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       const Text(
                         'UNION OF INDIA • DRIVING LICENCE',
-                        style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ],
                   ),
@@ -237,7 +287,11 @@ class _DlScreenState extends ConsumerState<DlScreen> {
               // Holder & Guardian
               Text(
                 dl.maskedHolderName,
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Text(
                 'S/D/W OF: ${dl.maskedFatherName}',
@@ -260,7 +314,9 @@ class _DlScreenState extends ConsumerState<DlScreen> {
 
         // Validity Section Card
         Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -268,18 +324,36 @@ class _DlScreenState extends ConsumerState<DlScreen> {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.event_available, color: AppColors.electricBlue, size: 20),
+                    Icon(
+                      Icons.event_available,
+                      color: AppColors.electricBlue,
+                      size: 20,
+                    ),
                     SizedBox(width: 8),
-                    Text('Licence Validity', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(
+                      'Licence Validity',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
                   ],
                 ),
                 const Divider(height: 20),
-                _specRow('Non-Transport (NT)', dl.validityNonTransport, isHighlight: true),
+                _specRow(
+                  'Non-Transport (NT)',
+                  dl.validityNonTransport,
+                  isHighlight: true,
+                ),
                 _specRow('Transport (TR)', dl.validityTransport),
                 _specRow('Issuing Authority', dl.issuingAuthority),
                 _specRow('State Transport Dept', dl.state),
                 if (dl.isCommercial && dl.badgeNumber != null)
-                  _specRow('Commercial Badge', dl.badgeNumber!, isHighlight: true),
+                  _specRow(
+                    'Commercial Badge',
+                    dl.badgeNumber!,
+                    isHighlight: true,
+                  ),
               ],
             ),
           ),
@@ -288,7 +362,9 @@ class _DlScreenState extends ConsumerState<DlScreen> {
 
         // Endorsed Vehicle Classes
         Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -298,38 +374,65 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                   children: [
                     Icon(Icons.drive_eta, color: AppColors.saffron, size: 20),
                     SizedBox(width: 8),
-                    Text('Endorsed Vehicle Classes (COV)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(
+                      'Endorsed Vehicle Classes (COV)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
                   ],
                 ),
                 const Divider(height: 20),
-                ...dl.vehicleClasses.map((c) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.electricBlue.withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(8),
+                ...dl.vehicleClasses.map(
+                  (c) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.electricBlue.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            c.classCode,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'monospace',
+                              color: AppColors.electricBlue,
+                            ),
+                          ),
                         ),
-                        child: Text(
-                          c.classCode,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'monospace', color: AppColors.electricBlue),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                c.description,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              Text(
+                                'Issued: ${c.issueDate}',
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(c.description, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                            Text('Issued: ${c.issueDate}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                )),
+                ),
               ],
             ),
           ),
@@ -365,9 +468,23 @@ class _DlScreenState extends ConsumerState<DlScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 9, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white60,
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }

@@ -16,7 +16,8 @@ class TrafficSignsData {
       title: 'Give Way',
       category: 'Mandatory',
       shape: 'Inverted Triangle',
-      description: 'Yield right of way to traffic on the main or intersecting road.',
+      description:
+          'Yield right of way to traffic on the main or intersecting road.',
       fineForViolation: '₹1,000 (Dangerous driving / Fail to yield)',
     ),
     TrafficSignEntity(
@@ -40,7 +41,8 @@ class TrafficSignsData {
       title: 'No Parking',
       category: 'Mandatory',
       shape: 'Circle',
-      description: 'Vehicles must not be parked here at any time. Towing charges apply.',
+      description:
+          'Vehicles must not be parked here at any time. Towing charges apply.',
       fineForViolation: '₹500 (1st offence) / ₹1,500 + Towing',
     ),
     TrafficSignEntity(
@@ -64,7 +66,8 @@ class TrafficSignsData {
       title: 'Compulsory Ahead or Turn Right',
       category: 'Mandatory',
       shape: 'Circle',
-      description: 'Vehicles are required to only proceed straight or turn right.',
+      description:
+          'Vehicles are required to only proceed straight or turn right.',
       fineForViolation: '₹500 - ₹1,000 (Disobeying direction)',
     ),
 
@@ -74,7 +77,8 @@ class TrafficSignsData {
       title: 'Right Hand Curve',
       category: 'Cautionary',
       shape: 'Triangle',
-      description: 'Sharp road curve to the right ahead. Reduce speed and stay in lane.',
+      description:
+          'Sharp road curve to the right ahead. Reduce speed and stay in lane.',
     ),
     TrafficSignEntity(
       id: 'c2',
@@ -125,7 +129,8 @@ class TrafficSignsData {
       title: 'Hospital',
       category: 'Informatory',
       shape: 'Rectangle',
-      description: 'Medical facility / hospital located nearby. No honking zone.',
+      description:
+          'Medical facility / hospital located nearby. No honking zone.',
     ),
     TrafficSignEntity(
       id: 'i2',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../domain/models/fuel_price_entity.dart';
 import '../data/fuel_mock_datasource.dart';
@@ -10,7 +11,8 @@ class FuelRatesScreen extends StatefulWidget {
   State<FuelRatesScreen> createState() => _FuelRatesScreenState();
 }
 
-class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProviderStateMixin {
+class _FuelRatesScreenState extends State<FuelRatesScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
   List<FuelPriceEntity> _filteredCities = FuelMockDataSource.allCities;
@@ -44,7 +46,8 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
         _filteredCities = FuelMockDataSource.allCities;
       } else {
         _filteredCities = FuelMockDataSource.allCities.where((c) {
-          return c.city.toLowerCase().contains(q) || c.state.toLowerCase().contains(q);
+          return c.city.toLowerCase().contains(q) ||
+              c.state.toLowerCase().contains(q);
         }).toList();
       }
     });
@@ -82,10 +85,7 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildFuelRatesTab(),
-          _buildTripCalculatorTab(),
-        ],
+        children: [_buildFuelRatesTab(), _buildTripCalculatorTab()],
       ),
     );
   }
@@ -111,8 +111,13 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
                       },
                     )
                   : null,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ),
@@ -150,11 +155,23 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.city, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text(item.state, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    Text(
+                      item.city,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      item.state,
+                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
                   ],
                 ),
-                Text(item.lastUpdated, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                Text(
+                  item.lastUpdated,
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                ),
               ],
             ),
             const Divider(height: 20),
@@ -205,10 +222,12 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
     final changeText = change == 0.0
         ? 'No change'
         : change > 0
-            ? '+₹${change.toStringAsFixed(2)}'
-            : '-₹${change.abs().toStringAsFixed(2)}';
+        ? '+₹${change.toStringAsFixed(2)}'
+        : '-₹${change.abs().toStringAsFixed(2)}';
 
-    final changeColor = change > 0 ? Colors.red : (change < 0 ? Colors.green : Colors.grey);
+    final changeColor = change > 0
+        ? Colors.red
+        : (change < 0 ? Colors.green : Colors.grey);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -219,7 +238,14 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
       ),
       child: Column(
         children: [
-          Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: accentColor)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
+            ),
+          ),
           const SizedBox(height: 4),
           Text(
             '₹${price.toStringAsFixed(2)}',
@@ -229,7 +255,11 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
           const SizedBox(height: 2),
           Text(
             changeText,
-            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: changeColor),
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: changeColor,
+            ),
           ),
         ],
       ),
@@ -241,7 +271,9 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
       padding: const EdgeInsets.all(16),
       children: [
         Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -251,11 +283,24 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
                   children: [
                     Icon(Icons.route, color: AppColors.electricBlue),
                     SizedBox(width: 8),
-                    Text('Trip Cost Estimator', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(
+                      'Trip Cost Estimator',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                const Text('TRIP DISTANCE (KM)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'TRIP DISTANCE (KM)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 TextField(
                   controller: _distanceController,
@@ -267,7 +312,14 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
                   ),
                 ),
                 const SizedBox(height: 14),
-                const Text('VEHICLE MILEAGE (KM/L)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'VEHICLE MILEAGE (KM/L)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 TextField(
                   controller: _mileageController,
@@ -279,7 +331,14 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
                   ),
                 ),
                 const SizedBox(height: 14),
-                const Text('FUEL TYPE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'FUEL TYPE',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 SegmentedButton<String>(
                   segments: const [
@@ -315,19 +374,36 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
             ),
             child: Column(
               children: [
-                const Text('ESTIMATED FUEL EXPENSE', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+                const Text(
+                  'ESTIMATED FUEL EXPENSE',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Text(
                   '₹${_tripResult!.totalCost.toStringAsFixed(0)}',
-                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.amberAccent),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.amberAccent,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 const Divider(color: Colors.white24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _calcStat('FUEL REQUIRED', '${_tripResult!.litersRequired.toStringAsFixed(1)} L'),
-                    _calcStat('EST. RUNNING COST', '₹${_tripResult!.costPerKm.toStringAsFixed(2)} / km'),
+                    _calcStat(
+                      'FUEL REQUIRED',
+                      '${_tripResult!.litersRequired.toStringAsFixed(1)} L',
+                    ),
+                    _calcStat(
+                      'EST. RUNNING COST',
+                      '₹${_tripResult!.costPerKm.toStringAsFixed(2)} / km',
+                    ),
                   ],
                 ),
               ],
@@ -340,9 +416,19 @@ class _FuelRatesScreenState extends State<FuelRatesScreen> with SingleTickerProv
   Widget _calcStat(String label, String value) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 10)),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white60, fontSize: 10),
+        ),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }

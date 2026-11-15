@@ -15,7 +15,11 @@ class AppTypography {
     fontSize: 20,
   );
 
-  static TextTheme createTextTheme(Color primary, Color secondary, Color muted) {
+  static TextTheme createTextTheme(
+    Color primary,
+    Color secondary,
+    Color muted,
+  ) {
     return TextTheme(
       headlineLarge: TextStyle(
         fontSize: 28,

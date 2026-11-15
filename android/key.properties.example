@@ -1,0 +1,10 @@
+# Android Release Keystore Configuration Example
+# Copy this file to 'key.properties' (which is git-ignored) and fill in your production credentials.
+#
+# Generate a new release keystore via:
+# keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias rtoinfo
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=rtoinfo
+storeFile=../release.jks

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../domain/models/quiz_question_entity.dart';
 import '../data/quiz_questions_data.dart';
@@ -64,9 +65,7 @@ class _MockExamScreenState extends State<MockExamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('RTO Mock Exam (LL Test)'),
-      ),
+      appBar: AppBar(title: const Text('RTO Mock Exam (LL Test)')),
       body: switch (_phase) {
         ExamPhase.notStarted => _buildIntroView(),
         ExamPhase.inProgress => _buildQuizView(),
@@ -88,7 +87,11 @@ class _MockExamScreenState extends State<MockExamScreen> {
                 color: AppColors.electricBlue.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.school, size: 64, color: AppColors.electricBlue),
+              child: const Icon(
+                Icons.school,
+                size: 64,
+                color: AppColors.electricBlue,
+              ),
             ),
             const SizedBox(height: 20),
             const Text(
@@ -104,18 +107,32 @@ class _MockExamScreenState extends State<MockExamScreen> {
             ),
             const SizedBox(height: 24),
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _introRuleItem(Icons.format_list_numbered, 'Total Questions: 15 multiple-choice questions'),
+                    _introRuleItem(
+                      Icons.format_list_numbered,
+                      'Total Questions: 15 multiple-choice questions',
+                    ),
                     const Divider(height: 16),
-                    _introRuleItem(Icons.check_circle_outline, 'Passing Criteria: 60% (At least 9 correct answers)'),
+                    _introRuleItem(
+                      Icons.check_circle_outline,
+                      'Passing Criteria: 60% (At least 9 correct answers)',
+                    ),
                     const Divider(height: 16),
-                    _introRuleItem(Icons.menu_book, 'Topics: Road signs, right of way, overtaking, and MV Act rules'),
+                    _introRuleItem(
+                      Icons.menu_book,
+                      'Topics: Road signs, right of way, overtaking, and MV Act rules',
+                    ),
                     const Divider(height: 16),
-                    _introRuleItem(Icons.lightbulb_outline, 'Instant Feedback: Explanations provided after every question'),
+                    _introRuleItem(
+                      Icons.lightbulb_outline,
+                      'Instant Feedback: Explanations provided after every question',
+                    ),
                   ],
                 ),
               ),
@@ -126,7 +143,10 @@ class _MockExamScreenState extends State<MockExamScreen> {
               height: 52,
               child: FilledButton.icon(
                 icon: const Icon(Icons.play_arrow),
-                label: const Text('Start Practice Test', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                label: const Text(
+                  'Start Practice Test',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 onPressed: _startExam,
               ),
             ),
@@ -141,7 +161,12 @@ class _MockExamScreenState extends State<MockExamScreen> {
       children: [
         Icon(icon, size: 20, color: AppColors.saffron),
         const SizedBox(width: 12),
-        Expanded(child: Text(text, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          ),
+        ),
       ],
     );
   }
@@ -164,11 +189,18 @@ class _MockExamScreenState extends State<MockExamScreen> {
                 children: [
                   Text(
                     'Question ${_currentIndex + 1} of ${_questions.length}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                   Text(
                     '${(progress * 100).toInt()}%',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.electricBlue),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: AppColors.electricBlue,
+                    ),
                   ),
                 ],
               ),
@@ -179,7 +211,9 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   value: progress,
                   minHeight: 8,
                   backgroundColor: Colors.grey.withOpacity(0.2),
-                  valueColor: const AlwaysStoppedAnimation(AppColors.electricBlue),
+                  valueColor: const AlwaysStoppedAnimation(
+                    AppColors.electricBlue,
+                  ),
                 ),
               ),
             ],
@@ -193,12 +227,18 @@ class _MockExamScreenState extends State<MockExamScreen> {
             children: [
               // Question Card
               Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(18),
                   child: Text(
                     question.question,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, height: 1.4),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      height: 1.4,
+                    ),
                   ),
                 ),
               ),
@@ -218,7 +258,10 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   if (isCorrect) {
                     cardColor = Colors.green.withOpacity(0.12);
                     borderColor = Colors.green;
-                    trailingIcon = const Icon(Icons.check_circle, color: Colors.green);
+                    trailingIcon = const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                    );
                   } else if (isSelected && !isCorrect) {
                     cardColor = Colors.red.withOpacity(0.12);
                     borderColor = Colors.red;
@@ -236,7 +279,12 @@ class _MockExamScreenState extends State<MockExamScreen> {
                       decoration: BoxDecoration(
                         color: cardColor,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: borderColor, width: isSelected || (_answeredCurrent && isCorrect) ? 2 : 1),
+                        border: Border.all(
+                          color: borderColor,
+                          width: isSelected || (_answeredCurrent && isCorrect)
+                              ? 2
+                              : 1,
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -245,11 +293,15 @@ class _MockExamScreenState extends State<MockExamScreen> {
                             height: 28,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isSelected ? AppColors.electricBlue : Colors.grey.withOpacity(0.2),
+                              color: isSelected
+                                  ? AppColors.electricBlue
+                                  : Colors.grey.withOpacity(0.2),
                             ),
                             child: Center(
                               child: Text(
-                                String.fromCharCode(65 + optIndex), // A, B, C, D
+                                String.fromCharCode(
+                                  65 + optIndex,
+                                ), // A, B, C, D
                                 style: TextStyle(
                                   color: isSelected ? Colors.white : null,
                                   fontWeight: FontWeight.bold,
@@ -262,7 +314,10 @@ class _MockExamScreenState extends State<MockExamScreen> {
                           Expanded(
                             child: Text(
                               optionText,
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                           if (trailingIcon != null) trailingIcon,
@@ -286,15 +341,29 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.lightbulb, color: Colors.amber, size: 22),
+                      const Icon(
+                        Icons.lightbulb,
+                        color: Colors.amber,
+                        size: 22,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('EXPLANATION', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                            const Text(
+                              'EXPLANATION',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
                             const SizedBox(height: 4),
-                            Text(question.explanation, style: const TextStyle(fontSize: 13, height: 1.3)),
+                            Text(
+                              question.explanation,
+                              style: const TextStyle(fontSize: 13, height: 1.3),
+                            ),
                           ],
                         ),
                       ),
@@ -312,14 +381,24 @@ class _MockExamScreenState extends State<MockExamScreen> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, -2))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, -2),
+                ),
+              ],
             ),
             child: SizedBox(
               width: double.infinity,
               height: 48,
               child: FilledButton(
                 onPressed: _nextQuestion,
-                child: Text(_currentIndex < _questions.length - 1 ? 'Next Question' : 'View Exam Results'),
+                child: Text(
+                  _currentIndex < _questions.length - 1
+                      ? 'Next Question'
+                      : 'View Exam Results',
+                ),
               ),
             ),
           ),
@@ -352,16 +431,29 @@ class _MockExamScreenState extends State<MockExamScreen> {
           ),
           child: Column(
             children: [
-              Icon(isPassed ? Icons.verified : Icons.error_outline, size: 54, color: Colors.white),
+              Icon(
+                isPassed ? Icons.verified : Icons.error_outline,
+                size: 54,
+                color: Colors.white,
+              ),
               const SizedBox(height: 12),
               Text(
                 isPassed ? 'CONGRATULATIONS! TEST PASSED' : 'TEST NOT CLEARED',
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 0.8),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.8,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Your Score: $score / $total (${percentage.toStringAsFixed(1)}%)',
-                style: const TextStyle(color: Colors.amberAccent, fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.amberAccent,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
@@ -398,7 +490,10 @@ class _MockExamScreenState extends State<MockExamScreen> {
         ),
         const SizedBox(height: 28),
 
-        const Text('Question Review', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text(
+          'Question Review',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 12),
 
         // Question-by-question review
@@ -409,7 +504,9 @@ class _MockExamScreenState extends State<MockExamScreen> {
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Column(
@@ -417,12 +514,19 @@ class _MockExamScreenState extends State<MockExamScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(isCorrect ? Icons.check_circle : Icons.cancel, color: isCorrect ? Colors.green : Colors.red, size: 20),
+                      Icon(
+                        isCorrect ? Icons.check_circle : Icons.cancel,
+                        color: isCorrect ? Colors.green : Colors.red,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Q${i + 1}: ${q.question}',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],
@@ -430,15 +534,26 @@ class _MockExamScreenState extends State<MockExamScreen> {
                   const Divider(height: 16),
                   Text(
                     'Correct Answer: ${q.options[q.correctIndex]}',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
                   ),
                   if (!isCorrect && userAns != null)
                     Text(
                       'Your Answer: ${q.options[userAns]}',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
                     ),
                   const SizedBox(height: 6),
-                  Text(q.explanation, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  Text(
+                    q.explanation,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
                 ],
               ),
             ),

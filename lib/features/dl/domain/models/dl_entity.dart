@@ -101,7 +101,8 @@ class DlEntity {
       issuingAuthority: map['issuingAuthority'] ?? '',
       state: map['state'] ?? '',
       status: map['status'] ?? 'ACTIVE',
-      vehicleClasses: (map['vehicleClasses'] as List<dynamic>?)
+      vehicleClasses:
+          (map['vehicleClasses'] as List<dynamic>?)
               ?.map((c) => DlVehicleClass.fromMap(c as Map<String, dynamic>))
               .toList() ??
           [],

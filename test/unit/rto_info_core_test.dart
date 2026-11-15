@@ -1,9 +1,12 @@
 import 'dart:io';
+
 import '../../lib/core/constants/app_constants.dart';
 import '../../lib/core/utils/vehicle_number_validator.dart';
 import '../../lib/app/localization/app_strings.dart';
 import '../../lib/features/vehicle_details/domain/models/vehicle_entity.dart';
 import '../../lib/features/vehicle_details/data/datasources/vehicle_mock_datasource.dart';
+import '../../lib/features/vehicle_details/data/datasources/mock_vehicle_data_provider.dart';
+import '../../lib/core/network/api_exceptions.dart';
 import '../../lib/features/challan/domain/models/challan_entity.dart';
 import '../../lib/features/challan/data/datasources/challan_mock_datasource.dart';
 import '../../lib/features/history/domain/models/search_history_entity.dart';
@@ -55,25 +58,38 @@ Future<void> main() async {
 
   // 1. Vehicle Number Formatting & Validation
   test('VehicleNumberValidator: cleanPlate sanitizes user input', () {
-    assert(VehicleNumberValidator.cleanPlate(' dl 01-ab-1234 ') == 'DL01AB1234');
+    assert(
+      VehicleNumberValidator.cleanPlate(' dl 01-ab-1234 ') == 'DL01AB1234',
+    );
     assert(VehicleNumberValidator.cleanPlate('hr-26 dq 5551') == 'HR26DQ5551');
     assert(VehicleNumberValidator.cleanPlate('ka 05 mj 5005') == 'KA05MJ5005');
   });
 
   test('VehicleNumberValidator: formatForDisplay formats Indian plates', () {
-    assert(VehicleNumberValidator.formatForDisplay('DL01AB1234') == 'DL 01 AB 1234');
-    assert(VehicleNumberValidator.formatForDisplay('MH12DE1433') == 'MH 12 DE 1433');
-    assert(VehicleNumberValidator.formatForDisplay('KA05MJ5005') == 'KA 05 MJ 5005');
-    assert(VehicleNumberValidator.formatForDisplay('HR26DQ5551') == 'HR 26 DQ 5551');
+    assert(
+      VehicleNumberValidator.formatForDisplay('DL01AB1234') == 'DL 01 AB 1234',
+    );
+    assert(
+      VehicleNumberValidator.formatForDisplay('MH12DE1433') == 'MH 12 DE 1433',
+    );
+    assert(
+      VehicleNumberValidator.formatForDisplay('KA05MJ5005') == 'KA 05 MJ 5005',
+    );
+    assert(
+      VehicleNumberValidator.formatForDisplay('HR26DQ5551') == 'HR 26 DQ 5551',
+    );
   });
 
-  test('VehicleNumberValidator: isValid identifies valid Indian number plates', () {
-    assert(VehicleNumberValidator.isValid('DL01AB1234') == true);
-    assert(VehicleNumberValidator.isValid('MH12DE1433') == true);
-    assert(VehicleNumberValidator.isValid('KA05MJ5005') == true);
-    assert(VehicleNumberValidator.isValid('HR26DQ5551') == true);
-    assert(VehicleNumberValidator.isValid('UP32AZ0001') == true);
-  });
+  test(
+    'VehicleNumberValidator: isValid identifies valid Indian number plates',
+    () {
+      assert(VehicleNumberValidator.isValid('DL01AB1234') == true);
+      assert(VehicleNumberValidator.isValid('MH12DE1433') == true);
+      assert(VehicleNumberValidator.isValid('KA05MJ5005') == true);
+      assert(VehicleNumberValidator.isValid('HR26DQ5551') == true);
+      assert(VehicleNumberValidator.isValid('UP32AZ0001') == true);
+    },
+  );
 
   test('VehicleNumberValidator: isValid rejects invalid strings', () {
     assert(VehicleNumberValidator.isValid('') == false);
@@ -132,89 +148,109 @@ Future<void> main() async {
     final reconstructed = VehicleEntity.fromMap(map);
 
     assert(reconstructed.cleanRegistrationNumber == 'DL01AB1234');
-    assert(reconstructed.maskedOwnerName.contains('****'), 'Owner name must be masked for privacy');
+    assert(
+      reconstructed.maskedOwnerName.contains('****'),
+      'Owner name must be masked for privacy',
+    );
     assert(reconstructed.isHypothecated == true);
     assert(reconstructed.hypothecationBank == 'HDFC Bank');
+    assert(reconstructed.isDemoData == true, 'Must clearly identify as demo data');
+    assert(VehicleEntity.safeValue(null) == 'Not Available');
+    assert(VehicleEntity.safeValue('') == 'Not Available');
+    assert(VehicleEntity.safeValue('ACTIVE') == 'ACTIVE');
   });
 
-  // 3. VehicleMockDataSource & Deterministic Generation
-  await asyncTest('VehicleMockDataSource returns accurate Parivahan records', () async {
-    final ds = VehicleMockDataSource();
-    final seeded = await ds.getVehicleDetails('DL01AB1234');
-    assert(seeded != null);
-    assert(seeded!.maker == 'MARUTI SUZUKI INDIA LTD');
-    assert(seeded!.fuelType == 'PETROL');
+  // 3. MockVehicleDataProvider & Deterministic Generation
+  await asyncTest(
+    'MockVehicleDataProvider returns accurate Parivahan records with demo indicator',
+    () async {
+      final ds = MockVehicleDataProvider();
+      final seeded = await ds.getVehicleDetails('DL01AB1234');
+      assert(seeded != null);
+      assert(seeded!.maker == 'MARUTI SUZUKI INDIA LTD');
+      assert(seeded!.fuelType == 'PETROL');
+      assert(seeded!.isDemoData == true);
 
-    final dynamicVehicle = await ds.getVehicleDetails('UP32AZ0001');
-    assert(dynamicVehicle != null);
-    assert(dynamicVehicle!.state == 'UP');
-    assert(dynamicVehicle!.rtoCode == 'UP-32');
+      final dynamicVehicle = await ds.getVehicleDetails('UP32AZ0001');
+      assert(dynamicVehicle != null);
+      assert(dynamicVehicle!.state == 'UP');
+      assert(dynamicVehicle!.rtoCode == 'UP-32');
 
-    final invalid = await ds.getVehicleDetails('INVALID');
-    assert(invalid == null);
-  });
+      final invalid = await ds.getVehicleDetails('INVALID');
+      assert(invalid == null);
+    },
+  );
 
   // 4. ChallanEntity & ChallanMockDataSource
-  await asyncTest('ChallanEntity differentiation and mock datasource retrieval', () async {
-    final ds = ChallanMockDataSource();
-    final challans = await ds.getChallansForVehicle('DL01AB1234');
-    assert(challans.isNotEmpty);
+  await asyncTest(
+    'ChallanEntity differentiation and mock datasource retrieval',
+    () async {
+      final ds = ChallanMockDataSource();
+      final challans = await ds.getChallansForVehicle('DL01AB1234');
+      assert(challans.isNotEmpty);
 
-    final pending = challans.where((c) => c.isPending).toList();
-    final paid = challans.where((c) => c.isPaid).toList();
+      final pending = challans.where((c) => c.isPending).toList();
+      final paid = challans.where((c) => c.isPaid).toList();
 
-    assert(pending.isNotEmpty, 'Must have pending challans');
-    assert(paid.isNotEmpty, 'Must have paid challans');
-    assert(pending.first.officialPaymentPortalUrl == 'https://echallan.parivahan.gov.in/');
-  });
+      assert(pending.isNotEmpty, 'Must have pending challans');
+      assert(paid.isNotEmpty, 'Must have paid challans');
+      assert(
+        pending.first.officialPaymentPortalUrl ==
+            'https://echallan.parivahan.gov.in/',
+      );
+    },
+  );
 
   // 5. MemoryStorageService Persistence (Search History & Favourites)
-  await asyncTest('MemoryStorageService manages history & favourites', () async {
-    final storage = MemoryStorageService();
-    await storage.clearAllData();
+  await asyncTest(
+    'MemoryStorageService manages history & favourites',
+    () async {
+      final storage = MemoryStorageService();
+      await storage.clearAllData();
 
-    // Add search history
-    final historyItem = SearchHistoryEntity(
-      id: 'h-1',
-      registrationNumber: 'DL01AB1234',
-      formattedPlate: 'DL 01 AB 1234',
-      makerModel: 'Maruti Suzuki Swift',
-      vehicleClass: 'Motor Car (LMV)',
-      searchedAt: DateTime.now(),
-    );
-    await storage.addHistory(historyItem);
+      // Add search history
+      final historyItem = SearchHistoryEntity(
+        id: 'h-1',
+        registrationNumber: 'DL01AB1234',
+        formattedPlate: 'DL 01 AB 1234',
+        makerModel: 'Maruti Suzuki Swift',
+        vehicleClass: 'Motor Car (LMV)',
+        searchedAt: DateTime.now(),
+      );
+      await storage.addHistory(historyItem);
 
-    final historyList = await storage.getHistory();
-    assert(historyList.length == 1);
-    assert(historyList.first.registrationNumber == 'DL01AB1234');
+      final historyList = await storage.getHistory();
+      assert(historyList.length == 1);
+      assert(historyList.first.registrationNumber == 'DL01AB1234');
 
-    // Add favourite
-    final favItem = FavouriteVehicleEntity(
-      id: 'f-1',
-      registrationNumber: 'DL01AB1234',
-      formattedPlate: 'DL 01 AB 1234',
-      makerModel: 'Maruti Suzuki Swift',
-      vehicleClass: 'Motor Car (LMV)',
-      fuelType: 'PETROL',
-      insuranceValidity: '09-Apr-2027',
-      insuranceStatus: 'ACTIVE',
-      fitnessValidity: '11-Apr-2038',
-      savedAt: DateTime.now(),
-    );
-    await storage.addFavourite(favItem);
+      // Add favourite
+      final favItem = FavouriteVehicleEntity(
+        id: 'f-1',
+        registrationNumber: 'DL01AB1234',
+        formattedPlate: 'DL 01 AB 1234',
+        makerModel: 'Maruti Suzuki Swift',
+        vehicleClass: 'Motor Car (LMV)',
+        fuelType: 'PETROL',
+        insuranceValidity: '09-Apr-2027',
+        insuranceStatus: 'ACTIVE',
+        fitnessValidity: '11-Apr-2038',
+        savedAt: DateTime.now(),
+      );
+      await storage.addFavourite(favItem);
 
-    assert(await storage.isFavourite('DL01AB1234') == true);
-    assert(await storage.isFavourite('MH12DE1433') == false);
+      assert(await storage.isFavourite('DL01AB1234') == true);
+      assert(await storage.isFavourite('MH12DE1433') == false);
 
-    // Remove favourite
-    await storage.removeFavourite('DL01AB1234');
-    assert(await storage.isFavourite('DL01AB1234') == false);
+      // Remove favourite
+      await storage.removeFavourite('DL01AB1234');
+      assert(await storage.isFavourite('DL01AB1234') == false);
 
-    // Clear all
-    await storage.clearAllData();
-    assert((await storage.getHistory()).isEmpty);
-    assert((await storage.getFavourites()).isEmpty);
-  });
+      // Clear all
+      await storage.clearAllData();
+      assert((await storage.getHistory()).isEmpty);
+      assert((await storage.getFavourites()).isEmpty);
+    },
+  );
 
   // 6. Localization Dictionary (English & Hindi)
   test('AppStrings: English and Hindi translations are complete', () {
@@ -235,20 +271,32 @@ Future<void> main() async {
   });
 
   // 7. Strict Zero-Authentication Verification
-  test('Strict Rule: No authentication files, login, or signup screens exist', () {
-    final libDir = Directory('lib');
-    final allFiles = libDir.listSync(recursive: true);
+  test(
+    'Strict Rule: No authentication files, login, or signup screens exist',
+    () {
+      final libDir = Directory('lib');
+      final allFiles = libDir.listSync(recursive: true);
 
-    for (final entity in allFiles) {
-      if (entity is File) {
-        final path = entity.path.toLowerCase();
-        assert(!path.contains('login'), 'Found prohibited login file: $path');
-        assert(!path.contains('signup'), 'Found prohibited signup file: $path');
-        assert(!path.contains('auth_guard'), 'Found prohibited auth guard file: $path');
-        assert(!path.contains('firebase_auth'), 'Found prohibited firebase_auth file: $path');
+      for (final entity in allFiles) {
+        if (entity is File) {
+          final path = entity.path.toLowerCase();
+          assert(!path.contains('login'), 'Found prohibited login file: $path');
+          assert(
+            !path.contains('signup'),
+            'Found prohibited signup file: $path',
+          );
+          assert(
+            !path.contains('auth_guard'),
+            'Found prohibited auth guard file: $path',
+          );
+          assert(
+            !path.contains('firebase_auth'),
+            'Found prohibited firebase_auth file: $path',
+          );
+        }
       }
-    }
-  });
+    },
+  );
 
   // 8. Android Configuration Verification
   test('Android package name is com.rtoinfo.app and permissions verified', () {
@@ -263,32 +311,44 @@ Future<void> main() async {
     final gradleContent = gradle.readAsStringSync();
     assert(gradleContent.contains('namespace = "com.rtoinfo.app"'));
     assert(gradleContent.contains('applicationId = "com.rtoinfo.app"'));
+
+    // Version management verification
+    assert(AppConstants.appVersion == '0.1.0');
+    assert(AppConstants.buildNumber == 1);
+    final changelog = File('CHANGELOG.md');
+    assert(changelog.existsSync(), 'CHANGELOG.md must exist');
+    assert(changelog.readAsStringSync().contains('[0.1.0]'), 'CHANGELOG must document 0.1.0');
   });
 
   // 9. Driving Licence (Sarathi Parivahan) Verification
-  await asyncTest('DL Verification: DlMockDataSource retrieves seeded and dynamic DLs', () async {
-    final ds = DlMockDataSource();
-    final seeded = await ds.getDlDetails('DL0420110149632');
-    assert(seeded != null);
-    assert(seeded!.maskedHolderName.contains('****'));
-    assert(seeded!.vehicleClasses.any((c) => c.classCode == 'MCWG'));
-    assert(seeded!.vehicleClasses.any((c) => c.classCode == 'LMV'));
-    assert(seeded!.state == 'Delhi');
+  await asyncTest(
+    'DL Verification: DlMockDataSource retrieves seeded and dynamic DLs',
+    () async {
+      final ds = DlMockDataSource();
+      final seeded = await ds.getDlDetails('DL0420110149632');
+      assert(seeded != null);
+      assert(seeded!.maskedHolderName.contains('****'));
+      assert(seeded!.vehicleClasses.any((c) => c.classCode == 'MCWG'));
+      assert(seeded!.vehicleClasses.any((c) => c.classCode == 'LMV'));
+      assert(seeded!.state == 'Delhi');
 
-    final commercial = await ds.getDlDetails('MH1420180019284');
-    assert(commercial != null);
-    assert(commercial!.isCommercial == true);
-    assert(commercial!.badgeNumber != null);
+      final commercial = await ds.getDlDetails('MH1420180019284');
+      assert(commercial != null);
+      assert(commercial!.isCommercial == true);
+      assert(commercial!.badgeNumber != null);
 
-    final dynamicDl = await ds.getDlDetails('RJ1420220011223');
-    assert(dynamicDl != null);
-    assert(dynamicDl!.state == 'RJ');
-  });
+      final dynamicDl = await ds.getDlDetails('RJ1420220011223');
+      assert(dynamicDl != null);
+      assert(dynamicDl!.state == 'RJ');
+    },
+  );
 
   // 10. Fuel Prices & Trip Cost Calculator Logic
   test('Fuel Prices & TripCostResult calculation logic', () {
     assert(FuelMockDataSource.allCities.isNotEmpty);
-    final delhi = FuelMockDataSource.allCities.firstWhere((c) => c.city == 'New Delhi');
+    final delhi = FuelMockDataSource.allCities.firstWhere(
+      (c) => c.city == 'New Delhi',
+    );
     assert(delhi.petrolPrice > 90);
     assert(delhi.dieselPrice > 80);
 
@@ -341,9 +401,15 @@ Future<void> main() async {
 
   // 13. Traffic Signs & MV Act Fines Catalogue
   test('TrafficSignsData contains categorized signs and fine schedules', () {
-    final mandatory = TrafficSignsData.signs.where((s) => s.category == 'Mandatory').toList();
-    final cautionary = TrafficSignsData.signs.where((s) => s.category == 'Cautionary').toList();
-    final informatory = TrafficSignsData.signs.where((s) => s.category == 'Informatory').toList();
+    final mandatory = TrafficSignsData.signs
+        .where((s) => s.category == 'Mandatory')
+        .toList();
+    final cautionary = TrafficSignsData.signs
+        .where((s) => s.category == 'Cautionary')
+        .toList();
+    final informatory = TrafficSignsData.signs
+        .where((s) => s.category == 'Informatory')
+        .toList();
 
     assert(mandatory.isNotEmpty);
     assert(cautionary.isNotEmpty);

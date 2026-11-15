@@ -31,7 +31,8 @@ class AppStrings {
       'aboutApp': 'About Application',
       'appVersion': 'Version',
       'clearData': 'Clear Application Data',
-      'clearDataConfirm': 'Are you sure you want to clear all history and favourites?',
+      'clearDataConfirm':
+          'Are you sure you want to clear all history and favourites?',
       'cancel': 'Cancel',
       'confirm': 'Confirm',
       'noHistory': 'No search history yet',
@@ -80,6 +81,8 @@ class AppStrings {
   };
 
   static String get(String key, String languageCode) {
-    return _localizedValues[languageCode]?[key] ?? _localizedValues['en']?[key] ?? key;
+    return _localizedValues[languageCode]?[key] ??
+        _localizedValues['en']?[key] ??
+        key;
   }
 }

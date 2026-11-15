@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import 'providers/history_provider.dart';
@@ -40,11 +41,15 @@ class HistoryScreen extends ConsumerWidget {
                   Icon(
                     Icons.history,
                     size: 64,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextMuted,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    isHindi ? 'कोई खोज इतिहास नहीं है' : 'No search history yet',
+                    isHindi
+                        ? 'कोई खोज इतिहास नहीं है'
+                        : 'No search history yet',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -58,7 +63,9 @@ class HistoryScreen extends ConsumerWidget {
                         : 'Searched vehicles will appear here for fast access',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                      color: isDark
+                          ? AppColors.darkTextMuted
+                          : AppColors.lightTextMuted,
                     ),
                   ),
                 ],
@@ -70,7 +77,8 @@ class HistoryScreen extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
                 final item = historyItems[index];
-                final formattedTime = DateFormat('dd MMM yyyy, hh:mm a').format(item.searchedAt);
+                final formattedTime = DateFormat('dd MMM yyyy, hh:mm a')
+                    .format(item.searchedAt);
 
                 return Dismissible(
                   key: Key(item.id),
@@ -82,7 +90,10 @@ class HistoryScreen extends ConsumerWidget {
                       color: AppColors.error,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(Icons.delete_outline, color: Colors.white),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
+                    ),
                   ),
                   onDismissed: (_) {
                     ref.read(historyProvider.notifier).removeSearch(item.id);
@@ -127,7 +138,9 @@ class HistoryScreen extends ConsumerWidget {
                                     item.makerModel,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                      color: isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -135,7 +148,9 @@ class HistoryScreen extends ConsumerWidget {
                                     formattedTime,
                                     style: TextStyle(
                                       fontSize: 10,
-                                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                                      color: isDark
+                                          ? AppColors.darkTextMuted
+                                          : AppColors.lightTextMuted,
                                     ),
                                   ),
                                 ],
@@ -143,9 +158,13 @@ class HistoryScreen extends ConsumerWidget {
                             ),
                             IconButton(
                               icon: const Icon(Icons.close, size: 18),
-                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextMuted,
                               onPressed: () {
-                                ref.read(historyProvider.notifier).removeSearch(item.id);
+                                ref
+                                    .read(historyProvider.notifier)
+                                    .removeSearch(item.id);
                               },
                             ),
                           ],
@@ -159,7 +178,11 @@ class HistoryScreen extends ConsumerWidget {
     );
   }
 
-  void _showClearHistoryDialog(BuildContext context, WidgetRef ref, bool isHindi) {
+  void _showClearHistoryDialog(
+    BuildContext context,
+    WidgetRef ref,
+    bool isHindi,
+  ) {
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
@@ -181,7 +204,9 @@ class HistoryScreen extends ConsumerWidget {
               ref.read(historyProvider.notifier).clearAll();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(isHindi ? 'इतिहास साफ़ किया गया' : 'Search history cleared'),
+                  content: Text(
+                    isHindi ? 'इतिहास साफ़ किया गया' : 'Search history cleared',
+                  ),
                 ),
               );
             },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_colors.dart';
 
 enum BadgeType { active, expired, warning, info, neutral }

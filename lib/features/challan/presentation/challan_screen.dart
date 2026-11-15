@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../core/widgets/status_badge.dart';
@@ -23,9 +24,7 @@ class ChallanScreen extends ConsumerWidget {
     final challansAsync = ref.watch(vehicleChallansProvider(cleanPlate));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('e-Challan • $formattedPlate'),
-      ),
+      appBar: AppBar(title: Text('e-Challan • $formattedPlate')),
       body: challansAsync.when(
         loading: () => const Center(
           child: Column(
@@ -46,11 +45,21 @@ class ChallanScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.error,
+                ),
                 const SizedBox(height: 12),
-                const Text('Error Checking Challans', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const Text(
+                  'Error Checking Challans',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
                 const SizedBox(height: 6),
-                Text('$err', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(
+                  '$err',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
               ],
             ),
           ),
@@ -58,7 +67,10 @@ class ChallanScreen extends ConsumerWidget {
         data: (challans) {
           final pendingChallans = challans.where((c) => c.isPending).toList();
           final paidChallans = challans.where((c) => c.isPaid).toList();
-          final totalPendingAmount = pendingChallans.fold<double>(0, (sum, c) => sum + c.challanAmount);
+          final totalPendingAmount = pendingChallans.fold<double>(
+            0,
+            (sum, c) => sum + c.challanAmount,
+          );
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -70,7 +82,9 @@ class ChallanScreen extends ConsumerWidget {
                   color: isDark ? AppColors.darkSurfaceAlt : Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -78,33 +92,55 @@ class ChallanScreen extends ConsumerWidget {
                   children: [
                     Column(
                       children: [
-                        const Text('Total Records', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                        const Text(
+                          'Total Records',
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           '${challans.length}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
-                    Container(width: 1, height: 32, color: Colors.grey.withOpacity(0.3)),
+                    Container(
+                      width: 1,
+                      height: 32,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
                     Column(
                       children: [
-                        const Text('Pending Fines', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                        const Text(
+                          'Pending Fines',
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           '₹${totalPendingAmount.toStringAsFixed(0)}',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: totalPendingAmount > 0 ? AppColors.error : AppColors.success,
+                            color: totalPendingAmount > 0
+                                ? AppColors.error
+                                : AppColors.success,
                           ),
                         ),
                       ],
                     ),
-                    Container(width: 1, height: 32, color: Colors.grey.withOpacity(0.3)),
+                    Container(
+                      width: 1,
+                      height: 32,
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
                     Column(
                       children: [
-                        const Text('Settled / Paid', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                        const Text(
+                          'Settled / Paid',
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
                         const SizedBox(height: 4),
                         Text(
                           '${paidChallans.length}',
@@ -132,7 +168,11 @@ class ChallanScreen extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline, color: AppColors.error, size: 22),
+                      const Icon(
+                        Icons.info_outline,
+                        color: AppColors.error,
+                        size: 22,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -140,7 +180,11 @@ class ChallanScreen extends ConsumerWidget {
                           children: const [
                             Text(
                               'Official Fine Payment Portal',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.error),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: AppColors.error,
+                              ),
                             ),
                             SizedBox(height: 2),
                             Text(
@@ -166,11 +210,18 @@ class ChallanScreen extends ConsumerWidget {
                   ),
                   child: Column(
                     children: const [
-                      Icon(Icons.check_circle_outline, color: AppColors.success, size: 56),
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: AppColors.success,
+                        size: 56,
+                      ),
                       SizedBox(height: 12),
                       Text(
                         'Clean Record! No Challans Found',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -256,12 +307,20 @@ class ChallanScreen extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               c.legalSection,
-              style: const TextStyle(fontSize: 12, color: AppColors.saffron, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.saffron,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 14,
+                  color: Colors.grey,
+                ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
@@ -276,7 +335,11 @@ class ChallanScreen extends ConsumerWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
+                const Icon(
+                  Icons.calendar_today_outlined,
+                  size: 14,
+                  color: Colors.grey,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   c.challanDate,
@@ -291,7 +354,10 @@ class ChallanScreen extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Fine Amount', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                    const Text(
+                      'Fine Amount',
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
                     Text(
                       '₹${c.challanAmount.toStringAsFixed(0)}',
                       style: TextStyle(
@@ -306,14 +372,25 @@ class ChallanScreen extends ConsumerWidget {
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.electricBlue,
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
                     ),
                     icon: const Icon(Icons.open_in_browser, size: 16),
-                    label: const Text('Parivahan Portal', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    label: const Text(
+                      'Parivahan Portal',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Directing to official portal: https://echallan.parivahan.gov.in/'),
+                          content: Text(
+                            'Directing to official portal: https://echallan.parivahan.gov.in/',
+                          ),
                         ),
                       );
                     },
@@ -321,7 +398,11 @@ class ChallanScreen extends ConsumerWidget {
                 else
                   Text(
                     'Receipt: ${c.paymentReceiptNumber ?? "Settled"}',
-                    style: const TextStyle(fontSize: 11, color: AppColors.success, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.success,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
               ],
             ),

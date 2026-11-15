@@ -19,7 +19,8 @@ class LoanEmiCalculator {
     }
 
     final monthlyRate = (annualInterestRate / 12) / 100;
-    final numerator = principal * monthlyRate * pow(1 + monthlyRate, tenureMonths);
+    final numerator =
+        principal * monthlyRate * pow(1 + monthlyRate, tenureMonths);
     final denominator = pow(1 + monthlyRate, tenureMonths) - 1;
 
     final monthlyEmi = numerator / denominator;
@@ -54,6 +55,8 @@ class LoanEmiResult {
     required this.totalPayment,
   });
 
-  double get interestRatio => totalPayment > 0 ? (totalInterest / totalPayment) : 0;
-  double get principalRatio => totalPayment > 0 ? (principal / totalPayment) : 0;
+  double get interestRatio =>
+      totalPayment > 0 ? (totalInterest / totalPayment) : 0;
+  double get principalRatio =>
+      totalPayment > 0 ? (principal / totalPayment) : 0;
 }

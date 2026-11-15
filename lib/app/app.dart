@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'localization/app_locale.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
@@ -24,10 +25,7 @@ class RTOInfoApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       locale: locale,
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('hi', 'IN'),
-      ],
+      supportedLocales: const [Locale('en', 'US'), Locale('hi', 'IN')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

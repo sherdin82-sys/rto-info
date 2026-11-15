@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
@@ -18,9 +19,7 @@ class SettingsScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isHindi ? 'सेटिंग्स' : 'Settings'),
-      ),
+      appBar: AppBar(title: Text(isHindi ? 'सेटिंग्स' : 'Settings')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -32,10 +31,14 @@ class SettingsScreen extends ConsumerWidget {
                 RadioListTile<ThemeMode>(
                   title: Text(isHindi ? 'सिस्टम थीम' : 'System Default'),
                   subtitle: Text(
-                    isHindi ? 'डिवाइस सेटिंग्स का पालन करें' : 'Follow system dark/light mode',
+                    isHindi
+                        ? 'डिवाइस सेटिंग्स का पालन करें'
+                        : 'Follow system dark/light mode',
                     style: TextStyle(
                       fontSize: 11,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                      color: isDark
+                          ? AppColors.darkTextMuted
+                          : AppColors.lightTextMuted,
                     ),
                   ),
                   value: ThemeMode.system,
@@ -80,21 +83,31 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 RadioListTile<String>(
                   title: const Text('English'),
-                  subtitle: const Text('Default language', style: TextStyle(fontSize: 11)),
+                  subtitle: const Text(
+                    'Default language',
+                    style: TextStyle(fontSize: 11),
+                  ),
                   value: 'en',
                   groupValue: currentLocale.languageCode,
                   onChanged: (code) {
-                    ref.read(localeProvider.notifier).setLocale(SupportedLanguage.english);
+                    ref
+                        .read(localeProvider.notifier)
+                        .setLocale(SupportedLanguage.english);
                   },
                 ),
                 const Divider(height: 1),
                 RadioListTile<String>(
                   title: const Text('हिंदी (Hindi)'),
-                  subtitle: const Text('भारतीय राष्ट्रीय भाषा', style: TextStyle(fontSize: 11)),
+                  subtitle: const Text(
+                    'भारतीय राष्ट्रीय भाषा',
+                    style: TextStyle(fontSize: 11),
+                  ),
                   value: 'hi',
                   groupValue: currentLocale.languageCode,
                   onChanged: (code) {
-                    ref.read(localeProvider.notifier).setLocale(SupportedLanguage.hindi);
+                    ref
+                        .read(localeProvider.notifier)
+                        .setLocale(SupportedLanguage.hindi);
                   },
                 ),
               ],
@@ -103,19 +116,29 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Section: Data & Privacy
-          _buildSectionHeader(isHindi ? 'डेटा व गोपनीयता' : 'Data & Privacy', context),
+          _buildSectionHeader(
+            isHindi ? 'डेटा व गोपनीयता' : 'Data & Privacy',
+            context,
+          ),
           Card(
             child: ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
               title: Text(
                 isHindi ? 'स्थानीय डेटा साफ़ करें' : 'Clear Local App Data',
-                style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               subtitle: Text(
-                isHindi ? 'खोज इतिहास व पसंदीदा हटाएं' : 'Clear search history and bookmarks',
+                isHindi
+                    ? 'खोज इतिहास व पसंदीदा हटाएं'
+                    : 'Clear search history and bookmarks',
                 style: TextStyle(
                   fontSize: 11,
-                  color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                  color: isDark
+                      ? AppColors.darkTextMuted
+                      : AppColors.lightTextMuted,
                 ),
               ),
               onTap: () {
@@ -126,7 +149,10 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Section: About
-          _buildSectionHeader(isHindi ? 'एप्लिकेशन के बारे में' : 'About Application', context),
+          _buildSectionHeader(
+            isHindi ? 'एप्लिकेशन के बारे में' : 'About Application',
+            context,
+          ),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -141,10 +167,17 @@ class SettingsScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: AppColors.primaryNavy,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.electricBlue, width: 2),
+                          border: Border.all(
+                            color: AppColors.electricBlue,
+                            width: 2,
+                          ),
                         ),
                         child: const Center(
-                          child: Icon(Icons.directions_car, color: Colors.amber, size: 24),
+                          child: Icon(
+                            Icons.directions_car,
+                            color: Colors.amber,
+                            size: 24,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -153,13 +186,18 @@ class SettingsScreen extends ConsumerWidget {
                         children: [
                           Text(
                             AppConstants.appName,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                           Text(
                             'Version ${AppConstants.appVersion} (${AppConstants.buildNumber})',
                             style: TextStyle(
                               fontSize: 12,
-                              color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextMuted,
                             ),
                           ),
                         ],
@@ -174,7 +212,9 @@ class SettingsScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 12,
                       height: 1.5,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -226,7 +266,11 @@ class SettingsScreen extends ConsumerWidget {
               ref.read(favouritesProvider.notifier).clearAll();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(isHindi ? 'डेटा सफलतापूर्वक साफ़ किया गया' : 'Local data cleared'),
+                  content: Text(
+                    isHindi
+                        ? 'डेटा सफलतापूर्वक साफ़ किया गया'
+                        : 'Local data cleared',
+                  ),
                 ),
               );
             },

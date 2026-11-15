@@ -9,7 +9,7 @@ class ChallanRepositoryImpl implements ChallanRepository {
   final ChallanDataSource _dataSource;
 
   ChallanRepositoryImpl({required ChallanDataSource dataSource})
-      : _dataSource = dataSource;
+    : _dataSource = dataSource;
 
   @override
   Future<List<ChallanEntity>> getChallansForVehicle(String registrationNumber) {

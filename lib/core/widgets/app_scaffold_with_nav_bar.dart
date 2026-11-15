@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../app/localization/app_locale.dart';
 import '../../app/theme/app_colors.dart';
 
@@ -8,10 +9,7 @@ import '../../app/theme/app_colors.dart';
 class AppScaffoldWithNavBar extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
-  const AppScaffoldWithNavBar({
-    super.key,
-    required this.navigationShell,
-  });
+  const AppScaffoldWithNavBar({super.key, required this.navigationShell});
 
   void _onDestinationSelected(int index) {
     navigationShell.goBranch(

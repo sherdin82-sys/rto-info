@@ -14,7 +14,9 @@ class MemoryStorageService implements StorageService {
 
   @override
   Future<void> addHistory(SearchHistoryEntity item) async {
-    final filtered = _history.where((h) => h.registrationNumber != item.registrationNumber).toList();
+    final filtered = _history
+        .where((h) => h.registrationNumber != item.registrationNumber)
+        .toList();
     _history.clear();
     _history.add(item);
     _history.addAll(filtered);
@@ -42,7 +44,9 @@ class MemoryStorageService implements StorageService {
 
   @override
   Future<void> addFavourite(FavouriteVehicleEntity item) async {
-    final filtered = _favourites.where((f) => f.registrationNumber != item.registrationNumber).toList();
+    final filtered = _favourites
+        .where((f) => f.registrationNumber != item.registrationNumber)
+        .toList();
     _favourites.clear();
     _favourites.add(item);
     _favourites.addAll(filtered);

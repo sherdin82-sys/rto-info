@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants/app_constants.dart';
 import '../../features/history/domain/models/search_history_entity.dart';
 import '../../features/favourites/domain/models/favourite_vehicle_entity.dart';
@@ -30,7 +32,11 @@ class LocalStorageService implements StorageService {
       final jsonList = _prefs!.getStringList(AppConstants.keySearchHistory);
       if (jsonList != null) {
         return jsonList
-            .map((s) => SearchHistoryEntity.fromMap(jsonDecode(s) as Map<String, dynamic>))
+            .map(
+              (s) => SearchHistoryEntity.fromMap(
+                jsonDecode(s) as Map<String, dynamic>,
+              ),
+            )
             .toList();
       }
     }
@@ -42,7 +48,9 @@ class LocalStorageService implements StorageService {
 
     final current = await getHistory();
     // Deduplicate existing entry for same plate
-    final filtered = current.where((h) => h.registrationNumber != item.registrationNumber).toList();
+    final filtered = current
+        .where((h) => h.registrationNumber != item.registrationNumber)
+        .toList();
     final updated = [item, ...filtered];
 
     if (_prefs != null) {
@@ -86,7 +94,11 @@ class LocalStorageService implements StorageService {
       final jsonList = _prefs!.getStringList(AppConstants.keyFavourites);
       if (jsonList != null) {
         return jsonList
-            .map((s) => FavouriteVehicleEntity.fromMap(jsonDecode(s) as Map<String, dynamic>))
+            .map(
+              (s) => FavouriteVehicleEntity.fromMap(
+                jsonDecode(s) as Map<String, dynamic>,
+              ),
+            )
             .toList();
       }
     }
@@ -102,7 +114,9 @@ class LocalStorageService implements StorageService {
     if (_prefs == null) await init();
 
     final current = await getFavourites();
-    final filtered = current.where((f) => f.registrationNumber != item.registrationNumber).toList();
+    final filtered = current
+        .where((f) => f.registrationNumber != item.registrationNumber)
+        .toList();
     final updated = [item, ...filtered];
 
     if (_prefs != null) {
@@ -118,7 +132,9 @@ class LocalStorageService implements StorageService {
     if (_prefs == null) await init();
 
     final current = await getFavourites();
-    final updated = current.where((f) => f.registrationNumber != cleanPlate).toList();
+    final updated = current
+        .where((f) => f.registrationNumber != cleanPlate)
+        .toList();
 
     if (_prefs != null) {
       final jsonList = updated.map((f) => jsonEncode(f.toMap())).toList();

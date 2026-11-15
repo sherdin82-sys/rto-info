@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../app/theme/app_colors.dart';
 import '../utils/vehicle_number_formatter.dart';
 
@@ -90,10 +91,15 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
             children: [
               // Blue IND Strip with Ashoka Chakra Dot
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 14,
+                ),
                 decoration: const BoxDecoration(
                   color: AppColors.hsrpBlueStrip,
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(13)),
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(13),
+                  ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -151,7 +157,9 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                         letterSpacing: 1.5,
-                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                        color: isDark
+                            ? AppColors.darkTextMuted
+                            : AppColors.lightTextMuted,
                       ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -186,7 +194,10 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                     onTap: widget.isLoading ? null : _submitSearch,
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       child: widget.isLoading
                           ? const SizedBox(
                               width: 20,
@@ -196,7 +207,11 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                                 color: Colors.white,
                               ),
                             )
-                          : const Icon(Icons.search, color: Colors.white, size: 22),
+                          : const Icon(
+                              Icons.search,
+                              color: Colors.white,
+                              size: 22,
+                            ),
                     ),
                   ),
                 ),
@@ -211,7 +226,11 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
             padding: const EdgeInsets.only(top: 6, left: 12),
             child: Row(
               children: [
-                const Icon(Icons.error_outline, size: 14, color: AppColors.error),
+                const Icon(
+                  Icons.error_outline,
+                  size: 14,
+                  color: AppColors.error,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   _errorMessage!,

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/storage/local_storage_service.dart';
 import '../../domain/models/search_history_entity.dart';
 
@@ -48,7 +49,8 @@ class HistoryNotifier extends StateNotifier<List<SearchHistoryEntity>> {
   }
 }
 
-final historyProvider = StateNotifierProvider<HistoryNotifier, List<SearchHistoryEntity>>((ref) {
-  final storage = ref.watch(localStorageServiceProvider);
-  return HistoryNotifier(storage);
-});
+final historyProvider =
+    StateNotifierProvider<HistoryNotifier, List<SearchHistoryEntity>>((ref) {
+      final storage = ref.watch(localStorageServiceProvider);
+      return HistoryNotifier(storage);
+    });

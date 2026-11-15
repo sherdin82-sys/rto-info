@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../domain/models/resale_valuation_model.dart';
 import '../domain/models/loan_emi_model.dart';
@@ -10,7 +11,8 @@ class ResaleScreen extends StatefulWidget {
   State<ResaleScreen> createState() => _ResaleScreenState();
 }
 
-class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderStateMixin {
+class _ResaleScreenState extends State<ResaleScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   // Resale Form State
@@ -84,10 +86,7 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildResaleTab(),
-          _buildEmiTab(),
-        ],
+        children: [_buildResaleTab(), _buildEmiTab()],
       ),
     );
   }
@@ -102,33 +101,56 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
       padding: const EdgeInsets.all(16),
       children: [
         Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('VEHICLE CATEGORY', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'VEHICLE CATEGORY',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: ['Two Wheeler', 'Hatchback', 'Sedan', 'SUV', 'Electric'].map((type) {
-                    final isSel = _selectedVehicleType == type;
-                    return ChoiceChip(
-                      label: Text(type),
-                      selected: isSel,
-                      onSelected: (val) {
-                        if (val) {
-                          setState(() => _selectedVehicleType = type);
-                          _calculateResale();
-                        }
-                      },
-                    );
-                  }).toList(),
+                  children:
+                      [
+                        'Two Wheeler',
+                        'Hatchback',
+                        'Sedan',
+                        'SUV',
+                        'Electric',
+                      ].map((type) {
+                        final isSel = _selectedVehicleType == type;
+                        return ChoiceChip(
+                          label: Text(type),
+                          selected: isSel,
+                          onSelected: (val) {
+                            if (val) {
+                              setState(() => _selectedVehicleType = type);
+                              _calculateResale();
+                            }
+                          },
+                        );
+                      }).toList(),
                 ),
                 const SizedBox(height: 14),
-                const Text('ORIGINAL PURCHASE PRICE (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'ORIGINAL PURCHASE PRICE (₹)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 TextField(
                   controller: _originalPriceController,
@@ -146,18 +168,34 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('PURCHASE YEAR', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                          const Text(
+                            'PURCHASE YEAR',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           DropdownButtonFormField<int>(
                             value: _purchaseYear,
-                            items: years.map((y) => DropdownMenuItem(value: y, child: Text('$y'))).toList(),
+                            items: years
+                                .map(
+                                  (y) => DropdownMenuItem(
+                                    value: y,
+                                    child: Text('$y'),
+                                  ),
+                                )
+                                .toList(),
                             onChanged: (val) {
                               if (val != null) {
                                 setState(() => _purchaseYear = val);
                                 _calculateResale();
                               }
                             },
-                            decoration: const InputDecoration(prefixIcon: Icon(Icons.calendar_month)),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.calendar_month),
+                            ),
                           ),
                         ],
                       ),
@@ -167,7 +205,14 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('KILOMETERS DRIVEN', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                          const Text(
+                            'KILOMETERS DRIVEN',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
                           const SizedBox(height: 6),
                           TextField(
                             controller: _kmController,
@@ -184,7 +229,14 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Text('OVERALL CONDITION', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'OVERALL CONDITION',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 SegmentedButton<String>(
                   segments: const [
@@ -219,23 +271,44 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
             ),
             child: Column(
               children: [
-                const Text('ESTIMATED MARKET RESALE VALUE', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+                const Text(
+                  'ESTIMATED MARKET RESALE VALUE',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Text(
                   '₹${_valuationResult!.estimatedValue.toStringAsFixed(0)}',
-                  style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.amberAccent),
+                  style: const TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.amberAccent,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   'Expected Range: ₹${_valuationResult!.rangeLow.toStringAsFixed(0)} - ₹${_valuationResult!.rangeHigh.toStringAsFixed(0)}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const Divider(color: Colors.white24, height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _resaleStat('OVERALL DEPRECIATION', '${_valuationResult!.depreciationPercentage.toStringAsFixed(1)}%'),
-                    _resaleStat('VEHICLE AGE', '${currentYear - _purchaseYear} Years'),
+                    _resaleStat(
+                      'OVERALL DEPRECIATION',
+                      '${_valuationResult!.depreciationPercentage.toStringAsFixed(1)}%',
+                    ),
+                    _resaleStat(
+                      'VEHICLE AGE',
+                      '${currentYear - _purchaseYear} Years',
+                    ),
                   ],
                 ),
               ],
@@ -248,9 +321,19 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
   Widget _resaleStat(String label, String value) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 10)),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white60, fontSize: 10),
+        ),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
@@ -262,13 +345,22 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
       padding: const EdgeInsets.all(16),
       children: [
         Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('LOAN AMOUNT (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const Text(
+                  'LOAN AMOUNT (₹)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 TextField(
                   controller: _loanAmountController,
@@ -294,8 +386,21 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('INTEREST RATE (% P.A.)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
-                    Text('${_interestRate.toStringAsFixed(1)}%', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.electricBlue)),
+                    const Text(
+                      'INTEREST RATE (% P.A.)',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      '${_interestRate.toStringAsFixed(1)}%',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.electricBlue,
+                      ),
+                    ),
                   ],
                 ),
                 Slider(
@@ -312,8 +417,21 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('LOAN TENURE (YEARS)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
-                    Text('$_tenureYears Years (${_tenureYears * 12} Mos)', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.saffron)),
+                    const Text(
+                      'LOAN TENURE (YEARS)',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      '$_tenureYears Years (${_tenureYears * 12} Mos)',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.saffron,
+                      ),
+                    ),
                   ],
                 ),
                 Slider(
@@ -346,11 +464,22 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
             ),
             child: Column(
               children: [
-                const Text('MONTHLY EMI', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+                const Text(
+                  'MONTHLY EMI',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Text(
                   '₹${_emiResult!.monthlyEmi.toStringAsFixed(0)}',
-                  style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900, color: Colors.amberAccent),
+                  style: const TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.amberAccent,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 // Visual ratio
@@ -360,7 +489,10 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                     children: [
                       Expanded(
                         flex: (_emiResult!.principalRatio * 100).round(),
-                        child: Container(height: 10, color: AppColors.electricBlue),
+                        child: Container(
+                          height: 10,
+                          color: AppColors.electricBlue,
+                        ),
                       ),
                       Expanded(
                         flex: (_emiResult!.interestRatio * 100).round(),
@@ -375,16 +507,36 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                   children: [
                     Row(
                       children: [
-                        Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.electricBlue, shape: BoxShape.circle)),
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.electricBlue,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
                         const SizedBox(width: 4),
-                        const Text('Principal', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                        const Text(
+                          'Principal',
+                          style: TextStyle(color: Colors.white70, fontSize: 10),
+                        ),
                       ],
                     ),
                     Row(
                       children: [
-                        Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.saffron, shape: BoxShape.circle)),
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.saffron,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
                         const SizedBox(width: 4),
-                        const Text('Interest', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                        const Text(
+                          'Interest',
+                          style: TextStyle(color: Colors.white70, fontSize: 10),
+                        ),
                       ],
                     ),
                   ],
@@ -393,9 +545,18 @@ class _ResaleScreenState extends State<ResaleScreen> with SingleTickerProviderSt
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _resaleStat('PRINCIPAL AMOUNT', '₹${_emiResult!.principal.toStringAsFixed(0)}'),
-                    _resaleStat('TOTAL INTEREST', '₹${_emiResult!.totalInterest.toStringAsFixed(0)}'),
-                    _resaleStat('TOTAL PAYMENT', '₹${_emiResult!.totalPayment.toStringAsFixed(0)}'),
+                    _resaleStat(
+                      'PRINCIPAL AMOUNT',
+                      '₹${_emiResult!.principal.toStringAsFixed(0)}',
+                    ),
+                    _resaleStat(
+                      'TOTAL INTEREST',
+                      '₹${_emiResult!.totalInterest.toStringAsFixed(0)}',
+                    ),
+                    _resaleStat(
+                      'TOTAL PAYMENT',
+                      '₹${_emiResult!.totalPayment.toStringAsFixed(0)}',
+                    ),
                   ],
                 ),
               ],

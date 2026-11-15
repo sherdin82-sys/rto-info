@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+
 import 'vehicle_number_validator.dart';
 
 /// VehicleNumberFormatter delegates input filtering and sanitization to VehicleNumberValidator.
@@ -15,7 +16,9 @@ class VehicleNumberFormatter extends TextInputFormatter {
     );
   }
 
-  static String cleanPlate(String input) => VehicleNumberValidator.cleanPlate(input);
-  static String formatForDisplay(String plate) => VehicleNumberValidator.formatForDisplay(plate);
+  static String cleanPlate(String input) =>
+      VehicleNumberValidator.cleanPlate(input);
+  static String formatForDisplay(String plate) =>
+      VehicleNumberValidator.formatForDisplay(plate);
   static bool isValid(String plate) => VehicleNumberValidator.isValid(plate);
 }

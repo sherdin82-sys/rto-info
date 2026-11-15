@@ -41,24 +41,15 @@ class QuizQuestionsData {
     QuizQuestion(
       id: 4,
       question: 'What is the minimum legal age for obtaining a Driving Licence for a Light Motor Vehicle (Car) in India?',
-      options: [
-        '16 years',
-        '18 years',
-        '21 years',
-        '20 years',
-      ],
+      options: ['16 years', '18 years', '21 years', '20 years'],
       correctIndex: 1,
       explanation: 'The minimum age for an LMV licence is 18 years (16 years for gearless two-wheelers up to 50cc with parental consent).',
     ),
     QuizQuestion(
       id: 5,
-      question: 'What is the validity period of a Learner’s Licence issued in India?',
-      options: [
-        '3 months',
-        '6 months',
-        '1 year',
-        '30 days',
-      ],
+      question:
+          'What is the validity period of a Learner’s Licence issued in India?',
+      options: ['3 months', '6 months', '1 year', '30 days'],
       correctIndex: 1,
       explanation: 'A Learner’s Licence is valid for 6 months from the date of issue across India.',
     ),
@@ -136,7 +127,8 @@ class QuizQuestionsData {
     ),
     QuizQuestion(
       id: 12,
-      question: 'Parking in front of a hospital entrance or fire station gate is:',
+      question:
+          'Parking in front of a hospital entrance or fire station gate is:',
       options: [
         'Permitted for up to 10 minutes',
         'Strictly prohibited at all times',

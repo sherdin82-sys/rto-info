@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/storage/local_storage_service.dart';
 import '../../domain/models/favourite_vehicle_entity.dart';
 import '../../../vehicle_details/domain/models/vehicle_entity.dart';
@@ -53,7 +54,10 @@ class FavouritesNotifier extends StateNotifier<List<FavouriteVehicleEntity>> {
   }
 }
 
-final favouritesProvider = StateNotifierProvider<FavouritesNotifier, List<FavouriteVehicleEntity>>((ref) {
-  final storage = ref.watch(localStorageServiceProvider);
-  return FavouritesNotifier(storage);
-});
+final favouritesProvider =
+    StateNotifierProvider<FavouritesNotifier, List<FavouriteVehicleEntity>>((
+      ref,
+    ) {
+      final storage = ref.watch(localStorageServiceProvider);
+      return FavouritesNotifier(storage);
+    });

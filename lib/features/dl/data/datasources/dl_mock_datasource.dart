@@ -95,7 +95,10 @@ class DlMockDataSource {
 
   /// Retrieves DL details by cleaned number e.g. "DL0420110149632"
   Future<DlEntity?> getDlDetails(String inputNumber) async {
-    final clean = inputNumber.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final clean = inputNumber.toUpperCase().replaceAll(
+      RegExp(r'[^A-Z0-9]'),
+      '',
+    );
     if (clean.length < 10) return null;
 
     if (_seededLicences.containsKey(clean)) {

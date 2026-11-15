@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../app/theme/app_colors.dart';
 import '../domain/models/traffic_sign_entity.dart';
 import '../data/traffic_signs_data.dart';
@@ -10,7 +11,8 @@ class TrafficSignsScreen extends StatefulWidget {
   State<TrafficSignsScreen> createState() => _TrafficSignsScreenState();
 }
 
-class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTickerProviderStateMixin {
+class _TrafficSignsScreenState extends State<TrafficSignsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
   String _searchQuery = '';
@@ -51,7 +53,8 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: TextField(
               controller: _searchController,
-              onChanged: (val) => setState(() => _searchQuery = val.toLowerCase().trim()),
+              onChanged: (val) =>
+                  setState(() => _searchQuery = val.toLowerCase().trim()),
               decoration: InputDecoration(
                 hintText: 'Search sign name, rule or offence...',
                 prefixIcon: const Icon(Icons.search),
@@ -64,8 +67,13 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
                         },
                       )
                     : null,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -92,7 +100,8 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
       final matchesCat = s.category == category;
       if (!matchesCat) return false;
       if (_searchQuery.isEmpty) return true;
-      return s.title.toLowerCase().contains(_searchQuery) || s.description.toLowerCase().contains(_searchQuery);
+      return s.title.toLowerCase().contains(_searchQuery) ||
+          s.description.toLowerCase().contains(_searchQuery);
     }).toList();
 
     if (filtered.isEmpty) {
@@ -143,8 +152,12 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
               height: 52,
               decoration: BoxDecoration(
                 color: bgColor,
-                shape: sign.shape == 'Circle' || sign.shape == 'Octagon' ? BoxShape.circle : BoxShape.rectangle,
-                borderRadius: sign.shape != 'Circle' && sign.shape != 'Octagon' ? BorderRadius.circular(8) : null,
+                shape: sign.shape == 'Circle' || sign.shape == 'Octagon'
+                    ? BoxShape.circle
+                    : BoxShape.rectangle,
+                borderRadius: sign.shape != 'Circle' && sign.shape != 'Octagon'
+                    ? BorderRadius.circular(8)
+                    : null,
                 border: Border.all(color: borderColor, width: 3),
               ),
               child: Center(
@@ -158,24 +171,38 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
                 children: [
                   Text(
                     sign.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     sign.description,
-                    style: const TextStyle(fontSize: 12, color: Colors.blueGrey, height: 1.3),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      height: 1.3,
+                    ),
                   ),
                   if (sign.fineForViolation != null) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.red.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         'Fine: ${sign.fineForViolation}',
-                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.red),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],
@@ -207,7 +234,9 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
       itemBuilder: (context, index) {
         final fine = filtered[index];
         return Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -217,26 +246,40 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.electricBlue.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         fine.section,
-                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.electricBlue),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.electricBlue,
+                        ),
                       ),
                     ),
                     Text(
                       fine.category,
-                      style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Text(
                   fine.offence,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Row(
@@ -247,7 +290,11 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen> with SingleTick
                     Expanded(
                       child: Text(
                         fine.penalty,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ],

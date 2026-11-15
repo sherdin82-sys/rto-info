@@ -54,6 +54,8 @@ class VehicleEntity {
   final String? hypothecationStatus;
 
   final bool isBlacklisted;
+  final bool isDemoData;
+  final String dataSourceLabel;
 
   const VehicleEntity({
     required this.registrationNumber,
@@ -98,6 +100,8 @@ class VehicleEntity {
     this.hypothecationBank,
     this.hypothecationStatus,
     this.isBlacklisted = false,
+    this.isDemoData = true,
+    this.dataSourceLabel = 'Demonstration Record (Mock Parivahan)',
   });
 
   Map<String, dynamic> toMap() {
@@ -144,6 +148,8 @@ class VehicleEntity {
       'hypothecationBank': hypothecationBank,
       'hypothecationStatus': hypothecationStatus,
       'isBlacklisted': isBlacklisted,
+      'isDemoData': isDemoData,
+      'dataSourceLabel': dataSourceLabel,
     };
   }
 
@@ -164,7 +170,9 @@ class VehicleEntity {
       fuelType: map['fuelType'] ?? '',
       bodyType: map['bodyType'] ?? '',
       engineCapacity: map['engineCapacity'] ?? '',
-      seatingCapacity: map['seatingCapacity'] is int ? map['seatingCapacity'] : 5,
+      seatingCapacity: map['seatingCapacity'] is int
+          ? map['seatingCapacity']
+          : 5,
       manufacturingYear: map['manufacturingYear'] ?? '',
       emissionStandard: map['emissionStandard'] ?? '',
       color: map['color'] ?? '',
@@ -178,7 +186,9 @@ class VehicleEntity {
       insurancePolicyNumber: map['insurancePolicyNumber'] ?? '',
       insuranceValidity: map['insuranceValidity'] ?? '',
       insuranceStatus: map['insuranceStatus'] ?? 'ACTIVE',
-      insuranceDaysRemaining: map['insuranceDaysRemaining'] is int ? map['insuranceDaysRemaining'] : 180,
+      insuranceDaysRemaining: map['insuranceDaysRemaining'] is int
+          ? map['insuranceDaysRemaining']
+          : 180,
       pucCertificateNumber: map['pucCertificateNumber'] ?? '',
       pucValidity: map['pucValidity'] ?? '',
       pucStatus: map['pucStatus'] ?? 'ACTIVE',
@@ -191,6 +201,15 @@ class VehicleEntity {
       hypothecationBank: map['hypothecationBank'],
       hypothecationStatus: map['hypothecationStatus'],
       isBlacklisted: map['isBlacklisted'] == true,
+      isDemoData: map['isDemoData'] != false,
+      dataSourceLabel:
+          map['dataSourceLabel'] ?? 'Demonstration Record (Mock Parivahan)',
     );
+  }
+
+  /// Displays unavailable information as 'Not Available' instead of inventing values.
+  static String safeValue(String? value, {String fallback = 'Not Available'}) {
+    if (value == null || value.trim().isEmpty) return fallback;
+    return value.trim();
   }
 }

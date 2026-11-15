@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = 'RTO Info';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '0.1.0';
   static const int buildNumber = 1;
   static const String androidPackageName = 'com.rtoinfo.app';
 
@@ -19,25 +19,25 @@ class AppConstants {
       'plate': 'DL01AB1234',
       'label': 'DL 01 AB 1234',
       'desc': 'Maruti Suzuki Swift (Delhi)',
-      'class': 'Motor Car (LMV)'
+      'class': 'Motor Car (LMV)',
     },
     {
       'plate': 'MH12DE1433',
       'label': 'MH 12 DE 1433',
       'desc': 'Hyundai Creta (Pune)',
-      'class': 'Motor Car (LMV)'
+      'class': 'Motor Car (LMV)',
     },
     {
       'plate': 'KA05MJ5005',
       'label': 'KA 05 MJ 5005',
       'desc': 'Tata Nexon EV (Bengaluru)',
-      'class': 'Electric Car (BEV)'
+      'class': 'Electric Car (BEV)',
     },
     {
       'plate': 'HR26DQ5551',
       'label': 'HR 26 DQ 5551',
       'desc': 'Royal Enfield Classic 350 (Gurugram)',
-      'class': 'Two Wheeler (MCWG)'
+      'class': 'Two Wheeler (MCWG)',
     },
   ];
 

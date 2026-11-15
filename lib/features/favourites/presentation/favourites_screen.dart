@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/widgets/status_badge.dart';
@@ -19,9 +20,7 @@ class FavouritesScreen extends ConsumerWidget {
     final favouriteVehicles = ref.watch(favouritesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isHindi ? 'पसंदीदा वाहन' : 'My Favourites'),
-      ),
+      appBar: AppBar(title: Text(isHindi ? 'पसंदीदा वाहन' : 'My Favourites')),
       body: favouriteVehicles.isEmpty
           ? Center(
               child: Column(
@@ -30,11 +29,15 @@ class FavouritesScreen extends ConsumerWidget {
                   Icon(
                     Icons.bookmark_outline,
                     size: 64,
-                    color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                    color: isDark
+                        ? AppColors.darkTextMuted
+                        : AppColors.lightTextMuted,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    isHindi ? 'कोई पसंदीदा वाहन सुरक्षित नहीं है' : 'No favourite vehicles saved',
+                    isHindi
+                        ? 'कोई पसंदीदा वाहन सुरक्षित नहीं है'
+                        : 'No favourite vehicles saved',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -48,7 +51,9 @@ class FavouritesScreen extends ConsumerWidget {
                         : 'Search any vehicle and tap the bookmark icon',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                      color: isDark
+                          ? AppColors.darkTextMuted
+                          : AppColors.lightTextMuted,
                     ),
                   ),
                 ],
@@ -71,12 +76,19 @@ class FavouritesScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkSurfaceAlt : AppColors.lightSurfaceAlt,
+                                color: isDark
+                                    ? AppColors.darkSurfaceAlt
+                                    : AppColors.lightSurfaceAlt,
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                                  color: isDark
+                                      ? AppColors.darkBorder
+                                      : AppColors.lightBorder,
                                 ),
                               ),
                               child: Text(
@@ -92,14 +104,21 @@ class FavouritesScreen extends ConsumerWidget {
                               children: [
                                 StatusBadge(
                                   label: v.insuranceStatus,
-                                  type: v.insuranceStatus == 'ACTIVE' ? BadgeType.active : BadgeType.expired,
+                                  type: v.insuranceStatus == 'ACTIVE'
+                                      ? BadgeType.active
+                                      : BadgeType.expired,
                                 ),
                                 const SizedBox(width: 4),
                                 IconButton(
-                                  icon: const Icon(Icons.bookmark, color: AppColors.saffron),
+                                  icon: const Icon(
+                                    Icons.bookmark,
+                                    color: AppColors.saffron,
+                                  ),
                                   tooltip: 'Remove from Favourites',
                                   onPressed: () {
-                                    ref.read(favouritesProvider.notifier).removeFavourite(v.registrationNumber);
+                                    ref
+                                        .read(favouritesProvider.notifier)
+                                        .removeFavourite(v.registrationNumber);
                                   },
                                 ),
                               ],
@@ -112,7 +131,9 @@ class FavouritesScreen extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? Colors.white : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -120,7 +141,9 @@ class FavouritesScreen extends ConsumerWidget {
                           '${v.vehicleClass} • ${v.fuelType}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextMuted,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -128,7 +151,9 @@ class FavouritesScreen extends ConsumerWidget {
                           'Insurance: ${v.insuranceValidity} • Fitness: ${v.fitnessValidity}',
                           style: TextStyle(
                             fontSize: 11,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -136,13 +161,18 @@ class FavouritesScreen extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: OutlinedButton.icon(
-                                icon: const Icon(Icons.warning_amber_rounded, size: 16),
+                                icon: const Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 16,
+                                ),
                                 label: Text(
                                   isHindi ? 'चालान देखें' : 'Check Challans',
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 onPressed: () {
-                                  context.push('/challan?plate=${v.registrationNumber}');
+                                  context.push(
+                                    '/challan?plate=${v.registrationNumber}',
+                                  );
                                 },
                               ),
                             ),
@@ -155,7 +185,9 @@ class FavouritesScreen extends ConsumerWidget {
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 onPressed: () {
-                                  context.push('/rc?plate=${v.registrationNumber}');
+                                  context.push(
+                                    '/rc?plate=${v.registrationNumber}',
+                                  );
                                 },
                               ),
                             ),
