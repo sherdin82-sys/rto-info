@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
-import '../../../core/widgets/status_badge.dart';
+import '../../../shared/models/challan_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/empty_state_view.dart';
+import '../../../shared/widgets/error_view.dart';
+import '../../../shared/widgets/loading_view.dart';
+import '../../../shared/widgets/premium_card.dart';
+import '../../../shared/widgets/status_badge.dart';
 import 'providers/challan_provider.dart';
 
 /// ChallanScreen displays official traffic violation records for a vehicle.
-/// Conforms to Section 7: Clearly differentiates Paid vs Pending challans,
+/// Conforms strictly to Section 7: Clearly differentiates Paid vs Pending challans,
 /// provides official payment portal links, and does NOT simulate fake payments.
-class ChallanScreen extends ConsumerWidget {
+class ChallanScreen extends ConsumerStatefulWidget {
   final String? initialPlate;
 
   const ChallanScreen({super.key, this.initialPlate});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final rawPlate = initialPlate ?? 'DL01AB1234';
+  ConsumerState<ChallanScreen> createState() => _ChallanScreenState();
+}
+
+class _ChallanScreenState extends ConsumerState<ChallanScreen> {
+  int _selectedFilter = 0; // 0: All, 1: Pending, 2: Paid
+
+  @override
+  Widget build(BuildContext context) {
+    final rawPlate = widget.initialPlate ?? 'DL01AB1234';
     final cleanPlate = VehicleNumberValidator.cleanPlate(rawPlate);
     final formattedPlate = VehicleNumberValidator.formatForDisplay(cleanPlate);
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -24,45 +41,19 @@ class ChallanScreen extends ConsumerWidget {
     final challansAsync = ref.watch(vehicleChallansProvider(cleanPlate));
 
     return Scaffold(
-      appBar: AppBar(title: Text('e-Challan • $formattedPlate')),
+      appBar: AppAppBar(
+        title: 'e-Challan • $formattedPlate',
+        subtitle: 'National e-Challan Gateway Records',
+      ),
       body: challansAsync.when(
-        loading: () => const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text(
-                'Checking National e-Challan Database...',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-              ),
-            ],
-          ),
+        loading: () => const LoadingView(
+          message: 'Checking National e-Challan Database...',
         ),
-        error: (err, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: AppColors.error,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Error Checking Challans',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '$err',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
+        error: (err, _) => ErrorView(
+          title: 'Error Checking Challans',
+          message: '$err',
+          actionLabel: 'Try Again',
+          onAction: () => ref.refresh(vehicleChallansProvider(cleanPlate)),
         ),
         data: (challans) {
           final pendingChallans = challans.where((c) => c.isPending).toList();
@@ -72,98 +63,89 @@ class ChallanScreen extends ConsumerWidget {
             (sum, c) => sum + c.challanAmount,
           );
 
+          List<ChallanEntity> displayList;
+          if (_selectedFilter == 1) {
+            displayList = pendingChallans;
+          } else if (_selectedFilter == 2) {
+            displayList = paidChallans;
+          } else {
+            displayList = challans;
+          }
+
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.edgeInsetsL,
             children: [
               // Summary Banner
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceAlt : Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.lightBorder,
-                  ),
-                ),
+              PremiumCard(
+                padding: AppSpacing.edgeInsetsL,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Column(
-                      children: [
-                        const Text(
-                          'Total Records',
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${challans.length}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    _buildSummaryItem(
+                      label: 'Total Records',
+                      value: '${challans.length}',
+                      valueColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                     Container(
                       width: 1,
-                      height: 32,
-                      color: Colors.grey.withOpacity(0.3),
+                      height: 36,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Pending Fines',
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '₹${totalPendingAmount.toStringAsFixed(0)}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: totalPendingAmount > 0
-                                ? AppColors.error
-                                : AppColors.success,
-                          ),
-                        ),
-                      ],
+                    _buildSummaryItem(
+                      label: 'Pending Fines',
+                      value: '₹${totalPendingAmount.toStringAsFixed(0)}',
+                      valueColor: totalPendingAmount > 0
+                          ? AppColors.error
+                          : AppColors.success,
                     ),
                     Container(
                       width: 1,
-                      height: 32,
-                      color: Colors.grey.withOpacity(0.3),
+                      height: 36,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
-                    Column(
-                      children: [
-                        const Text(
-                          'Settled / Paid',
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${paidChallans.length}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.success,
-                          ),
-                        ),
-                      ],
+                    _buildSummaryItem(
+                      label: 'Settled / Paid',
+                      value: '${paidChallans.length}',
+                      valueColor: AppColors.success,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.l),
 
-              // Official Portal Notice (Prompt Section 7 compliance: No fake payment simulation)
+              // Filter Chips
+              Row(
+                children: [
+                  _buildFilterChip(0, 'All (${challans.length})', isDark),
+                  const SizedBox(width: AppSpacing.s),
+                  _buildFilterChip(
+                    1,
+                    'Pending (${pendingChallans.length})',
+                    isDark,
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  _buildFilterChip(
+                    2,
+                    'Settled (${paidChallans.length})',
+                    isDark,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+
+              // Official Portal Notice (Section 7 compliance: No fake payment simulation)
               if (pendingChallans.isNotEmpty) ...[
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: AppSpacing.edgeInsetsM,
                   decoration: BoxDecoration(
                     color: AppColors.error.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: AppRadius.radiusM,
                     border: Border.all(color: AppColors.error.withOpacity(0.3)),
                   ),
                   child: Row(
@@ -173,13 +155,13 @@ class ChallanScreen extends ConsumerWidget {
                         color: AppColors.error,
                         size: 22,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text(
-                              'Official Fine Payment Portal',
+                              'Official Government Payment Portal',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
@@ -188,7 +170,7 @@ class ChallanScreen extends ConsumerWidget {
                             ),
                             SizedBox(height: 2),
                             Text(
-                              'Pay online exclusively via official government portal at echallan.parivahan.gov.in. Third-party simulated payments are strictly prohibited for your security.',
+                              'Pay online directly on the official Parivahan portal at echallan.parivahan.gov.in. Third-party simulated payments are strictly prohibited for your financial security.',
                               style: TextStyle(fontSize: 11, height: 1.3),
                             ),
                           ],
@@ -197,77 +179,24 @@ class ChallanScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.l),
               ],
 
               // Empty State
-              if (challans.isEmpty)
-                Container(
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: const [
-                      Icon(
-                        Icons.check_circle_outline,
-                        color: AppColors.success,
-                        size: 56,
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Clean Record! No Challans Found',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'No pending or recorded violations found for this vehicle.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
+              if (displayList.isEmpty)
+                EmptyStateView(
+                  icon: Icons.check_circle_outline_rounded,
+                  title: 'Clean Record! No Challans Found',
+                  description:
+                      'No pending or recorded violations found under this filter for $formattedPlate.',
                 ),
 
-              // Pending Challans Section
-              if (pendingChallans.isNotEmpty) ...[
-                Text(
-                  'PENDING VIOLATIONS (${pendingChallans.length})',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.8,
-                    color: AppColors.error,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                for (final c in pendingChallans) ...[
-                  _buildChallanCard(c, isDark, context),
-                  const SizedBox(height: 12),
-                ],
-                const SizedBox(height: 16),
+              // Challan List Cards
+              for (final c in displayList) ...[
+                _buildChallanCard(c, isDark, context),
+                const SizedBox(height: AppSpacing.m),
               ],
-
-              // Paid Challans Section
-              if (paidChallans.isNotEmpty) ...[
-                Text(
-                  'SETTLED / PAID RECORDS (${paidChallans.length})',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.8,
-                    color: AppColors.success,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                for (final c in paidChallans) ...[
-                  _buildChallanCard(c, isDark, context),
-                  const SizedBox(height: 12),
-                ],
-              ],
+              const SizedBox(height: AppSpacing.xl),
             ],
           );
         },
@@ -275,139 +204,189 @@ class ChallanScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildChallanCard(dynamic c, bool isDark, BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  c.challanNumber,
-                  style: const TextStyle(
-                    fontFamily: 'monospace',
+  Widget _buildSummaryItem({
+    required String label,
+    required String value,
+    required Color valueColor,
+  }) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Colors.grey,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: valueColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterChip(int index, String label, bool isDark) {
+    final isSelected = _selectedFilter == index;
+    return ChoiceChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) => setState(() => _selectedFilter = index),
+      selectedColor: AppColors.electricBlue.withOpacity(0.18),
+      labelStyle: TextStyle(
+        fontSize: 12,
+        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+        color: isSelected
+            ? AppColors.electricBlue
+            : (isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary),
+      ),
+      side: BorderSide(
+        color: isSelected
+            ? AppColors.electricBlue
+            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+      ),
+    );
+  }
+
+  Widget _buildChallanCard(ChallanEntity c, bool isDark, BuildContext context) {
+    final isPending = c.isPending;
+
+    return PremiumCard(
+      accentColor: isPending ? AppColors.error : AppColors.success,
+      padding: AppSpacing.edgeInsetsL,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  c.violationName,
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    fontSize: 13,
+                    fontSize: 14,
+                    color: isDark ? Colors.white : AppColors.primaryNavy,
                   ),
                 ),
-                StatusBadge(
-                  label: c.paymentStatus,
-                  type: c.isPaid ? BadgeType.active : BadgeType.expired,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text(
-              c.violationDescription,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              c.legalSection,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.saffron,
-                fontWeight: FontWeight.w600,
               ),
+              StatusBadge(
+                label: c.challanStatus.toUpperCase(),
+                type: isPending ? BadgeType.expired : BadgeType.active,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.s),
+          Text(
+            'Challan No: ${c.challanNumber}',
+            style: const TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 11,
+              color: Colors.grey,
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 14,
-                  color: Colors.grey,
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    c.location,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_today_outlined,
-                  size: 14,
-                  color: Colors.grey,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  c.challanDate,
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(Icons.place_outlined, size: 14, color: Colors.grey),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  c.violationPlace,
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-            const Divider(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Fine Amount',
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Row(
+            children: [
+              const Icon(
+                Icons.calendar_today_outlined,
+                size: 14,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                c.violationDate,
+                style: const TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+            ],
+          ),
+          const Divider(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Penalty Amount',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  Text(
+                    '₹${c.challanAmount.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: isPending ? AppColors.error : AppColors.success,
+                    ),
+                  ),
+                ],
+              ),
+              if (isPending)
+                AppButton(
+                  label: 'Pay on Parivahan',
+                  variant: AppButtonVariant.primary,
+                  height: 36,
+                  isFullWidth: false,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Redirecting to official portal: echallan.parivahan.gov.in',
+                        ),
+                      ),
+                    );
+                  },
+                )
+              else
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.verified,
+                      size: 16,
+                      color: AppColors.success,
+                    ),
+                    const SizedBox(width: 4),
                     Text(
-                      '₹${c.challanAmount.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        color: c.isPaid ? AppColors.success : AppColors.error,
+                      'Paid: ${c.paymentDate ?? 'Settled'}',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.success,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
                 ),
-                if (c.isPending)
-                  FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.electricBlue,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                    ),
-                    icon: const Icon(Icons.open_in_browser, size: 16),
-                    label: const Text(
-                      'Parivahan Portal',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Directing to official portal: https://echallan.parivahan.gov.in/',
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                else
-                  Text(
-                    'Receipt: ${c.paymentReceiptNumber ?? "Settled"}',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.success,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -4,7 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/localization/app_locale.dart';
-import '../../../app/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/empty_state_view.dart';
 import '../../../shared/widgets/premium_card.dart';
 import 'providers/history_provider.dart';
@@ -22,128 +26,189 @@ class HistoryScreen extends ConsumerWidget {
     final historyItems = ref.watch(historyProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isHindi ? 'खोज इतिहास' : 'Search History'),
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
+      appBar: AppAppBar(
+        title: isHindi ? 'खोज इतिहास' : 'Search History',
+        subtitle: isHindi
+            ? '${historyItems.length} वाहन रिकॉर्ड्स'
+            : '${historyItems.length} cached vehicle searches',
         actions: [
           if (historyItems.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.delete_sweep_outlined),
+              icon: const Icon(Icons.delete_sweep_rounded),
               tooltip: isHindi ? 'इतिहास साफ़ करें' : 'Clear All History',
+              color: AppColors.error,
               onPressed: () {
                 _showClearHistoryDialog(context, ref, isHindi);
               },
             ),
         ],
       ),
-      body: historyItems.isEmpty
-          ? EmptyStateView(
-              icon: Icons.history,
-              title: isHindi
-                  ? 'कोई खोज इतिहास नहीं है'
-                  : 'No search history yet',
-              description: isHindi
-                  ? 'खोजे गए वाहन स्वचालित रूप से यहाँ दिखाई देंगे'
-                  : 'Searched vehicles will appear here for fast access',
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: historyItems.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = historyItems[index];
-                final formattedTime = DateFormat('dd MMM yyyy, hh:mm a')
-                    .format(item.searchedAt);
+      body: SafeArea(
+        child: historyItems.isEmpty
+            ? EmptyStateView(
+                icon: Icons.history_rounded,
+                title: isHindi
+                    ? 'कोई खोज इतिहास नहीं है'
+                    : 'No Search History Yet',
+                description: isHindi
+                    ? 'खोजे गए वाहन त्वरित पहुँच के लिए स्वचालित रूप से यहाँ सुरक्षित होते हैं।'
+                    : 'Searched vehicle registration numbers are saved locally for fast one-tap access.',
+              )
+            : ListView.separated(
+                padding: const EdgeInsets.all(AppSpacing.l),
+                itemCount: historyItems.length,
+                separatorBuilder: (_, __) =>
+                    const SizedBox(height: AppSpacing.s),
+                itemBuilder: (context, index) {
+                  final item = historyItems[index];
+                  final formattedTime = DateFormat('dd MMM yyyy, hh:mm a')
+                      .format(item.searchedAt);
 
-                return Dismissible(
-                  key: Key(item.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    alignment: Alignment.centerRight,
-                    decoration: BoxDecoration(
-                      color: AppColors.error,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(
-                      Icons.delete_outline,
-                      color: Colors.white,
-                    ),
-                  ),
-                  onDismissed: (_) {
-                    ref.read(historyProvider.notifier).removeSearch(item.id);
-                  },
-                  child: PremiumCard(
-                    onTap: () {
-                      context.push('/rc?plate=${item.registrationNumber}');
-                    },
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryNavy.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.directions_car,
-                            color: AppColors.electricBlue,
+                  return Dismissible(
+                    key: Key(item.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      padding: const EdgeInsets.only(right: AppSpacing.l),
+                      alignment: Alignment.centerRight,
+                      decoration: BoxDecoration(
+                        color: AppColors.error,
+                        borderRadius: BorderRadius.circular(AppRadius.card),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.delete_outline_rounded,
+                            color: Colors.white,
                             size: 24,
                           ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.formattedPlate,
-                                style: const TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                item.makerModel,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: isDark
-                                      ? AppColors.darkTextSecondary
-                                      : AppColors.lightTextSecondary,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                formattedTime,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: isDark
-                                      ? AppColors.darkTextMuted
-                                      : AppColors.lightTextMuted,
-                                ),
-                              ),
-                            ],
+                          SizedBox(width: 8),
+                          Text(
+                            'Delete',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close, size: 18),
-                          color: isDark
-                              ? AppColors.darkTextMuted
-                              : AppColors.lightTextMuted,
-                          onPressed: () {
-                            ref
-                                .read(historyProvider.notifier)
-                                .removeSearch(item.id);
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                    onDismissed: (_) {
+                      ref.read(historyProvider.notifier).removeSearch(item.id);
+                    },
+                    child: PremiumCard(
+                      onTap: () {
+                        context.push('/rc?plate=${item.registrationNumber}');
+                      },
+                      padding: const EdgeInsets.all(AppSpacing.m),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.electricBlue.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(AppRadius.s),
+                            ),
+                            child: const Icon(
+                              Icons.directions_car_rounded,
+                              color: AppColors.electricBlue,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.m),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? AppColors.darkSurfaceAlt
+                                            : AppColors.lightSurfaceAlt,
+                                        borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(
+                                          color: isDark
+                                              ? AppColors.darkBorder
+                                              : AppColors.lightBorder,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        item.formattedPlate,
+                                        style: const TextStyle(
+                                          fontFamily: 'monospace',
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 13,
+                                          letterSpacing: 0.8,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  item.makerModel,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColors.lightTextPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.access_time_rounded,
+                                      size: 11,
+                                      color: isDark
+                                          ? AppColors.darkTextMuted
+                                          : AppColors.lightTextMuted,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      formattedTime,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: isDark
+                                            ? AppColors.darkTextMuted
+                                            : AppColors.lightTextMuted,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded, size: 18),
+                            color: isDark
+                                ? AppColors.darkTextMuted
+                                : AppColors.lightTextMuted,
+                            tooltip: 'Remove',
+                            onPressed: () {
+                              ref
+                                  .read(historyProvider.notifier)
+                                  .removeSearch(item.id);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+      ),
     );
   }
 
@@ -155,11 +220,18 @@ class HistoryScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
-        title: Text(isHindi ? 'इतिहास साफ़ करें?' : 'Clear Search History?'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+        ),
+        title: Text(
+          isHindi ? 'इतिहास साफ़ करें?' : 'Clear Search History?',
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+        ),
         content: Text(
           isHindi
-              ? 'क्या आप सभी खोज इतिहास रिकॉर्ड हटाना चाहते हैं?'
-              : 'This will remove all recent vehicle search history.',
+              ? 'क्या आप सभी हालिया खोज रिकॉर्ड स्थायी रूप से हटाना चाहते हैं?'
+              : 'This will remove all recent vehicle search history cached on this device.',
+          style: const TextStyle(fontSize: 13, height: 1.4),
         ),
         actions: [
           TextButton(
@@ -167,7 +239,12 @@ class HistoryScreen extends ConsumerWidget {
             child: Text(isHindi ? 'रद्द करें' : 'Cancel'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.error,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.s),
+              ),
+            ),
             onPressed: () {
               Navigator.pop(dialogCtx);
               ref.read(historyProvider.notifier).clearAll();
@@ -179,7 +256,7 @@ class HistoryScreen extends ConsumerWidget {
                 ),
               );
             },
-            child: Text(isHindi ? 'साफ़ करें' : 'Clear'),
+            child: Text(isHindi ? 'साफ़ करें' : 'Clear All'),
           ),
         ],
       ),

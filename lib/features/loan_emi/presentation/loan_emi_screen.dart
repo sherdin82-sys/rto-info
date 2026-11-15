@@ -6,7 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/localization/app_locale.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/models/loan_emi_model.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_text_field.dart';
 import '../../../shared/widgets/premium_card.dart';
 
 class LoanEmiScreen extends ConsumerStatefulWidget {
@@ -69,77 +75,75 @@ class _LoanEmiScreenState extends ConsumerState<LoanEmiScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isHindi ? 'वाहन ऋण ईएमआई' : 'Vehicle Loan EMI'),
+      appBar: AppAppBar(
+        title: isHindi ? 'ऑटो ऋण ईएमआई' : 'Vehicle Loan EMI',
+        subtitle: isHindi
+            ? 'मासिक किस्त व ब्याज गणना'
+            : 'Monthly installment calculator',
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
+        padding: AppSpacing.edgeInsetsL,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PremiumCard(
+              padding: AppSpacing.edgeInsetsL,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    isHindi ? 'ऋण का विवरण' : 'Loan Parameters',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
+                  AppTextField(
                     controller: _amountController,
+                    label: isHindi ? 'ऋण राशि (₹)' : 'Loan Amount (₹)',
+                    hint: '500000',
+                    prefixIcon: const Icon(Icons.currency_rupee, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi ? 'ऋण राशि (₹)' : 'Loan Amount (₹)',
-                      prefixIcon: const Icon(Icons.currency_rupee),
-                    ),
                   ),
-                  const SizedBox(height: 14),
-                  TextField(
+                  const SizedBox(height: AppSpacing.m),
+                  AppTextField(
                     controller: _rateController,
+                    label: isHindi
+                        ? 'वार्षिक ब्याज दर (%)'
+                        : 'Annual Interest Rate (%)',
+                    hint: '9.5',
+                    prefixIcon: const Icon(Icons.percent, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi
-                          ? 'ब्याज दर (% प्रति वर्ष)'
-                          : 'Interest Rate (% p.a.)',
-                      prefixIcon: const Icon(Icons.percent),
-                    ),
                   ),
-                  const SizedBox(height: 14),
-                  TextField(
+                  const SizedBox(height: AppSpacing.m),
+                  AppTextField(
                     controller: _tenureController,
+                    label: isHindi
+                        ? 'अवधि (महीनों में)'
+                        : 'Loan Tenure (Months)',
+                    hint: '60',
+                    prefixIcon: const Icon(Icons.calendar_month, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi ? 'अवधि (महीने)' : 'Tenure (Months)',
-                      prefixIcon: const Icon(Icons.calendar_month),
-                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  AppButton(
+                    label: isHindi
+                        ? 'ईएमआई की गणना करें'
+                        : 'Calculate Monthly EMI',
+                    variant: AppButtonVariant.primary,
+                    onPressed: _calculate,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            const SizedBox(height: AppSpacing.xl),
+
             if (_result != null) ...[
               PremiumCard(
-                backgroundColor: isDark
-                    ? AppColors.darkSurfaceAlt
-                    : AppColors.lightSurfaceVariant,
-                borderColor: AppColors.electricBlue.withOpacity(0.4),
+                accentColor: AppColors.electricBlue,
+                padding: AppSpacing.edgeInsetsXl,
                 child: Column(
                   children: [
                     Text(
-                      isHindi ? 'मासिक ईएमआई' : 'Monthly EMI',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: isDark
+                      isHindi ? 'मासिक किस्त (ईएमआई)' : 'Estimated Monthly EMI',
+                      style: AppTypography.labelLarge(
+                        isDark
                             ? AppColors.darkTextSecondary
                             : AppColors.lightTextSecondary,
                       ),
@@ -147,20 +151,38 @@ class _LoanEmiScreenState extends ConsumerState<LoanEmiScreen> {
                     const SizedBox(height: 6),
                     Text(
                       '₹${_result!.monthlyEmi.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w800,
+                      style: AppTypography.currencyValue(
                         color: AppColors.electricBlue,
+                        fontSize: 34,
                       ),
                     ),
-                    const Divider(height: 24),
+                    const Divider(height: 28),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStat(
+                          isHindi ? 'मूल राशि' : 'Principal',
+                          '₹${_result!.principal.toStringAsFixed(0)}',
+                          isDark,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 36,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
+                        ),
+                        _buildStat(
                           isHindi ? 'कुल ब्याज' : 'Total Interest',
                           '₹${_result!.totalInterest.toStringAsFixed(0)}',
                           isDark,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 36,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                         _buildStat(
                           isHindi ? 'कुल भुगतान' : 'Total Payable',
@@ -183,21 +205,18 @@ class _LoanEmiScreenState extends ConsumerState<LoanEmiScreen> {
     return Column(
       children: [
         Text(
-          value,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary,
+          label,
+          style: AppTypography.labelSmall(
+            isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 4),
         Text(
-          label,
+          value,
           style: TextStyle(
-            fontSize: 11,
-            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
+            color: isDark ? Colors.white : AppColors.primaryNavy,
           ),
         ),
       ],

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../app/theme/app_colors.dart';
-import '../domain/models/rto_office_entity.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../shared/models/rto_office_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_text_field.dart';
+import '../../../shared/widgets/empty_state_view.dart';
+import '../../../shared/widgets/premium_card.dart';
 import '../data/rto_directory_data.dart';
 
 class RtoDirectoryScreen extends StatefulWidget {
@@ -61,36 +68,32 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('All-India RTO Directory')),
+      appBar: const AppAppBar(
+        title: 'All-India RTO Directory',
+        subtitle: 'Official Transport Offices & Helplines',
+      ),
       body: Column(
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: TextField(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.l,
+              AppSpacing.m,
+              AppSpacing.l,
+              AppSpacing.s,
+            ),
+            child: AppTextField(
               controller: _searchController,
+              hint: 'Search by RTO code (e.g. DL-01, MH-12) or city...',
+              prefixIcon: const Icon(Icons.search, size: 20),
               onChanged: (_) => _filter(),
-              decoration: InputDecoration(
-                hintText: 'Search by RTO code (e.g. DL-01, MH-12) or city...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          _filter();
-                        },
-                      )
-                    : null,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              onClear: () {
+                _searchController.clear();
+                _filter();
+              },
             ),
           ),
 
@@ -99,64 +102,79 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
             height: 44,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
               itemCount: _states.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.s),
               itemBuilder: (context, index) {
-                final state = _states[index];
-                final isSelected = _selectedState == state;
+                final st = _states[index];
+                final isSelected = st == _selectedState;
                 return ChoiceChip(
-                  label: Text(
-                    state,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
+                  label: Text(st),
                   selected: isSelected,
-                  onSelected: (val) {
-                    if (val) {
-                      setState(() => _selectedState = state);
-                      _filter();
-                    }
+                  onSelected: (_) {
+                    setState(() {
+                      _selectedState = st;
+                    });
+                    _filter();
                   },
+                  selectedColor: AppColors.electricBlue.withOpacity(0.18),
+                  labelStyle: TextStyle(
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                    color: isSelected
+                        ? AppColors.electricBlue
+                        : (isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
+                  ),
+                  side: BorderSide(
+                    color: isSelected
+                        ? AppColors.electricBlue
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
+                  ),
                 );
               },
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s),
 
-          // Results count
+          // Count & Result List
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.l,
+              vertical: 4,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${_filteredOffices.length} RTO Offices Found',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+                  '${_filteredOffices.length} Offices Listed',
+                  style: AppTypography.labelSmall(
+                    isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
                   ),
                 ),
               ],
             ),
           ),
 
-          // List of RTO Offices
           Expanded(
             child: _filteredOffices.isEmpty
-                ? const Center(child: Text('No RTO office matching search'))
+                ? EmptyStateView(
+                    icon: Icons.location_off_rounded,
+                    title: 'No RTO Office Found',
+                    description:
+                        'No transport office matched "$_selectedState / ${_searchController.text}".',
+                  )
                 : ListView.separated(
-                    padding: const EdgeInsets.all(16),
+                    padding: AppSpacing.edgeInsetsL,
                     itemCount: _filteredOffices.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(height: AppSpacing.m),
                     itemBuilder: (context, index) {
                       final office = _filteredOffices[index];
-                      return _buildOfficeCard(office);
+                      return _buildOfficeCard(office, isDark);
                     },
                   ),
           ),
@@ -165,124 +183,151 @@ class _RtoDirectoryScreenState extends State<RtoDirectoryScreen> {
     );
   }
 
-  Widget _buildOfficeCard(RtoOfficeEntity office) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // RTO Code Pill
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryNavy,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    office.rtoCode,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'monospace',
-                      fontSize: 14,
-                    ),
+  Widget _buildOfficeCard(RtoOfficeEntity office, bool isDark) {
+    return PremiumCard(
+      padding: AppSpacing.edgeInsetsL,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.electricBlue.withOpacity(0.12),
+                  borderRadius: AppRadius.radiusS,
+                  border: Border.all(
+                    color: AppColors.electricBlue.withOpacity(0.3),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        office.officeName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${office.city}, ${office.state}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.electricBlue,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                child: Text(
+                  office.rtoCode,
+                  style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15,
+                    color: AppColors.electricBlue,
                   ),
                 ),
-              ],
-            ),
-            const Divider(height: 20),
-            // Address
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 16,
-                  color: Colors.grey,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    office.address,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            // Phone & Pin
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+              ),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.phone_outlined,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 6),
                     Text(
-                      office.phone,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                      office.officeName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        color: isDark ? Colors.white : AppColors.primaryNavy,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${office.city}, ${office.state}',
+                      style: AppTypography.labelSmall(
+                        isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
                 ),
-                TextButton.icon(
-                  icon: const Icon(Icons.copy, size: 14),
-                  label: const Text(
-                    'Copy Code',
-                    style: TextStyle(fontSize: 11),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.m),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.place_outlined, size: 16, color: Colors.grey),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  '${office.address} - ${office.pincode}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    height: 1.3,
                   ),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: office.rtoCode));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Copied ${office.rtoCode} to clipboard'),
-                      ),
-                    );
-                  },
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const Divider(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: office.phone));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Helpline ${office.phone} copied to clipboard',
+                      ),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                },
+                borderRadius: AppRadius.radiusS,
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.phone_outlined,
+                      size: 14,
+                      color: AppColors.success,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      office.phone,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.success,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: office.website));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Portal link ${office.website} copied'),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                },
+                borderRadius: AppRadius.radiusS,
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.open_in_new,
+                      size: 14,
+                      color: AppColors.electricBlue,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'State Portal',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.electricBlue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

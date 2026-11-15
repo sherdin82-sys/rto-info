@@ -4,7 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/localization/app_locale.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/models/fuel_price_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_text_field.dart';
 import '../../../shared/widgets/premium_card.dart';
 
 class TripCalculatorScreen extends ConsumerStatefulWidget {
@@ -58,81 +64,77 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isHindi ? 'यात्रा लागत कैलकुलेटर' : 'Trip Cost Calculator'),
+      appBar: AppAppBar(
+        title: isHindi ? 'यात्रा लागत कैलकुलेटर' : 'Trip Cost Calculator',
+        subtitle: isHindi
+            ? 'ईंधन खपत व अनुमानित खर्च'
+            : 'Estimate fuel & travel budget',
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
+        padding: AppSpacing.edgeInsetsL,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             PremiumCard(
+              padding: AppSpacing.edgeInsetsL,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    isHindi ? 'यात्रा का विवरण' : 'Trip Details',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
+                  AppTextField(
                     controller: _distanceController,
+                    label: isHindi
+                        ? 'दूरी (किलोमीटर में)'
+                        : 'Trip Distance (km)',
+                    hint: '120',
+                    prefixIcon: const Icon(Icons.route, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi ? 'दूरी (किमी)' : 'Distance (km)',
-                      prefixIcon: const Icon(Icons.straighten),
-                    ),
                   ),
-                  const SizedBox(height: 14),
-                  TextField(
+                  const SizedBox(height: AppSpacing.m),
+                  AppTextField(
                     controller: _mileageController,
+                    label: isHindi
+                        ? 'वाहन माइलेज (किमी/लीटर)'
+                        : 'Vehicle Mileage (km/L)',
+                    hint: '18',
+                    prefixIcon: const Icon(Icons.speed, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi
-                          ? 'माइलेज (किमी / ली)'
-                          : 'Mileage (km / L)',
-                      prefixIcon: const Icon(Icons.speed),
-                    ),
                   ),
-                  const SizedBox(height: 14),
-                  TextField(
+                  const SizedBox(height: AppSpacing.m),
+                  AppTextField(
                     controller: _fuelPriceController,
+                    label: isHindi
+                        ? 'ईंधन मूल्य (₹/लीटर)'
+                        : 'Fuel Price (₹/Litre)',
+                    hint: '94.72',
+                    prefixIcon: const Icon(Icons.local_gas_station, size: 20),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _calculate(),
-                    decoration: InputDecoration(
-                      labelText: isHindi
-                          ? 'ईंधन दर (₹ / ली)'
-                          : 'Fuel Price (₹ / L)',
-                      prefixIcon: const Icon(Icons.local_gas_station),
-                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  AppButton(
+                    label: isHindi ? 'लागत गणना करें' : 'Calculate Fuel Cost',
+                    variant: AppButtonVariant.primary,
+                    onPressed: _calculate,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            const SizedBox(height: AppSpacing.xl),
+
             if (_result != null) ...[
               PremiumCard(
-                backgroundColor: isDark
-                    ? AppColors.darkSurfaceAlt
-                    : AppColors.lightSurfaceVariant,
-                borderColor: AppColors.electricBlue.withOpacity(0.4),
+                accentColor: AppColors.warmOrange,
+                padding: AppSpacing.edgeInsetsXl,
                 child: Column(
                   children: [
                     Text(
                       isHindi
-                          ? 'अनुमानित कुल लागत'
-                          : 'Estimated Total Fuel Cost',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: isDark
+                          ? 'अनुमानित यात्रा लागत'
+                          : 'Estimated Total Trip Cost',
+                      style: AppTypography.labelLarge(
+                        isDark
                             ? AppColors.darkTextSecondary
                             : AppColors.lightTextSecondary,
                       ),
@@ -140,13 +142,12 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
                     const SizedBox(height: 6),
                     Text(
                       '₹${_result!.totalCost.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
+                      style: AppTypography.currencyValue(
                         color: AppColors.electricBlue,
+                        fontSize: 34,
                       ),
                     ),
-                    const Divider(height: 24),
+                    const Divider(height: 28),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -154,6 +155,13 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
                           isHindi ? 'ईंधन की खपत' : 'Fuel Needed',
                           '${_result!.litersRequired.toStringAsFixed(1)} L',
                           isDark,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 36,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                         _buildStat(
                           isHindi ? 'लागत / किमी' : 'Cost / km',
@@ -176,21 +184,18 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
     return Column(
       children: [
         Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary,
+          label,
+          style: AppTypography.labelSmall(
+            isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 4),
         Text(
-          label,
+          value,
           style: TextStyle(
-            fontSize: 11,
-            color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: isDark ? Colors.white : AppColors.primaryNavy,
           ),
         ),
       ],

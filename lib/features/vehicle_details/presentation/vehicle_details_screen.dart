@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/theme/app_colors.dart';
+import '../../../core/services/native_bridge.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
-import '../../../core/widgets/status_badge.dart';
-import 'providers/vehicle_details_provider.dart';
-import '../../history/presentation/providers/history_provider.dart';
+import '../../../shared/models/vehicle_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/error_view.dart';
+import '../../../shared/widgets/loading_view.dart';
+import '../../../shared/widgets/premium_card.dart';
+import '../../../shared/widgets/status_badge.dart';
 import '../../favourites/presentation/providers/favourites_provider.dart';
-import '../domain/models/vehicle_entity.dart';
+import '../../history/presentation/providers/history_provider.dart';
+import 'providers/vehicle_details_provider.dart';
 
 /// VehicleDetailsScreen presents the comprehensive Parivahan Vahan profile
 /// organized into Registration, Vehicle, Owner, and Compliance sections.
@@ -40,6 +49,25 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
     });
   }
 
+  void _shareVehicle(VehicleEntity vehicle) {
+    final text =
+        '''
+*RTO VEHICLE INFORMATION*
+Plate: ${vehicle.registrationNumber}
+Model: ${vehicle.maker} ${vehicle.model}
+Class: ${vehicle.vehicleClass}
+Fuel: ${vehicle.fuelType}
+Fitness: ${vehicle.fitnessValidity}
+Insurance: ${vehicle.insuranceValidity} (${vehicle.insuranceStatus})
+Authority: ${vehicle.registrationAuthority}
+Check more on RTO Info App
+''';
+    NativeBridge.shareVehicleDetails(
+      text: text,
+      subject: 'RTO Details: ${vehicle.registrationNumber}',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final rawPlate = widget.initialPlate ?? 'DL01AB1234';
@@ -51,14 +79,9 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
     final isFav = ref.read(favouritesProvider.notifier).isFavourite(cleanPlate);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          VehicleNumberValidator.formatForDisplay(cleanPlate),
-          style: const TextStyle(
-            fontWeight: FontWeight.w800,
-            fontFamily: 'monospace',
-          ),
-        ),
+      appBar: AppAppBar(
+        title: VehicleNumberValidator.formatForDisplay(cleanPlate),
+        subtitle: 'Parivahan Digital RC Card',
         actions: [
           vehicleAsync.when(
             data: (vehicle) {
@@ -66,7 +89,7 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
               return IconButton(
                 icon: Icon(
                   isFav ? Icons.bookmark : Icons.bookmark_border,
-                  color: isFav ? AppColors.saffron : null,
+                  color: isFav ? AppColors.warmOrange : null,
                 ),
                 tooltip: isFav
                     ? 'Remove from Favourites'
@@ -80,7 +103,7 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                       content: Text(
                         isFav
                             ? 'Removed from Favourites'
-                            : 'Added to Favourites',
+                            : 'Saved to Favourites',
                       ),
                       duration: const Duration(seconds: 1),
                     ),
@@ -91,101 +114,62 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
           ),
-          IconButton(
-            icon: const Icon(Icons.share_outlined),
-            tooltip: 'Share Details',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Vehicle details ready for sharing'),
-                ),
+          vehicleAsync.when(
+            data: (vehicle) {
+              if (vehicle == null) return const SizedBox.shrink();
+              return IconButton(
+                icon: const Icon(Icons.share_outlined),
+                tooltip: 'Share Details',
+                onPressed: () => _shareVehicle(vehicle),
               );
             },
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
           ),
         ],
       ),
       body: vehicleAsync.when(
-        loading: () => const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text(
-                'Retrieving Parivahan Vahan Records...',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-              ),
-            ],
-          ),
-        ),
-        error: (err, stack) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: AppColors.error,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Record Not Found',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Could not retrieve vehicle information for $cleanPlate. Please check the registration number.',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-                const SizedBox(height: 18),
-                FilledButton(
-                  onPressed: () => context.pop(),
-                  child: const Text('Go Back'),
-                ),
-              ],
-            ),
-          ),
+        loading: () =>
+            const LoadingView(message: 'Retrieving Parivahan Vahan Records...'),
+        error: (err, stack) => ErrorView(
+          title: 'Record Not Found',
+          message:
+              'Could not retrieve vehicle information for $cleanPlate. Please verify the registration number.',
+          actionLabel: 'Go Back',
+          onAction: () => context.pop(),
         ),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Vehicle record not available'));
+            return ErrorView(
+              title: 'Vehicle Record Unavailable',
+              message:
+                  'No official registration record matched $cleanPlate in the database.',
+              actionLabel: 'Go Back',
+              onAction: () => context.pop(),
+            );
           }
 
           _recordHistoryOnce(vehicle);
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.edgeInsetsL,
             children: [
               // Digital Smart Card RC Header
               _buildDigitalRcSmartCard(vehicle, isDark),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.l),
 
-              // Quick Action Bar
+              // Action Buttons Row
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
+                    child: AppButton(
+                      label: 'Check e-Challan',
                       icon: const Icon(
                         Icons.warning_amber_rounded,
                         size: 18,
-                        color: AppColors.error,
+                        color: Colors.white,
                       ),
-                      label: const Text(
-                        'Check Challans',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        side: BorderSide(
-                          color: AppColors.error.withOpacity(0.5),
-                        ),
-                      ),
+                      variant: AppButtonVariant.danger,
                       onPressed: () {
                         context.push(
                           '/challan?plate=${vehicle.cleanRegistrationNumber}',
@@ -193,227 +177,190 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                       },
                     ),
                   ),
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: AppButton(
+                      label: isFav ? 'Saved' : 'Bookmark',
+                      icon: Icon(
+                        isFav ? Icons.bookmark : Icons.bookmark_border,
+                        size: 18,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                      variant: AppButtonVariant.secondary,
+                      onPressed: () {
+                        ref
+                            .read(favouritesProvider.notifier)
+                            .toggleFavourite(vehicle);
+                      },
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
 
               // Section 1: Registration Details
               _buildSectionTitle('REGISTRATION DETAILS', isDark),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _DetailRow(
-                        title: 'Registration Number',
-                        value: vehicle.registrationNumber,
-                        isBold: true,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Registration Date',
-                        value: vehicle.registrationDate,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Registering Authority',
-                        value: vehicle.registrationAuthority,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'RTO Code & State',
-                        value: '${vehicle.rtoCode} (${vehicle.state})',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Vehicle Class',
-                        value: vehicle.vehicleClass,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Registration Validity',
-                        value: vehicle.registrationValidity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Status',
-                        value: vehicle.registrationStatus,
-                        isSuccess: true,
-                      ),
-                    ],
-                  ),
+              const SizedBox(height: AppSpacing.s),
+              PremiumCard(
+                child: Column(
+                  children: [
+                    _DetailRow(
+                      title: 'Registration Number',
+                      value: vehicle.registrationNumber,
+                      isBold: true,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Registration Date',
+                      value: vehicle.registrationDate,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Registering Authority',
+                      value: vehicle.registrationAuthority,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'RTO Code & State',
+                      value: '${vehicle.rtoCode} (${vehicle.state})',
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Vehicle Class',
+                      value: vehicle.vehicleClass,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Registration Validity',
+                      value: vehicle.registrationValidity,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Status',
+                      value: vehicle.registrationStatus,
+                      isSuccess: true,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
 
-              // Section 2: Vehicle Details
-              _buildSectionTitle('VEHICLE & MANUFACTURER DETAILS', isDark),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _DetailRow(
-                        title: 'Manufacturer / Maker',
-                        value: vehicle.maker,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Commercial Model',
-                        value: vehicle.model,
-                        isBold: true,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Category & Body Type',
-                        value:
-                            '${vehicle.vehicleCategory} • ${vehicle.bodyType}',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(title: 'Fuel Type', value: vehicle.fuelType),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Engine / Power Capacity',
-                        value: vehicle.engineCapacity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Seating Capacity',
-                        value: '${vehicle.seatingCapacity} Persons',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Manufacturing Year',
-                        value: vehicle.manufacturingYear,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Emission Norms',
-                        value: vehicle.emissionStandard,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(title: 'Color', value: vehicle.color),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Chassis No (Masked)',
-                        value: vehicle.maskedChassisNumber,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Engine No (Masked)',
-                        value: vehicle.maskedEngineNumber,
-                      ),
-                    ],
-                  ),
+              // Section 2: Vehicle & Manufacturer Details
+              _buildSectionTitle('VEHICLE & TECHNICAL SPECIFICATIONS', isDark),
+              const SizedBox(height: AppSpacing.s),
+              PremiumCard(
+                child: Column(
+                  children: [
+                    _DetailRow(
+                      title: 'Manufacturer / Maker',
+                      value: vehicle.maker,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(title: 'Model & Variant', value: vehicle.model),
+                    const Divider(height: 20),
+                    _DetailRow(title: 'Body Type', value: vehicle.bodyType),
+                    const Divider(height: 20),
+                    _DetailRow(title: 'Fuel Type', value: vehicle.fuelType),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Engine Displacement',
+                      value: '${vehicle.cubicCapacity} cc',
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Seating Capacity',
+                      value: '${vehicle.seatingCapacity} Persons',
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(title: 'Color', value: vehicle.color),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
 
-              // Section 3: Owner Details (Privacy-protected)
-              _buildSectionTitle(
-                'OWNER INFORMATION (PRIVACY PROTECTED)',
-                isDark,
-              ),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _DetailRow(
-                        title: 'Owner Name (Masked)',
-                        value: vehicle.maskedOwnerName,
-                        isBold: true,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Father / Husband Name',
-                        value: vehicle.maskedFatherName,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Ownership Serial',
-                        value: vehicle.ownershipSerial,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Jurisdiction Area',
-                        value: vehicle.maskedAddress,
-                      ),
-                    ],
-                  ),
+              // Section 3: Compliance & Validity
+              _buildSectionTitle('INSURANCE, FITNESS & PUC COMPLIANCE', isDark),
+              const SizedBox(height: AppSpacing.s),
+              PremiumCard(
+                child: Column(
+                  children: [
+                    _DetailRow(
+                      title: 'Insurance Status',
+                      value: vehicle.insuranceStatus,
+                      isSuccess:
+                          vehicle.insuranceStatus.toUpperCase() == 'ACTIVE',
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Insurance Provider',
+                      value: vehicle.insuranceCompany,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Insurance Valid Upto',
+                      value: vehicle.insuranceValidity,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Fitness Valid Upto',
+                      value: vehicle.fitnessValidity,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'PUC Valid Upto',
+                      value: vehicle.pucValidity,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Road Tax Status',
+                      value: vehicle.taxValidity,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Emission Norms',
+                      value: vehicle.emissionNorms,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
 
-              // Section 4: Compliance Details (Insurance, PUC, Fitness, Tax, Loan)
-              _buildSectionTitle('COMPLIANCE & LEGAL CERTIFICATES', isDark),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _DetailRow(
-                        title: 'Insurance Status',
-                        value: vehicle.insuranceStatus,
-                        isSuccess: vehicle.insuranceStatus == 'ACTIVE',
-                        isError: vehicle.insuranceStatus == 'EXPIRED',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Insurance Provider',
-                        value: vehicle.insuranceCompany,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Policy Expiry Date',
-                        value: vehicle.insuranceValidity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'PUC Certificate Status',
-                        value: vehicle.pucStatus,
-                        isSuccess:
-                            vehicle.pucStatus == 'ACTIVE' ||
-                            vehicle.pucStatus == 'EXEMPTED',
-                        isError: vehicle.pucStatus == 'EXPIRED',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'PUC Expiry Date',
-                        value: vehicle.pucValidity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Fitness Validity Upto',
-                        value: vehicle.fitnessValidity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Permit Details',
-                        value: vehicle.permitValidity,
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Road Tax Details',
-                        value:
-                            '${vehicle.roadTaxStatus} (${vehicle.roadTaxPaidUpto})',
-                      ),
-                      const Divider(height: 16),
-                      _DetailRow(
-                        title: 'Hypothecation (Financier)',
-                        value: vehicle.isHypothecated
-                            ? '${vehicle.hypothecationBank ?? "Financed"} • ${vehicle.hypothecationStatus ?? "ACTIVE"}'
-                            : 'No Hypothecation (Clean Title)',
-                      ),
-                    ],
-                  ),
+              // Section 4: Statutory Compliance & Ownership Details
+              _buildSectionTitle('STATUTORY COMPLIANCE & OWNERSHIP', isDark),
+              const SizedBox(height: AppSpacing.s),
+              PremiumCard(
+                child: Column(
+                  children: [
+                    _DetailRow(
+                      title: 'Owner Name (Sec 6 Privacy)',
+                      value: vehicle.ownerName,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Owner Serial / Count',
+                      value: vehicle.ownershipNumber,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Chassis Number (Masked)',
+                      value: vehicle.chassisNumber,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Engine Number (Masked)',
+                      value: vehicle.engineNumber,
+                    ),
+                    const Divider(height: 20),
+                    _DetailRow(
+                      title: 'Hypothecation / Financier',
+                      value: vehicle.financier,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xxl),
             ],
           );
         },
@@ -423,19 +370,22 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
 
   Widget _buildDigitalRcSmartCard(VehicleEntity v, bool isDark) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: AppSpacing.edgeInsetsXl,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.primaryNavyDark, AppColors.primaryNavy],
+          colors: [AppColors.primaryNavyDark, AppColors.primaryNavyLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.electricBlue.withOpacity(0.4)),
+        borderRadius: AppRadius.radiusXl,
+        border: Border.all(
+          color: AppColors.electricBlue.withOpacity(0.4),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryNavy.withOpacity(0.35),
-            blurRadius: 18,
+            color: AppColors.primaryNavy.withOpacity(0.4),
+            blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
@@ -448,12 +398,16 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.shield, color: Colors.amber, size: 22),
-                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.shield,
+                    color: AppColors.metallicGold,
+                    size: 20,
+                  ),
+                  const SizedBox(width: AppSpacing.s),
                   Text(
                     'UNION OF INDIA • REGISTRATION CERTIFICATE',
                     style: TextStyle(
-                      color: Colors.amber.shade300,
+                      color: AppColors.metallicGoldLight,
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
@@ -464,15 +418,15 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
               StatusBadge(label: v.registrationStatus, type: BadgeType.active),
             ],
           ),
-          const SizedBox(height: 6),
-          // Demo vs Verified Gateway Data Indicator
+          const SizedBox(height: AppSpacing.s),
+          // Demo vs Verified Record Indicator
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
               color: v.isDemoData
-                  ? Colors.amber.withOpacity(0.2)
-                  : Colors.green.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(6),
+                  ? Colors.amber.withOpacity(0.18)
+                  : Colors.green.withOpacity(0.18),
+              borderRadius: AppRadius.radiusXs,
               border: Border.all(
                 color: v.isDemoData ? Colors.amberAccent : Colors.greenAccent,
                 width: 0.8,
@@ -503,7 +457,7 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.l),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -512,12 +466,9 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                 children: [
                   Text(
                     v.registrationNumber,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22,
+                    style: AppTypography.hsrpPlate(
                       color: Colors.white,
-                      letterSpacing: 2.0,
+                      fontSize: 22,
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -525,19 +476,34 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
                     '${v.maker} • ${v.model}',
                     style: const TextStyle(
                       color: Colors.white70,
-                      fontSize: 12,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
+              // Metallic EMV Chip Visual
               Container(
-                width: 38,
-                height: 28,
+                width: 42,
+                height: 30,
                 decoration: BoxDecoration(
-                  color: Colors.amber.shade600,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.amber.shade200),
+                  gradient: const LinearGradient(
+                    colors: [
+                      AppColors.metallicGoldLight,
+                      AppColors.metallicGold,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: AppRadius.radiusS,
+                  border: Border.all(color: Colors.white70, width: 0.8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(1, 2),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   Icons.memory,
@@ -569,14 +535,73 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
   }
 
   Widget _buildSectionTitle(String title, bool isDark) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0.8,
-        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.8,
+          color: isDark ? AppColors.electricBlueLight : AppColors.electricBlue,
+        ),
       ),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final String title;
+  final String value;
+  final bool isBold;
+  final bool isSuccess;
+
+  const _DetailRow({
+    required this.title,
+    required this.value,
+    this.isBold = false,
+    this.isSuccess = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.s),
+        Expanded(
+          flex: 3,
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+              color: isSuccess
+                  ? AppColors.success
+                  : (isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -584,6 +609,7 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
 class _CardInfoItem extends StatelessWidget {
   final String label;
   final String value;
+
   const _CardInfoItem({required this.label, required this.value});
 
   @override
@@ -596,7 +622,8 @@ class _CardInfoItem extends StatelessWidget {
           style: const TextStyle(
             color: Colors.white54,
             fontSize: 9,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 2),
@@ -604,51 +631,8 @@ class _CardInfoItem extends StatelessWidget {
           value,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  final String title;
-  final String value;
-  final bool isBold;
-  final bool isSuccess;
-  final bool isError;
-
-  const _DetailRow({
-    required this.title,
-    required this.value,
-    this.isBold = false,
-    this.isSuccess = false,
-    this.isError = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Color textColor =
-        Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87;
-    if (isSuccess) textColor = AppColors.success;
-    if (isError) textColor = AppColors.error;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(width: 8),
-        Flexible(
-          child: Text(
-            VehicleEntity.safeValue(value),
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
-              color: textColor,
-            ),
           ),
         ),
       ],

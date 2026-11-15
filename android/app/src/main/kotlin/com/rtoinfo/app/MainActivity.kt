@@ -19,7 +19,7 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "getAppVersion" -> {
-                    result.success("0.1.0")
+                    result.success("0.2.0")
                 }
                 "getDeviceInfo" -> {
                     val info = mapOf(

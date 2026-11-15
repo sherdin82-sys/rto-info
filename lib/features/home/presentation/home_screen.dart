@@ -3,12 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/localization/app_locale.dart';
-import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/widgets/vehicle_search_bar.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../core/theme/theme_provider.dart';
+import '../../../shared/widgets/premium_card.dart';
+import '../../../shared/widgets/status_badge.dart';
+import '../../../shared/widgets/vehicle_search_bar.dart';
 import '../../history/presentation/providers/history_provider.dart';
 
 /// HomeScreen serves as the primary automotive dashboard for RTO Info.
+/// Redesigned with NoteFlow architecture, premium cards, and responsive native widgets.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -22,9 +29,10 @@ class HomeScreen extends ConsumerWidget {
     final quickTools = [
       {
         'title': isHindi ? 'आरसी विवरण' : 'RC Details',
-        'desc': isHindi ? 'वाहन स्वामित्व व फिटनेस' : 'Owner & fitness',
+        'desc': isHindi ? 'वाहन स्वामित्व व फिटनेस' : 'Owner & fitness status',
         'icon': Icons.verified_user_outlined,
         'color': AppColors.electricBlue,
+        'badge': 'VERIFIED',
         'route': '/rc',
       },
       {
@@ -32,6 +40,7 @@ class HomeScreen extends ConsumerWidget {
         'desc': isHindi ? 'यातायात जुर्माना देखें' : 'Pending traffic fines',
         'icon': Icons.warning_amber_rounded,
         'color': AppColors.error,
+        'badge': 'PORTAL',
         'route': '/challan',
       },
       {
@@ -39,13 +48,15 @@ class HomeScreen extends ConsumerWidget {
         'desc': isHindi ? 'ड्राइविंग लाइसेंस स्थिति' : 'Driving licence check',
         'icon': Icons.badge_outlined,
         'color': AppColors.success,
+        'badge': 'SARATHI',
         'route': '/dl',
       },
       {
         'title': isHindi ? 'ईंधन दरें' : 'Fuel Rates',
         'desc': isHindi ? 'दैनिक पेट्रोल व डीजल' : 'Daily petrol & diesel',
         'icon': Icons.local_gas_station_outlined,
-        'color': AppColors.saffron,
+        'color': AppColors.warmOrange,
+        'badge': 'DAILY',
         'route': '/fuel',
       },
       {
@@ -53,6 +64,7 @@ class HomeScreen extends ConsumerWidget {
         'desc': isHindi ? 'वाहन मूल्यांकन व ऋण' : 'Market valuation & loan',
         'icon': Icons.calculate_outlined,
         'color': const Color(0xFF8B5CF6),
+        'badge': 'CALC',
         'route': '/resale',
       },
       {
@@ -60,6 +72,7 @@ class HomeScreen extends ConsumerWidget {
         'desc': isHindi ? 'कार्यालय पता व संपर्क' : 'Offices & state codes',
         'icon': Icons.business_outlined,
         'color': const Color(0xFF0284C7),
+        'badge': 'ALL-INDIA',
         'route': '/rto',
       },
       {
@@ -69,6 +82,7 @@ class HomeScreen extends ConsumerWidget {
             : 'Road safety rules & fines',
         'icon': Icons.traffic_outlined,
         'color': AppColors.successDark,
+        'badge': 'MV ACT',
         'route': '/signs',
       },
       {
@@ -76,6 +90,7 @@ class HomeScreen extends ConsumerWidget {
         'desc': isHindi ? 'लर्नर लाइसेंस अभ्यास' : 'Learner licence test',
         'icon': Icons.school_outlined,
         'color': const Color(0xFF0D9488),
+        'badge': 'QUIZ',
         'route': '/exam',
       },
       {
@@ -85,6 +100,7 @@ class HomeScreen extends ConsumerWidget {
             : 'Estimate fuel & travel expense',
         'icon': Icons.route_outlined,
         'color': const Color(0xFFE11D48),
+        'badge': 'BUDGET',
         'route': '/trip-calculator',
       },
       {
@@ -93,7 +109,8 @@ class HomeScreen extends ConsumerWidget {
             ? 'मासिक किस्त व ब्याज'
             : 'Monthly installment calculator',
         'icon': Icons.payments_outlined,
-        'color': const Color(0xFF2563EB),
+        'color': AppColors.electricBlueDark,
+        'badge': 'FINANCE',
         'route': '/loan-emi',
       },
     ];
@@ -112,25 +129,32 @@ class HomeScreen extends ConsumerWidget {
             title: Row(
               children: [
                 Container(
-                  width: 34,
-                  height: 34,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
                     color: AppColors.primaryNavy,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: AppRadius.radiusM,
                     border: Border.all(
                       color: AppColors.electricBlue,
                       width: 1.5,
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.electricBlue.withOpacity(0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: const Center(
                     child: Icon(
                       Icons.directions_car,
-                      color: Colors.amber,
+                      color: AppColors.warmOrange,
                       size: 20,
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.m),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -147,7 +171,7 @@ class HomeScreen extends ConsumerWidget {
                                 : AppColors.primaryNavy,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: AppSpacing.xs),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 5,
@@ -155,7 +179,7 @@ class HomeScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.electricBlue.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: AppRadius.radiusXs,
                           ),
                           child: const Text(
                             'INDIA',
@@ -170,11 +194,10 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     Text(
                       isHindi
-                          ? 'भारतीय वाहन सूचना पोर्टल'
+                          ? 'भारतीय वाहन सूचना व परिवहन पोर्टल'
                           : 'Parivahan Vehicle Intelligence',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: isDark
+                      style: AppTypography.labelSmall(
+                        isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,
                       ),
@@ -185,11 +208,28 @@ class HomeScreen extends ConsumerWidget {
             ),
             actions: [
               IconButton(
-                icon: Text(
-                  isHindi ? 'EN' : 'हिं',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 13,
+                icon: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkSurfaceAlt
+                        : AppColors.lightSurfaceAlt,
+                    borderRadius: AppRadius.radiusS,
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
+                  ),
+                  child: Text(
+                    isHindi ? 'EN' : 'हिं',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
                 onPressed: () =>
@@ -205,21 +245,24 @@ class HomeScreen extends ConsumerWidget {
                     ref.read(themeModeProvider.notifier).toggleTheme(),
                 tooltip: 'Toggle Theme',
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s),
             ],
           ),
 
           // Main Dashboard Content
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.l,
+              vertical: AppSpacing.m,
+            ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Tricolor Accent Line
                 Container(
                   height: 3,
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: AppSpacing.l),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: AppRadius.radiusXs,
                     gradient: const LinearGradient(
                       colors: [
                         Color(0xFFFF9933),
@@ -233,34 +276,30 @@ class HomeScreen extends ConsumerWidget {
                 // Hero Title
                 Text(
                   isHindi ? 'वाहन विवरण खोजें' : 'Check Indian Vehicle Details',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                    color: isDark ? Colors.white : AppColors.primaryNavy,
-                  ),
+                  style: AppTypography.titleLarge(
+                    isDark ? Colors.white : AppColors.primaryNavy,
+                  ).copyWith(fontSize: 22, fontWeight: FontWeight.w900),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   isHindi
-                      ? 'आरसी, बीमा, प्रदूषण और ई-चालान की तुरंत जाँच करें'
-                      : 'Verify RC, insurance, PUC status, and pending challans instantly',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: isDark
+                      ? 'आरसी, बीमा, प्रदूषण और ई-चालान की तुरंत आधिकारिक जाँच करें'
+                      : 'Verify RC smart card, insurance, PUC status, and pending challans instantly',
+                  style: AppTypography.bodySmall(
+                    isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextSecondary,
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: AppSpacing.l),
 
-                // Search Bar
+                // HSRP Number Plate Search Input
                 VehicleSearchBar(
                   onSearch: (cleanPlate) {
                     context.push('/rc?plate=$cleanPlate');
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.m),
 
                 // Quick Plate Suggestions
                 Wrap(
@@ -269,10 +308,8 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     Text(
                       isHindi ? 'नमूना:' : 'Sample:',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: isDark
+                      style: AppTypography.labelSmall(
+                        isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,
                       ),
@@ -282,7 +319,7 @@ class HomeScreen extends ConsumerWidget {
                         onTap: () {
                           context.push('/rc?plate=${s['plate']}');
                         },
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: AppRadius.radiusS,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -292,7 +329,7 @@ class HomeScreen extends ConsumerWidget {
                             color: isDark
                                 ? AppColors.darkSurfaceAlt
                                 : AppColors.lightSurfaceAlt,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: AppRadius.radiusS,
                             border: Border.all(
                               color: isDark
                                   ? AppColors.darkBorder
@@ -311,20 +348,19 @@ class HomeScreen extends ConsumerWidget {
                       ),
                   ],
                 ),
+
+                // Recent Searches Ribbon
                 if (historyItems.isNotEmpty) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.xl),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         isHindi ? 'हाल की खोजें' : 'Recent Searches',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: isDark
+                        style: AppTypography.labelLarge(
+                          isDark
                               ? AppColors.darkTextMuted
                               : AppColors.lightTextMuted,
-                          letterSpacing: 0.5,
                         ),
                       ),
                       InkWell(
@@ -332,7 +368,7 @@ class HomeScreen extends ConsumerWidget {
                         child: Text(
                           isHindi ? 'सभी देखें' : 'View All',
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: AppColors.electricBlue,
                           ),
@@ -340,7 +376,7 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.s),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -367,27 +403,104 @@ class HomeScreen extends ConsumerWidget {
                     ],
                   ),
                 ],
-                const SizedBox(height: 24),
 
-                // Section: Quick RTO Tools
+                // Live Fuel Rates Mini Ticker Card
+                const SizedBox(height: AppSpacing.xl),
+                PremiumCard(
+                  onTap: () => context.push('/fuel'),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.l,
+                    vertical: AppSpacing.m,
+                  ),
+                  accentColor: AppColors.warmOrange,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.warmOrange.withOpacity(0.12),
+                              borderRadius: AppRadius.radiusM,
+                            ),
+                            child: const Icon(
+                              Icons.local_gas_station,
+                              color: AppColors.warmOrange,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.m),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                isHindi
+                                    ? 'दैनिक ईंधन दरें (दिल्ली)'
+                                    : 'Daily Fuel Rates (Delhi)',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: isDark
+                                      ? Colors.white
+                                      : AppColors.primaryNavy,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Petrol ₹94.72 • Diesel ₹87.62 • CNG ₹75.09',
+                                style: AppTypography.labelSmall(
+                                  isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: AppColors.electricBlue,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: AppSpacing.xxl),
+
+                // Section: Essential RTO Services
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       isHindi
-                          ? 'त्वरित आरटीओ सेवाएँ'
+                          ? 'आवश्यक आरटीओ सेवाएँ'
                           : 'Essential RTO Services',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : AppColors.primaryNavy,
+                      style: AppTypography.titleMedium(
+                        isDark ? Colors.white : AppColors.primaryNavy,
+                      ).copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.electricBlue.withOpacity(0.1),
+                        borderRadius: AppRadius.radiusPill,
+                      ),
+                      child: Text(
+                        '10 TOOLS',
+                        style: AppTypography.labelSmall(AppColors.electricBlue),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: AppSpacing.m),
 
-                // 2-Column Grid of Tools
+                // 2-Column Grid of 10 Tools using PremiumCard
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -402,16 +515,16 @@ class HomeScreen extends ConsumerWidget {
                     final item = quickTools[index];
                     final color = item['color'] as Color;
 
-                    return Card(
-                      child: InkWell(
-                        onTap: () {
-                          context.push(item['route'] as String);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    return PremiumCard(
+                      padding: const EdgeInsets.all(AppSpacing.m),
+                      onTap: () {
+                        context.push(item['route'] as String);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
@@ -419,7 +532,7 @@ class HomeScreen extends ConsumerWidget {
                                 height: 36,
                                 decoration: BoxDecoration(
                                   color: color.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: AppRadius.radiusM,
                                 ),
                                 child: Icon(
                                   item['icon'] as IconData,
@@ -427,50 +540,68 @@ class HomeScreen extends ConsumerWidget {
                                   size: 20,
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item['title'] as String,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13,
-                                      color: isDark
-                                          ? Colors.white
-                                          : AppColors.lightTextPrimary,
-                                    ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: color.withOpacity(0.08),
+                                  borderRadius: AppRadius.radiusXs,
+                                ),
+                                child: Text(
+                                  item['badge'] as String,
+                                  style: TextStyle(
+                                    color: color,
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.5,
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    item['desc'] as String,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: isDark
-                                          ? AppColors.darkTextMuted
-                                          : AppColors.lightTextMuted,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['title'] as String,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: isDark
+                                      ? Colors.white
+                                      : AppColors.lightTextPrimary,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                item['desc'] as String,
+                                style: AppTypography.labelSmall(
+                                  isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     );
                   },
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: AppSpacing.xxl),
 
-                // Compliance Notice Card
+                // Compliance Notice Card (Motor Vehicles Act Section 139)
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: AppSpacing.edgeInsetsL,
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.darkSurfaceAlt
                         : const Color(0xFFEFF6FF),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.radiusCard,
                     border: Border.all(
                       color: isDark
                           ? AppColors.darkBorder
@@ -485,7 +616,7 @@ class HomeScreen extends ConsumerWidget {
                         color: AppColors.electricBlue,
                         size: 22,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -502,7 +633,7 @@ class HomeScreen extends ConsumerWidget {
                                     : const Color(0xFF1E3A8A),
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: AppSpacing.xs),
                             Text(
                               isHindi
                                   ? 'डिजिलॉकर व एम-परिवहन द्वारा प्रस्तुत डिजिटल आरसी और ड्राइविंग लाइसेंस कानूनी रूप से भौतिक दस्तावेजों के समान मान्य हैं।'
@@ -521,7 +652,7 @@ class HomeScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.xl),
               ]),
             ),
           ),

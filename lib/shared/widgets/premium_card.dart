@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radius.dart';
+import '../../core/theme/app_spacing.dart';
 
-/// PremiumCard is NoteFlow's signature container widget with subtle border,
+/// PremiumCard is RTO Info's signature container widget with subtle border,
 /// rounded corners, and anti-aliased Material ink splash.
 class PremiumCard extends StatelessWidget {
   final Widget child;
@@ -11,8 +12,12 @@ class PremiumCard extends StatelessWidget {
   final VoidCallback? onLongPress;
   final Color? backgroundColor;
   final Color? borderColor;
+  final Color? accentColor;
+  final Gradient? gradient;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
+  final double borderWidth;
+  final List<BoxShadow>? shadows;
 
   const PremiumCard({
     super.key,
@@ -21,8 +26,12 @@ class PremiumCard extends StatelessWidget {
     this.onLongPress,
     this.backgroundColor,
     this.borderColor,
-    this.padding = const EdgeInsets.all(AppConstants.paddingMedium),
-    this.borderRadius = AppConstants.radiusMedium,
+    this.accentColor,
+    this.gradient,
+    this.padding = AppSpacing.edgeInsetsL,
+    this.borderRadius = AppRadius.card,
+    this.borderWidth = 1.0,
+    this.shadows,
   });
 
   @override
@@ -31,21 +40,69 @@ class PremiumCard extends StatelessWidget {
     final defaultBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final defaultBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return Material(
-      color: backgroundColor ?? defaultBg,
-      shape: RoundedRectangleBorder(
+    Widget content = Padding(padding: padding, child: child);
+
+    if (accentColor != null) {
+      content = IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 4,
+              decoration: BoxDecoration(
+                color: accentColor,
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(borderRadius),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(padding: padding, child: child),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget cardBody = InkWell(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      borderRadius: BorderRadius.circular(borderRadius),
+      splashColor: (isDark ? Colors.white : Colors.black).withAlpha(15),
+      highlightColor: (isDark ? Colors.white : Colors.black).withAlpha(8),
+      child: accentColor != null
+          ? content
+          : Padding(padding: padding, child: child),
+    );
+
+    if (gradient != null) {
+      return Container(
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(
+            color: borderColor ?? defaultBorder,
+            width: borderWidth,
+          ),
+          boxShadow: shadows,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Material(color: Colors.transparent, child: cardBody),
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor ?? defaultBg,
         borderRadius: BorderRadius.circular(borderRadius),
-        side: BorderSide(color: borderColor ?? defaultBorder, width: 1.0),
+        border: Border.all(
+          color: borderColor ?? defaultBorder,
+          width: borderWidth,
+        ),
+        boxShadow: shadows,
       ),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        borderRadius: BorderRadius.circular(borderRadius),
-        splashColor: (isDark ? Colors.white : Colors.black).withAlpha(15),
-        highlightColor: (isDark ? Colors.white : Colors.black).withAlpha(8),
-        child: Padding(padding: padding, child: child),
-      ),
+      child: Material(color: Colors.transparent, child: cardBody),
     );
   }
 }

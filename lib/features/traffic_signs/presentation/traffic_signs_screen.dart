@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../app/theme/app_colors.dart';
-import '../domain/models/traffic_sign_entity.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../shared/models/traffic_sign_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_text_field.dart';
+import '../../../shared/widgets/empty_state_view.dart';
+import '../../../shared/widgets/premium_card.dart';
 import '../data/traffic_signs_data.dart';
 
 class TrafficSignsScreen extends StatefulWidget {
@@ -33,8 +40,9 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Traffic Signs & MV Act Fines'),
+      appBar: AppAppBar(
+        title: 'Traffic Signs & MV Act Fines',
+        subtitle: 'Road Safety Rules & Penalties Handbook',
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
@@ -50,31 +58,22 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-            child: TextField(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.l,
+              AppSpacing.m,
+              AppSpacing.l,
+              AppSpacing.s,
+            ),
+            child: AppTextField(
               controller: _searchController,
+              hint: 'Search sign name, rule or offence...',
+              prefixIcon: const Icon(Icons.search, size: 20),
               onChanged: (val) =>
                   setState(() => _searchQuery = val.toLowerCase().trim()),
-              decoration: InputDecoration(
-                hintText: 'Search sign name, rule or offence...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() => _searchQuery = '');
-                        },
-                      )
-                    : null,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              onClear: () {
+                _searchController.clear();
+                setState(() => _searchQuery = '');
+              },
             ),
           ),
 
@@ -101,17 +100,22 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
       if (!matchesCat) return false;
       if (_searchQuery.isEmpty) return true;
       return s.title.toLowerCase().contains(_searchQuery) ||
-          s.description.toLowerCase().contains(_searchQuery);
+          s.description.toLowerCase().contains(_searchQuery) ||
+          s.fine.toLowerCase().contains(_searchQuery);
     }).toList();
 
     if (filtered.isEmpty) {
-      return const Center(child: Text('No signs found'));
+      return EmptyStateView(
+        icon: Icons.traffic_rounded,
+        title: 'No Signs Found',
+        description: 'No $category signs matched "$_searchQuery".',
+      );
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.edgeInsetsL,
       itemCount: filtered.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.m),
       itemBuilder: (context, index) {
         final sign = filtered[index];
         return _buildSignCard(sign);
@@ -120,97 +124,112 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
   }
 
   Widget _buildSignCard(TrafficSignEntity sign) {
-    Color borderColor;
-    Color bgColor;
-    IconData iconData;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    if (sign.category == 'Mandatory') {
-      borderColor = const Color(0xFFDC2626);
-      bgColor = const Color(0xFFFEF2F2);
-      iconData = Icons.do_not_disturb_on;
-    } else if (sign.category == 'Cautionary') {
-      borderColor = const Color(0xFFD97706);
-      bgColor = const Color(0xFFFFFBEB);
-      iconData = Icons.warning_amber_rounded;
-    } else {
-      borderColor = const Color(0xFF2563EB);
-      bgColor = const Color(0xFFEFF6FF);
-      iconData = Icons.info_outline;
+    Color badgeBg;
+    Color badgeFg;
+    IconData icon;
+
+    switch (sign.category) {
+      case 'Mandatory':
+        badgeBg = AppColors.error.withOpacity(0.12);
+        badgeFg = AppColors.error;
+        icon = Icons.do_not_disturb_on_outlined;
+        break;
+      case 'Cautionary':
+        badgeBg = AppColors.warning.withOpacity(0.15);
+        badgeFg = AppColors.warning;
+        icon = Icons.warning_amber_rounded;
+        break;
+      default:
+        badgeBg = AppColors.electricBlue.withOpacity(0.12);
+        badgeFg = AppColors.electricBlue;
+        icon = Icons.info_outline;
+        break;
     }
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Sign Visual Badge
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: sign.shape == 'Circle' || sign.shape == 'Octagon'
-                    ? BoxShape.circle
-                    : BoxShape.rectangle,
-                borderRadius: sign.shape != 'Circle' && sign.shape != 'Octagon'
-                    ? BorderRadius.circular(8)
-                    : null,
-                border: Border.all(color: borderColor, width: 3),
-              ),
-              child: Center(
-                child: Icon(iconData, color: borderColor, size: 28),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    sign.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+    return PremiumCard(
+      padding: AppSpacing.edgeInsetsL,
+      accentColor: badgeFg,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(color: badgeBg, shape: BoxShape.circle),
+            child: Icon(icon, color: badgeFg, size: 24),
+          ),
+          const SizedBox(width: AppSpacing.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        sign.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14,
+                          color: isDark ? Colors.white : AppColors.primaryNavy,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    sign.description,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.blueGrey,
-                      height: 1.3,
-                    ),
-                  ),
-                  if (sign.fineForViolation != null) ...[
-                    const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                        horizontal: 6,
+                        vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(6),
+                        color: badgeBg,
+                        borderRadius: AppRadius.radiusXs,
                       ),
                       child: Text(
-                        'Fine: ${sign.fineForViolation}',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                        sign.shape,
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          color: badgeFg,
                         ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  sign.description,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                    height: 1.35,
+                  ),
+                ),
+                if (sign.fine.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.gavel, size: 13, color: AppColors.error),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Fine: ${sign.fine}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -218,89 +237,78 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
   Widget _buildFinesList() {
     final filtered = TrafficSignsData.fines.where((f) {
       if (_searchQuery.isEmpty) return true;
-      return f.offence.toLowerCase().contains(_searchQuery) ||
-          f.section.toLowerCase().contains(_searchQuery) ||
-          f.penalty.toLowerCase().contains(_searchQuery);
+      return f['offence']!.toLowerCase().contains(_searchQuery) ||
+          f['section']!.toLowerCase().contains(_searchQuery) ||
+          f['fine']!.toLowerCase().contains(_searchQuery);
     }).toList();
 
     if (filtered.isEmpty) {
-      return const Center(child: Text('No offences found'));
+      return EmptyStateView(
+        icon: Icons.gavel_rounded,
+        title: 'No Penalties Found',
+        description: 'No MV Act offence matched "$_searchQuery".',
+      );
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return ListView.separated(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.edgeInsetsL,
       itemCount: filtered.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.m),
       itemBuilder: (context, index) {
-        final fine = filtered[index];
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.electricBlue.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        fine.section,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.electricBlue,
-                        ),
+        final item = filtered[index];
+        return PremiumCard(
+          padding: AppSpacing.edgeInsetsL,
+          accentColor: AppColors.error,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      item['offence']!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        color: isDark ? Colors.white : AppColors.primaryNavy,
                       ),
                     ),
-                    Text(
-                      fine.category,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  ),
+                  Text(
+                    item['fine']!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                      color: AppColors.error,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Motor Vehicles Act ${item['section']!}',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.electricBlue,
                 ),
-                const SizedBox(height: 10),
+              ),
+              if (item['action'] != null) ...[
+                const SizedBox(height: 4),
                 Text(
-                  fine.offence,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                  item['action']!,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.gavel, size: 16, color: Colors.red),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        fine.penalty,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
-            ),
+            ],
           ),
         );
       },

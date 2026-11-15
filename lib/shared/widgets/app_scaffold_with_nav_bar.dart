@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/localization/app_locale.dart';
-import '../../app/theme/app_colors.dart';
+import 'app_bottom_navigation.dart';
 
 /// AppScaffoldWithNavBar provides bottom navigation bar shell for GoRouter.
 class AppScaffoldWithNavBar extends ConsumerWidget {
@@ -21,49 +21,35 @@ class AppScaffoldWithNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isHindi = locale.languageCode == 'hi';
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
-            onDestinationSelected: _onDestinationSelected,
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.directions_car_outlined),
-                selectedIcon: const Icon(Icons.directions_car),
-                label: locale.languageCode == 'hi' ? 'होम' : 'Home',
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.history_outlined),
-                selectedIcon: const Icon(Icons.history),
-                label: locale.languageCode == 'hi' ? 'इतिहास' : 'History',
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.bookmark_outline),
-                selectedIcon: const Icon(Icons.bookmark),
-                label: locale.languageCode == 'hi' ? 'पसंदीदा' : 'Favourites',
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.settings_outlined),
-                selectedIcon: const Icon(Icons.settings),
-                label: locale.languageCode == 'hi' ? 'सेटिंग्स' : 'Settings',
-              ),
-            ],
+      bottomNavigationBar: AppBottomNavigation(
+        currentIndex: navigationShell.currentIndex,
+        onItemSelected: _onDestinationSelected,
+        items: [
+          AppNavigationItem(
+            icon: Icons.directions_car_outlined,
+            selectedIcon: Icons.directions_car,
+            label: isHindi ? 'होम' : 'Home',
           ),
-        ),
+          AppNavigationItem(
+            icon: Icons.history_outlined,
+            selectedIcon: Icons.history,
+            label: isHindi ? 'इतिहास' : 'History',
+          ),
+          AppNavigationItem(
+            icon: Icons.bookmark_outline,
+            selectedIcon: Icons.bookmark,
+            label: isHindi ? 'पसंदीदा' : 'Favourites',
+          ),
+          AppNavigationItem(
+            icon: Icons.settings_outlined,
+            selectedIcon: Icons.settings,
+            label: isHindi ? 'सेटिंग्स' : 'Settings',
+          ),
+        ],
       ),
     );
   }

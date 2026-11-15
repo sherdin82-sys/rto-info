@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/theme/app_colors.dart';
-import '../../../core/widgets/status_badge.dart';
-import '../domain/models/dl_entity.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../shared/models/dl_entity.dart';
+import '../../../shared/widgets/app_app_bar.dart';
+import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_text_field.dart';
+import '../../../shared/widgets/empty_state_view.dart';
+import '../../../shared/widgets/error_view.dart';
+import '../../../shared/widgets/loading_view.dart';
+import '../../../shared/widgets/premium_card.dart';
+import '../../../shared/widgets/status_badge.dart';
 import 'providers/dl_provider.dart';
 
-/// DlScreen handles Driving Licence verification with Sarathi Parivahan standards.
+/// DlScreen handles Driving Licence verification adhering to Sarathi Parivahan standards.
 class DlScreen extends ConsumerStatefulWidget {
   const DlScreen({super.key});
 
@@ -37,190 +47,151 @@ class _DlScreenState extends ConsumerState<DlScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final dlAsync = ref.watch(dlDetailsProvider(_activeSearchDl));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Driving Licence Verification')),
+      appBar: const AppAppBar(
+        title: 'Driving Licence Verification',
+        subtitle: 'Sarathi National Register Portal',
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.edgeInsetsL,
         children: [
           // DL Search Box
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'DRIVING LICENCE NUMBER',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
+          PremiumCard(
+            padding: AppSpacing.edgeInsetsL,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppTextField(
+                  controller: _dlController,
+                  label: 'DRIVING LICENCE NUMBER',
+                  hint: 'e.g. DL0420110149632',
+                  prefixIcon: const Icon(Icons.badge_outlined, size: 20),
+                  textCapitalization: TextCapitalization.characters,
+                  onSubmitted: (_) => _search(),
+                  onClear: () => _dlController.clear(),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                AppTextField(
+                  controller: _dobController,
+                  label: 'DATE OF BIRTH (YYYY-MM-DD)',
+                  hint: '1990-05-14',
+                  prefixIcon: const Icon(
+                    Icons.calendar_today_outlined,
+                    size: 20,
                   ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: _dlController,
-                    textCapitalization: TextCapitalization.characters,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'monospace',
-                      letterSpacing: 1.1,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'e.g. DL-0420110149632',
-                      prefixIcon: const Icon(Icons.badge_outlined),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => _dlController.clear(),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                  onSubmitted: (_) => _search(),
+                ),
+                const SizedBox(height: AppSpacing.l),
+                AppButton(
+                  label: 'Verify Licence with Sarathi',
+                  icon: const Icon(
+                    Icons.verified,
+                    size: 18,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'DATE OF BIRTH (DD-MM-YYYY)',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: _dobController,
-                    decoration: InputDecoration(
-                      hintText: '14-05-1990',
-                      prefixIcon: const Icon(Icons.calendar_today_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  variant: AppButtonVariant.primary,
+                  onPressed: _search,
+                ),
+                const SizedBox(height: AppSpacing.m),
+                // Quick Sample Pills
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      'Sample:',
+                      style: AppTypography.labelSmall(
+                        isDark
+                            ? AppColors.darkTextMuted
+                            : AppColors.lightTextMuted,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 14),
-                  FilledButton.icon(
-                    onPressed: _search,
-                    icon: const Icon(Icons.verified),
-                    label: const Text('Verify Licence with Sarathi'),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Quick Sample Pills
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      const Text(
-                        'Try:',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      _sampleChip('DL-0420110149632', 'Delhi (LMV+Bike)'),
-                      _sampleChip('MH-1420180019284', 'Maharashtra (Cab)'),
-                      _sampleChip('KA-0120150038192', 'Karnataka (Car)'),
-                    ],
-                  ),
-                ],
-              ),
+                    _sampleChip('DL0420110149632', 'Delhi (LMV+Bike)', isDark),
+                    _sampleChip('MH1420180019284', 'Maharashtra (Cab)', isDark),
+                    _sampleChip('KA0120150038192', 'Karnataka (Car)', isDark),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.xl),
 
           // DL Results
           dlAsync.when(
-            loading: () => const Center(
-              child: Padding(
-                padding: EdgeInsets.all(40),
-                child: CircularProgressIndicator(),
-              ),
+            loading: () => const LoadingView(
+              message: 'Verifying Driving Licence with Sarathi...',
             ),
-            error: (err, stack) => Card(
-              color: Colors.red.withOpacity(0.08),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text('Error retrieving DL record: $err'),
-              ),
+            error: (err, stack) => ErrorView(
+              title: 'Error Verifying Licence',
+              message: '$err',
+              actionLabel: 'Try Again',
+              onAction: _search,
             ),
             data: (dl) {
               if (dl == null) {
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: const [
-                        Icon(Icons.search_off, size: 48, color: Colors.grey),
-                        SizedBox(height: 8),
-                        Text(
-                          'No Driving Licence found',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Please check the DL number and format.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
+                return EmptyStateView(
+                  icon: Icons.search_off_rounded,
+                  title: 'No Driving Licence Found',
+                  description:
+                      'Please check the DL number and date of birth format.',
                 );
               }
 
-              return _buildDlCardAndDetails(dl);
+              return _buildDlCardAndDetails(dl, isDark);
             },
           ),
+          const SizedBox(height: AppSpacing.xl),
         ],
       ),
     );
   }
 
-  Widget _sampleChip(String dlNum, String label) {
-    return ActionChip(
-      label: Text(
-        '$dlNum ($label)',
-        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-      padding: EdgeInsets.zero,
-      onPressed: () {
+  Widget _sampleChip(String dlNum, String label, bool isDark) {
+    return InkWell(
+      onTap: () {
         _dlController.text = dlNum;
         _search();
       },
+      borderRadius: AppRadius.radiusS,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceAlt : AppColors.lightSurfaceAlt,
+          borderRadius: AppRadius.radiusS,
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 
-  Widget _buildDlCardAndDetails(DlEntity dl) {
+  Widget _buildDlCardAndDetails(DlEntity dl, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Digital DL Card
+        // Sarathi Digital DL Smart Card
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: AppSpacing.edgeInsetsXl,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF042F2E), Color(0xFF0D9488), Color(0xFF115E59)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: AppRadius.radiusXl,
             boxShadow: [
               BoxShadow(
-                color: Colors.teal.withOpacity(0.3),
-                blurRadius: 16,
+                color: Colors.teal.withOpacity(0.35),
+                blurRadius: 18,
                 offset: const Offset(0, 8),
               ),
             ],
@@ -241,221 +212,174 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white24,
+                          borderRadius: AppRadius.radiusXs,
                         ),
                         child: const Text(
-                          'IND',
+                          'SARATHI',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.s),
                       const Text(
                         'UNION OF INDIA • DRIVING LICENCE',
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
                         ),
                       ),
                     ],
                   ),
-                  StatusBadge(
-                    label: dl.status,
-                    type: dl.isValid ? BadgeType.active : BadgeType.expired,
-                  ),
+                  StatusBadge(label: dl.licenceStatus, type: BadgeType.active),
                 ],
               ),
-              const SizedBox(height: 14),
-              // DL Number
-              Text(
-                dl.dlNumber,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
-                  fontWeight: FontWeight.w900,
-                  fontSize: 19,
-                  color: Colors.amberAccent,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Holder & Guardian
-              Text(
-                dl.maskedHolderName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'S/D/W OF: ${dl.maskedFatherName}',
-                style: const TextStyle(color: Colors.white70, fontSize: 11),
-              ),
-              const Divider(color: Colors.white24, height: 24),
-              // Stats
+              const SizedBox(height: AppSpacing.l),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _dlCardMeta('DOB', dl.dob),
-                  _dlCardMeta('BLOOD GROUP', dl.bloodGroup),
-                  _dlCardMeta('ISSUE DATE', dl.issueDate),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dl.licenceNumber,
+                        style: AppTypography.hsrpPlate(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        dl.holderName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Gold EMV Chip Visual
+                  Container(
+                    width: 38,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.metallicGoldLight,
+                          AppColors.metallicGold,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: AppRadius.radiusS,
+                      border: Border.all(color: Colors.white70),
+                    ),
+                    child: const Icon(
+                      Icons.memory,
+                      color: Colors.black87,
+                      size: 18,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(color: Colors.white24, height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _DlInfoItem(label: 'RTO CODE', value: dl.rtoCode),
+                  _DlInfoItem(label: 'ISSUE DATE', value: dl.firstIssueDate),
+                  _DlInfoItem(
+                    label: 'NON-TRANS',
+                    value: dl.nonTransportValidUpto,
+                  ),
+                  _DlInfoItem(label: 'TRANSPORT', value: dl.transportValidUpto),
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.l),
 
-        // Validity Section Card
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+        // Endorsement Vehicle Classes
+        Text(
+          'AUTHORIZED VEHICLE CLASSES',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.8,
+            color: isDark
+                ? AppColors.electricBlueLight
+                : AppColors.electricBlue,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
+        ),
+        const SizedBox(height: AppSpacing.s),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final cov in dl.vehicleClasses)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurface,
+                  borderRadius: AppRadius.radiusM,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.event_available,
+                    const Icon(
+                      Icons.directions_car,
+                      size: 16,
                       color: AppColors.electricBlue,
-                      size: 20,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Text(
-                      'Licence Validity',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                      cov,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
-                const Divider(height: 20),
-                _specRow(
-                  'Non-Transport (NT)',
-                  dl.validityNonTransport,
-                  isHighlight: true,
-                ),
-                _specRow('Transport (TR)', dl.validityTransport),
-                _specRow('Issuing Authority', dl.issuingAuthority),
-                _specRow('State Transport Dept', dl.state),
-                if (dl.isCommercial && dl.badgeNumber != null)
-                  _specRow(
-                    'Commercial Badge',
-                    dl.badgeNumber!,
-                    isHighlight: true,
-                  ),
-              ],
-            ),
-          ),
+              ),
+          ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.xl),
 
-        // Endorsed Vehicle Classes
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
-                  children: [
-                    Icon(Icons.drive_eta, color: AppColors.saffron, size: 20),
-                    SizedBox(width: 8),
-                    Text(
-                      'Endorsed Vehicle Classes (COV)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 20),
-                ...dl.vehicleClasses.map(
-                  (c) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.electricBlue.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            c.classCode,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'monospace',
-                              color: AppColors.electricBlue,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                c.description,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              Text(
-                                'Issued: ${c.issueDate}',
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        // Privacy note
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue.withOpacity(0.2)),
-          ),
-          child: const Row(
+        // Detail Breakdown Card
+        PremiumCard(
+          child: Column(
             children: [
-              Icon(Icons.shield_outlined, size: 20, color: Colors.blue),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Data is queried from Sarathi Parivahan. Personal identification is masked in compliance with Motor Vehicles Act and IT Privacy norms.',
-                  style: TextStyle(fontSize: 11, color: Colors.blueGrey),
-                ),
+              _DlDetailRow(
+                title: 'Issuing Authority',
+                value: dl.issuingAuthority,
+              ),
+              const Divider(height: 20),
+              _DlDetailRow(title: 'State', value: dl.state),
+              const Divider(height: 20),
+              _DlDetailRow(title: 'Blood Group', value: dl.bloodGroup),
+              const Divider(height: 20),
+              _DlDetailRow(
+                title: 'Father / Guardian',
+                value: dl.fatherOrHusbandName,
               ),
             ],
           ),
@@ -463,17 +387,26 @@ class _DlScreenState extends ConsumerState<DlScreen> {
       ],
     );
   }
+}
 
-  Widget _dlCardMeta(String label, String value) {
+class _DlInfoItem extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _DlInfoItem({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
           style: const TextStyle(
-            color: Colors.white60,
+            color: Colors.white54,
             fontSize: 9,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 2),
@@ -482,30 +415,47 @@ class _DlScreenState extends ConsumerState<DlScreen> {
           style: const TextStyle(
             color: Colors.white,
             fontSize: 11,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _specRow(String label, String value, {bool isHighlight = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: isHighlight ? AppColors.electricBlue : null,
-            ),
+class _DlDetailRow extends StatelessWidget {
+  final String title;
+  final String value;
+
+  const _DlDetailRow({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 13,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
-        ],
-      ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
+          ),
+        ),
+      ],
     );
   }
 }

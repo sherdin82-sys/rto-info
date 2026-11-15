@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-11-15
+
+### Added & Redesigned
+- **Strict 100% Flutter & Dart Native UI**: Completely unified automotive design system built purely in Flutter widgets and Dart — zero React, HTML, CSS, JavaScript, or WebView.
+- **Centralized Automotive Design Tokens**:
+  - `AppColors`: Deep navy backgrounds (`0xFF080D1A`), electric blue interactions (`0xFF0066FF`), warm saffron/orange highlights (`0xFFFF7A00`), metallic gold accents (`0xFFFFD700`), and HSRP plate styling.
+  - `AppSpacing`: Unified 8-point geometric spatial scale (`xs`, `s`, `m`, `l`, `xl`, `xxl`, `xxxl`, `huge`).
+  - `AppRadius`: Harmonized border radius tokens (`xs: 6`, `s: 10`, `m: 14`, `card: 16`, `l: 18`, `xl: 24`, `button: 12`, `pill: 999`).
+  - `AppTypography`: Display, title, body, label styles, monospaced HSRP plate styling, and automotive financial counters.
+- **Unified Shared Widget System**:
+  - `AppAppBar`: Standardized header across all screens with automotive subtitles, action slots, theme toggle, and bilingual language switch.
+  - `PremiumCard`: Upgraded with glass borders, gradient backgrounds, and soft ambient drop shadows.
+  - `AppTextField`: Automotive text input with prefix/suffix icons, clear button, and validation states.
+  - `AppButton`: Reusable action button supporting primary, secondary, accent, and danger variants with loading states.
+  - `AppBottomNavigation`: Bottom navigation bar with automotive indicator pill and reactive tab switching.
+  - `StatusBadge`: Badging with pulsating dot indicator and high-contrast dark mode legibility.
+  - `LoadingView` & `ErrorView`: Automotive animated loading spinner and error recovery views with retry triggers.
+- **Complete Feature Module Modernization**:
+  - `HomeScreen`: Live fuel ticker preview, HSRP plate input, sample plates quick chips, recent searches carousel, 10 essential RTO services, and Section 139 compliance banner.
+  - `VehicleDetailsScreen`: Metallic gold EMV chip RC Smart Card, Section 6 privacy masking, countdown validity meters, and native share sheet intent.
+  - `VehicleSearchScreen`: High-speed number plate query interface with clean search bar and error feedback.
+  - `ChallanScreen`: Outstanding penalty summary banner, All/Pending/Settled filter chips, and official Parivahan payment portal disclaimer.
+  - `DlScreen`: Sarathi Parivahan Smart DL Card format with vehicle category endorsements and badge indicators.
+  - `FuelRatesScreen`: Daily fuel ticker across Indian metros, search filter, Petrol/Diesel/CNG rate pills, and integrated trip cost estimator.
+  - `ResaleScreen`: Indian used-vehicle fair market value calculator, depreciation meters, and auto loan EMI amortization breakdown.
+  - `RtoDirectoryScreen`: All-India RTO directory with state filter chips, helpline telephone actions, and state transport portal links.
+  - `TrafficSignsScreen`: 4-tab handbook covering Mandatory, Cautionary, Informatory signs, and MV Act 2019 fines schedule.
+  - `MockExamScreen`: Parivahan Sarathi LL examination simulation, question progress bar, instant feedback with legal explanations, and final scorecard.
+  - `HistoryScreen`: Chronological search history list with individual swipe-to-dismiss and clear-all confirmation dialog.
+  - `FavouritesScreen`: Bookmarked vehicle cards with quick actions for Challan and RC lookups.
+  - `SettingsScreen`: Theme selector, language switcher, native Android device info reader via `MethodChannel`, and local data reset.
+
+---
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

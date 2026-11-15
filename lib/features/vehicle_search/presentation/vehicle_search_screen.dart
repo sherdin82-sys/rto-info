@@ -5,7 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/localization/app_locale.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/vehicle_number_formatter.dart';
+import '../../../shared/widgets/app_app_bar.dart';
 import '../../../shared/widgets/premium_card.dart';
 import '../../../shared/widgets/vehicle_search_bar.dart';
 
@@ -19,9 +23,14 @@ class VehicleSearchScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(isHindi ? 'वाहन खोज' : 'Vehicle Search')),
+      appBar: AppAppBar(
+        title: isHindi ? 'वाहन खोज' : 'Vehicle Search',
+        subtitle: isHindi
+            ? 'एचएसआरपी नंबर प्लेट सत्यापन'
+            : 'Verify Indian registration plates',
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
+        padding: AppSpacing.edgeInsetsL,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,28 +39,24 @@ class VehicleSearchScreen extends ConsumerWidget {
                 context.push('/rc?plate=$plate');
               },
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               isHindi ? 'उदाहरण नंबर प्लेट' : 'Sample Number Plates',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary,
+              style: AppTypography.titleSmall(
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
-            const SizedBox(height: AppConstants.paddingSmall),
+            const SizedBox(height: AppSpacing.m),
             ...AppConstants.sampleVehicles.map(
               (sample) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.only(bottom: AppSpacing.m),
                 child: PremiumCard(
                   onTap: () {
                     context.push('/rc?plate=${sample['plate']}');
                   },
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
+                    horizontal: AppSpacing.l,
+                    vertical: AppSpacing.m,
                   ),
                   child: Row(
                     children: [
@@ -64,7 +69,7 @@ class VehicleSearchScreen extends ConsumerWidget {
                           color: isDark
                               ? AppColors.darkSurfaceAlt
                               : AppColors.lightSurfaceAlt,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: AppRadius.radiusS,
                           border: Border.all(
                             color: isDark
                                 ? AppColors.darkBorder
@@ -75,46 +80,45 @@ class VehicleSearchScreen extends ConsumerWidget {
                           VehicleNumberFormatter.formatForDisplay(
                             sample['plate']!,
                           ),
-                          style: const TextStyle(
-                            fontFamily: 'monospace',
-                            fontWeight: FontWeight.w700,
+                          style: AppTypography.hsrpPlate(
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.lightTextPrimary,
                             fontSize: 13,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              sample['desc']!,
+                              sample['label']!,
                               style: TextStyle(
+                                fontWeight: FontWeight.w700,
                                 fontSize: 13,
-                                fontWeight: FontWeight.w500,
                                 color: isDark
-                                    ? AppColors.darkTextPrimary
+                                    ? Colors.white
                                     : AppColors.lightTextPrimary,
                               ),
                             ),
+                            const SizedBox(height: 2),
                             Text(
-                              sample['class']!,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
+                              sample['desc']!,
+                              style: AppTypography.labelSmall(
+                                isDark
+                                    ? AppColors.darkTextMuted
+                                    : AppColors.lightTextMuted,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right,
-                        color: isDark
-                            ? AppColors.darkTextMuted
-                            : AppColors.lightTextMuted,
-                        size: 20,
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: AppColors.electricBlue,
                       ),
                     ],
                   ),
