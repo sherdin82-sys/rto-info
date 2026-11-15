@@ -25,6 +25,7 @@ class LocalStorageService implements StorageService {
 
   // --- Search History ---
 
+  @override
   Future<List<SearchHistoryEntity>> getHistory() async {
     if (_prefs == null) await init();
 
@@ -43,6 +44,7 @@ class LocalStorageService implements StorageService {
     return List.unmodifiable(_inMemoryHistory);
   }
 
+  @override
   Future<void> addHistory(SearchHistoryEntity item) async {
     if (_prefs == null) await init();
 
@@ -62,6 +64,7 @@ class LocalStorageService implements StorageService {
     }
   }
 
+  @override
   Future<void> deleteHistoryItem(String id) async {
     if (_prefs == null) await init();
 
@@ -77,6 +80,7 @@ class LocalStorageService implements StorageService {
     }
   }
 
+  @override
   Future<void> clearHistory() async {
     if (_prefs == null) await init();
     if (_prefs != null) {
@@ -87,6 +91,7 @@ class LocalStorageService implements StorageService {
 
   // --- Favourites ---
 
+  @override
   Future<List<FavouriteVehicleEntity>> getFavourites() async {
     if (_prefs == null) await init();
 
@@ -105,11 +110,13 @@ class LocalStorageService implements StorageService {
     return List.unmodifiable(_inMemoryFavourites);
   }
 
+  @override
   Future<bool> isFavourite(String cleanPlate) async {
     final list = await getFavourites();
     return list.any((f) => f.registrationNumber == cleanPlate);
   }
 
+  @override
   Future<void> addFavourite(FavouriteVehicleEntity item) async {
     if (_prefs == null) await init();
 
@@ -128,6 +135,7 @@ class LocalStorageService implements StorageService {
     }
   }
 
+  @override
   Future<void> removeFavourite(String cleanPlate) async {
     if (_prefs == null) await init();
 
@@ -145,6 +153,7 @@ class LocalStorageService implements StorageService {
     }
   }
 
+  @override
   Future<void> clearAllData() async {
     await clearHistory();
     if (_prefs == null) await init();

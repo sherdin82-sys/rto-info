@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../core/widgets/status_badge.dart';
-import '../providers/challan_provider.dart';
+import 'providers/challan_provider.dart';
 
 /// ChallanScreen displays official traffic violation records for a vehicle.
 /// Conforms to Section 7: Clearly differentiates Paid vs Pending challans,

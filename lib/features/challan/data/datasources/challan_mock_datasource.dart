@@ -83,7 +83,7 @@ class ChallanMockDataSource implements ChallanDataSource {
             'Main Traffic Signal Corridor, ${clean.substring(0, 2)} State',
         trafficPoliceUnit: 'State Automated Traffic Enforcement Branch',
         cameraCode: 'ITMS-CAM-${hash % 90 + 10}',
-        paymentReceiptNumber: (hash % 2 == 0) ? null : 'RCP-2026-${hash}',
+        paymentReceiptNumber: (hash % 2 == 0) ? null : 'RCP-2026-$hash',
         paidAt: (hash % 2 == 0) ? null : '20-Sep-2026',
       ),
     ];
