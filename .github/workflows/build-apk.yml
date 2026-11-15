@@ -1,4 +1,4 @@
-name: Build & Release RTO Info Android
+name: Build RTO Info Android APK
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Release APK & AAB
+    name: Build Release APK
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,7 @@ jobs:
       - name: Run Flutter Analyzer
         run: flutter analyze --no-fatal-infos
 
-      - name: Run Comprehensive Unit Tests
+      - name: Run Core Verification Tests
         run: dart run test/unit/rto_info_core_test.dart
 
       - name: Configure local.properties
@@ -53,39 +53,14 @@ jobs:
           echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
           echo "sdk.dir=$ANDROID_HOME" >> android/local.properties
 
-      - name: Setup Keystore from Secrets (If available)
-        if: env.KEYSTORE_BASE64 != ''
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/release.jks
-          echo "storePassword=$KEYSTORE_PASSWORD" > android/key.properties
-          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
-          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
-          echo "storeFile=../release.jks" >> android/key.properties
-
       - name: Build Android Release APK
-        run: flutter build apk --release --android-skip-build-dependency-validation
+        run: flutter build apk --release --split-per-abi --android-skip-build-dependency-validation
 
-      - name: Build Android Release App Bundle (AAB)
-        run: flutter build appbundle --release --android-skip-build-dependency-validation
-
-      - name: Upload Release APK Artifact
+      - name: Upload Release APKs Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RTOInfo-Release-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Upload Release AAB Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: RTOInfo-Release-AAB
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: RTOInfo-release-apk
+          path: build/app/outputs/flutter-apk/app-*-release.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -93,8 +68,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+          files: build/app/outputs/flutter-apk/app-*-release.apk
           generate_release_notes: true
           body_path: CHANGELOG.md

@@ -1,0 +1,88 @@
+/// AppStrings contains localized strings for English and Hindi.
+class AppStrings {
+  AppStrings._();
+
+  static const Map<String, Map<String, String>> _localizedValues = {
+    'en': {
+      'appName': 'RTO Info',
+      'appSubtitle': 'Indian Vehicle Information Portal',
+      'navHome': 'Home',
+      'navHistory': 'History',
+      'navFavourites': 'Favourites',
+      'navSettings': 'Settings',
+      'searchHint': 'Enter vehicle registration number',
+      'searchPlaceholder': 'e.g. DL01AB1234',
+      'searchButton': 'Search',
+      'recentSearches': 'Recent Searches',
+      'viewDetails': 'View Details',
+      'quickTools': 'Quick RTO Tools',
+      'rcLookup': 'RC Details',
+      'challanStatus': 'e-Challan',
+      'dlVerification': 'DL Verify',
+      'fuelRates': 'Fuel Rates',
+      'resaleCalc': 'Resale Value',
+      'loanEmi': 'Loan EMI',
+      'rtoDirectory': 'RTO Directory',
+      'trafficSigns': 'Traffic Signs',
+      'themeMode': 'Appearance',
+      'language': 'Language',
+      'english': 'English',
+      'hindi': 'हिंदी (Hindi)',
+      'aboutApp': 'About Application',
+      'appVersion': 'Version',
+      'clearData': 'Clear Application Data',
+      'clearDataConfirm':
+          'Are you sure you want to clear all history and favourites?',
+      'cancel': 'Cancel',
+      'confirm': 'Confirm',
+      'noHistory': 'No search history yet',
+      'noFavourites': 'No favourite vehicles saved',
+      'saveToFavourites': 'Save to Favourites',
+      'removeFromFavourites': 'Remove from Favourites',
+      'shareDetails': 'Share Vehicle Details',
+    },
+    'hi': {
+      'appName': 'आरटीओ इन्फो',
+      'appSubtitle': 'भारतीय वाहन सूचना पोर्टल',
+      'navHome': 'होम',
+      'navHistory': 'इतिहास',
+      'navFavourites': 'पसंदीदा',
+      'navSettings': 'सेटिंग्स',
+      'searchHint': 'वाहन पंजीकरण संख्या दर्ज करें',
+      'searchPlaceholder': 'उदा. DL01AB1234',
+      'searchButton': 'खोजें',
+      'recentSearches': 'हाल की खोजें',
+      'viewDetails': 'विवरण देखें',
+      'quickTools': 'त्वरित आरटीओ टूल्स',
+      'rcLookup': 'आरसी विवरण',
+      'challanStatus': 'ई-चालान',
+      'dlVerification': 'डीएल सत्यापन',
+      'fuelRates': 'ईंधन दरें',
+      'resaleCalc': 'पुनर्विक्रय मूल्य',
+      'loanEmi': 'ऋण ईएमआई',
+      'rtoDirectory': 'आरटीओ निर्देशिका',
+      'trafficSigns': 'यातायात संकेत',
+      'themeMode': 'थीम और रंगरूप',
+      'language': 'भाषा',
+      'english': 'English',
+      'hindi': 'हिंदी (Hindi)',
+      'aboutApp': 'एप्लिकेशन के बारे में',
+      'appVersion': 'संस्करण',
+      'clearData': 'डेटा साफ़ करें',
+      'clearDataConfirm': 'क्या आप सभी इतिहास और पसंदीदा हटाना चाहते हैं?',
+      'cancel': 'रद्द करें',
+      'confirm': 'पुष्टि करें',
+      'noHistory': 'कोई खोज इतिहास नहीं है',
+      'noFavourites': 'कोई पसंदीदा वाहन सुरक्षित नहीं है',
+      'saveToFavourites': 'पसंदीदा में जोड़ें',
+      'removeFromFavourites': 'पसंदीदा से हटाएं',
+      'shareDetails': 'वाहन विवरण साझा करें',
+    },
+  };
+
+  static String get(String key, String languageCode) {
+    return _localizedValues[languageCode]?[key] ??
+        _localizedValues['en']?[key] ??
+        key;
+  }
+}

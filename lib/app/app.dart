@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'localization/app_locale.dart';
+import '../core/localization/app_locale.dart';
+import '../core/theme/app_theme.dart';
+import '../core/theme/theme_provider.dart';
 import 'router/app_router.dart';
-import 'theme/app_theme.dart';
 
 /// RTOInfoApp is the root widget of the RTO Info Flutter application.
-/// It configures GoRouter navigation, dynamic theming, and Hindi/English localization.
+/// It configures navigation, dynamic theming, and Hindi/English localization
+/// following NoteFlow architecture.
 class RTOInfoApp extends ConsumerWidget {
   const RTOInfoApp({super.key});
 

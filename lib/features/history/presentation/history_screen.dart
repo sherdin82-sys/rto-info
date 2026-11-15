@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../shared/widgets/empty_state_view.dart';
+import '../../../shared/widgets/premium_card.dart';
 import 'providers/history_provider.dart';
 
 /// HistoryScreen provides chronological search history with individual delete and clear-all.
@@ -34,42 +36,14 @@ class HistoryScreen extends ConsumerWidget {
         ],
       ),
       body: historyItems.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.history,
-                    size: 64,
-                    color: isDark
-                        ? AppColors.darkTextMuted
-                        : AppColors.lightTextMuted,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    isHindi
-                        ? 'कोई खोज इतिहास नहीं है'
-                        : 'No search history yet',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    isHindi
-                        ? 'खोजे गए वाहन स्वचालित रूप से यहाँ दिखाई देंगे'
-                        : 'Searched vehicles will appear here for fast access',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isDark
-                          ? AppColors.darkTextMuted
-                          : AppColors.lightTextMuted,
-                    ),
-                  ),
-                ],
-              ),
+          ? EmptyStateView(
+              icon: Icons.history,
+              title: isHindi
+                  ? 'कोई खोज इतिहास नहीं है'
+                  : 'No search history yet',
+              description: isHindi
+                  ? 'खोजे गए वाहन स्वचालित रूप से यहाँ दिखाई देंगे'
+                  : 'Searched vehicles will appear here for fast access',
             )
           : ListView.separated(
               padding: const EdgeInsets.all(16),
@@ -98,78 +72,73 @@ class HistoryScreen extends ConsumerWidget {
                   onDismissed: (_) {
                     ref.read(historyProvider.notifier).removeSearch(item.id);
                   },
-                  child: Card(
-                    child: InkWell(
-                      onTap: () {
-                        context.push('/rc?plate=${item.registrationNumber}');
-                      },
-                      borderRadius: BorderRadius.circular(16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryNavy.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.directions_car,
-                                color: AppColors.electricBlue,
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.formattedPlate,
-                                    style: const TextStyle(
-                                      fontFamily: 'monospace',
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    item.makerModel,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.lightTextSecondary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    formattedTime,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: isDark
-                                          ? AppColors.darkTextMuted
-                                          : AppColors.lightTextMuted,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, size: 18),
-                              color: isDark
-                                  ? AppColors.darkTextMuted
-                                  : AppColors.lightTextMuted,
-                              onPressed: () {
-                                ref
-                                    .read(historyProvider.notifier)
-                                    .removeSearch(item.id);
-                              },
-                            ),
-                          ],
+                  child: PremiumCard(
+                    onTap: () {
+                      context.push('/rc?plate=${item.registrationNumber}');
+                    },
+                    padding: const EdgeInsets.all(14),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryNavy.withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.directions_car,
+                            color: AppColors.electricBlue,
+                            size: 24,
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.formattedPlate,
+                                style: const TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                item.makerModel,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                formattedTime,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 18),
+                          color: isDark
+                              ? AppColors.darkTextMuted
+                              : AppColors.lightTextMuted,
+                          onPressed: () {
+                            ref
+                                .read(historyProvider.notifier)
+                                .removeSearch(item.id);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );

@@ -23,3 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Local Storage**: Search history and bookmarks/favourites persistence with in-memory fallback.
 - **Localization & Themes**: Full English and Hindi (`हिंदी`) translation with Material 3 Light and Dark themes.
 - **Android & CI/CD**: Android packaging configured for `com.rtoinfo.app` (minSdk 24, compileSdk 36) with automated GitHub Actions workflow for release APK and AAB compilation.
+- **NoteFlow Reference Architecture Alignment**:
+  - Kotlin `MethodChannel` (`com.rtoinfo.app/native`) for hardware info, battery levels, network status, and native share sheets.
+  - Drift / SQLite DDL schema contracts for local persistence.
+  - Offline-first `LocalRtoRepository` with reactive broadcast streams and asynchronous disk storage.
+  - NoteFlow design components (`PremiumCard`, `EmptyStateView`) and typography system.
+  - 15 modular feature directories cleanly separating data, domain, and presentation layers.
+  - Multi-architecture `--split-per-abi` release APK pipeline.

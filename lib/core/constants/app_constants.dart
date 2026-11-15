@@ -7,6 +7,19 @@ class AppConstants {
   static const int buildNumber = 1;
   static const String androidPackageName = 'com.rtoinfo.app';
 
+  // NoteFlow Design System Spacing & Radius
+  static const double radiusSmall = 8.0;
+  static const double radiusMedium = 14.0;
+  static const double radiusLarge = 20.0;
+  static const double radiusXLarge = 28.0;
+
+  static const double paddingSmall = 8.0;
+  static const double paddingMedium = 16.0;
+  static const double paddingLarge = 24.0;
+
+  static const Duration defaultAnimationDuration = Duration(milliseconds: 250);
+  static const Duration fastAnimationDuration = Duration(milliseconds: 150);
+
   // Indian Vehicle Registration Plate Regex Pattern
   // Matches standard format: DL01AB1234, HR26DQ5551, KA05MJ5005, UP32AZ0001, etc.
   static final RegExp registrationPlateRegex = RegExp(

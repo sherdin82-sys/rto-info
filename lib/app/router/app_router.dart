@@ -15,6 +15,13 @@ import '../../features/resale/presentation/resale_screen.dart';
 import '../../features/rto_directory/presentation/rto_directory_screen.dart';
 import '../../features/traffic_signs/presentation/traffic_signs_screen.dart';
 import '../../features/mock_exam/presentation/mock_exam_screen.dart';
+import '../../features/vehicle_search/presentation/vehicle_search_screen.dart';
+import '../../features/driving_license/presentation/driving_license_screen.dart';
+import '../../features/fuel_prices/presentation/fuel_prices_screen.dart';
+import '../../features/trip_calculator/presentation/trip_calculator_screen.dart';
+import '../../features/resale_valuation/presentation/resale_valuation_screen.dart';
+import '../../features/loan_emi/presentation/loan_emi_screen.dart';
+import '../../features/quiz/presentation/quiz_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHome = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
@@ -146,6 +153,48 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/exam',
         name: 'mock_exam',
         builder: (context, state) => const MockExamScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/search',
+        name: 'vehicle_search',
+        builder: (context, state) => const VehicleSearchScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/driving-license',
+        name: 'driving_license',
+        builder: (context, state) => const DrivingLicenseScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/fuel-prices',
+        name: 'fuel_prices',
+        builder: (context, state) => const FuelPricesScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/trip-calculator',
+        name: 'trip_calculator',
+        builder: (context, state) => const TripCalculatorScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/resale-valuation',
+        name: 'resale_valuation',
+        builder: (context, state) => const ResaleValuationScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/loan-emi',
+        name: 'loan_emi',
+        builder: (context, state) => const LoanEmiScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/quiz',
+        name: 'rto_quiz',
+        builder: (context, state) => const QuizScreen(),
       ),
     ],
   );

@@ -78,6 +78,24 @@ class HomeScreen extends ConsumerWidget {
         'color': const Color(0xFF0D9488),
         'route': '/exam',
       },
+      {
+        'title': isHindi ? 'यात्रा लागत' : 'Trip Cost',
+        'desc': isHindi
+            ? 'माइलेज व यात्रा खर्च'
+            : 'Estimate fuel & travel expense',
+        'icon': Icons.route_outlined,
+        'color': const Color(0xFFE11D48),
+        'route': '/trip-calculator',
+      },
+      {
+        'title': isHindi ? 'ऋण ईएमआई' : 'Loan EMI',
+        'desc': isHindi
+            ? 'मासिक किस्त व ब्याज'
+            : 'Monthly installment calculator',
+        'icon': Icons.payments_outlined,
+        'color': const Color(0xFF2563EB),
+        'route': '/loan-emi',
+      },
     ];
 
     return Scaffold(

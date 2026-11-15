@@ -17,6 +17,7 @@ import '../../lib/features/resale/domain/models/loan_emi_model.dart';
 import '../../lib/features/rto_directory/data/rto_directory_data.dart';
 import '../../lib/features/traffic_signs/data/traffic_signs_data.dart';
 import '../../lib/features/mock_exam/data/quiz_questions_data.dart';
+import '../../lib/core/database/local_rto_repository.dart';
 
 Future<void> main() async {
   print('=====================================================');
@@ -147,32 +148,32 @@ Future<void> main() async {
     );
     assert(reconstructed.isHypothecated == true);
     assert(reconstructed.hypothecationBank == 'HDFC Bank');
-    assert(reconstructed.isDemoData == true, 'Must clearly identify as demo data');
+    assert(
+      reconstructed.isDemoData == true,
+      'Must clearly identify as demo data',
+    );
     assert(VehicleEntity.safeValue(null) == 'Not Available');
     assert(VehicleEntity.safeValue('') == 'Not Available');
     assert(VehicleEntity.safeValue('ACTIVE') == 'ACTIVE');
   });
 
   // 3. MockVehicleDataProvider & Deterministic Generation
-  await asyncTest(
-    'MockVehicleDataProvider returns accurate Parivahan records with demo indicator',
-    () async {
-      final ds = MockVehicleDataProvider();
-      final seeded = await ds.getVehicleDetails('DL01AB1234');
-      assert(seeded != null);
-      assert(seeded!.maker == 'MARUTI SUZUKI INDIA LTD');
-      assert(seeded!.fuelType == 'PETROL');
-      assert(seeded!.isDemoData == true);
+  await asyncTest('MockVehicleDataProvider returns accurate Parivahan records with demo indicator', () async {
+    final ds = MockVehicleDataProvider();
+    final seeded = await ds.getVehicleDetails('DL01AB1234');
+    assert(seeded != null);
+    assert(seeded!.maker == 'MARUTI SUZUKI INDIA LTD');
+    assert(seeded!.fuelType == 'PETROL');
+    assert(seeded!.isDemoData == true);
 
-      final dynamicVehicle = await ds.getVehicleDetails('UP32AZ0001');
-      assert(dynamicVehicle != null);
-      assert(dynamicVehicle!.state == 'UP');
-      assert(dynamicVehicle!.rtoCode == 'UP-32');
+    final dynamicVehicle = await ds.getVehicleDetails('UP32AZ0001');
+    assert(dynamicVehicle != null);
+    assert(dynamicVehicle!.state == 'UP');
+    assert(dynamicVehicle!.rtoCode == 'UP-32');
 
-      final invalid = await ds.getVehicleDetails('INVALID');
-      assert(invalid == null);
-    },
-  );
+    final invalid = await ds.getVehicleDetails('INVALID');
+    assert(invalid == null);
+  });
 
   // 4. ChallanEntity & ChallanMockDataSource
   await asyncTest(
@@ -245,7 +246,76 @@ Future<void> main() async {
     },
   );
 
-  // 6. Localization Dictionary (English & Hindi)
+  // 6. NoteFlow Offline-First Repository Architecture
+  await asyncTest(
+    'LocalRtoRepository: NoteFlow stream persistence and offline vehicle cache',
+    () async {
+      final repo = LocalRtoRepository(
+        seedDemoData: false,
+        enableDiskPersistence: false,
+      );
+      await repo.init();
+
+      // Verify empty initial state
+      assert((await repo.getSearchHistory()).isEmpty);
+      assert((await repo.getFavourites()).isEmpty);
+
+      // Add search history
+      final historyItem = SearchHistoryEntity(
+        id: 'h-1',
+        registrationNumber: 'UP32AZ0001',
+        formattedPlate: 'UP 32 AZ 0001',
+        makerModel: 'Toyota Fortuner',
+        vehicleClass: 'Motor Car (LMV)',
+        searchedAt: DateTime.now(),
+      );
+      await repo.addSearchHistory(historyItem);
+      final historyList = await repo.getSearchHistory();
+      assert(historyList.length == 1);
+      assert(historyList.first.registrationNumber == 'UP32AZ0001');
+
+      // Add & toggle favourite
+      final favItem = FavouriteVehicleEntity(
+        id: 'fav-1',
+        registrationNumber: 'UP32AZ0001',
+        formattedPlate: 'UP 32 AZ 0001',
+        makerModel: 'Toyota Fortuner',
+        vehicleClass: 'Motor Car (LMV)',
+        fuelType: 'DIESEL',
+        insuranceValidity: '20-Oct-2027',
+        insuranceStatus: 'ACTIVE',
+        fitnessValidity: '25-Oct-2035',
+        savedAt: DateTime.now(),
+      );
+      await repo.toggleFavourite(favItem);
+      assert(await repo.isFavourite('UP32AZ0001') == true);
+
+      // Toggle removes it
+      await repo.toggleFavourite(favItem);
+      assert(await repo.isFavourite('UP32AZ0001') == false);
+
+      // Vehicle offline caching
+      final seeded = await MockVehicleDataProvider().getVehicleDetails(
+        'DL01AB1234',
+      );
+      assert(seeded != null);
+      await repo.cacheVehicle(seeded!);
+      final cached = await repo.getCachedVehicle('DL01AB1234');
+      assert(cached != null);
+      assert(cached!.registrationNumber == 'DL01AB1234');
+      assert(cached!.maker == 'Maruti Suzuki India Ltd');
+
+      // Theme mode & locale persistence
+      await repo.setThemeMode('dark');
+      assert(repo.themeMode == 'dark');
+      await repo.setLocale('hi');
+      assert(repo.locale == 'hi');
+
+      repo.dispose();
+    },
+  );
+
+  // 7. Localization Dictionary (English & Hindi)
   test('AppStrings: English and Hindi translations are complete', () {
     assert(AppStrings.get('appName', 'en') == 'RTO Info');
     assert(AppStrings.get('appName', 'hi') == 'आरटीओ इन्फो');
@@ -310,7 +380,10 @@ Future<void> main() async {
     assert(AppConstants.buildNumber == 1);
     final changelog = File('CHANGELOG.md');
     assert(changelog.existsSync(), 'CHANGELOG.md must exist');
-    assert(changelog.readAsStringSync().contains('[0.1.0]'), 'CHANGELOG must document 0.1.0');
+    assert(
+      changelog.readAsStringSync().contains('[0.1.0]'),
+      'CHANGELOG must document 0.1.0',
+    );
   });
 
   // 9. Driving Licence (Sarathi Parivahan) Verification
