@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.2] - 2026-11-15
+
+### Added & Redesigned
+- **CarInfo-Referenced Premium Homepage Redesign (`HomeScreen`)**:
+  - **Top App Bar**: Brand logo with location selector (`📍 Delhi NCR ∨`), interactive bottom sheet city switcher (12 major Indian metros), `🏠 My garage` shortcut linking directly to saved vehicles (`/favourites`), language switcher (`EN`/`हिं`), and theme toggle.
+  - **Promotional Hero Carousel**: Petrol teal gradient banner with multi-slide carousel, verified badge illustrations, `Buy now` / `Check now` CTA buttons, dot pagination, and floating `Enter your Vehicle Number` badge.
+  - **Floating HSRP Search Box**: Clean card overlapping the hero banner with deep blue `IND` strip, Ashoka Chakra circle, monospace plate input `(e.g. DL 01 AB 1234)`, and circular search action.
+  - **Single-Row Sample Plate Chips**: Fast demo selection chips (`DL01AB1234`, `MH02CD5678`, `KA03EF9012`, `HR26DQ5551`, `UP16Z9999`).
+  - **4x2 Primary Services Grid (8 Services)**:
+    - `Pay challan` (Terminal POS icon, red accent) -> `/challan`
+    - `Car insurance` (Car with shield, cyan accent) -> `/rc`
+    - `Bike insurance` (Motorcycle with shield, green accent) -> `/rc`
+    - `Vehicle report` (Clipboard report, blue accent) -> `/rc`
+    - `RC search` (Magnifying glass, indigo accent) -> `/search`
+    - `FASTag Manager` (FASTag toll tag, amber accent) -> FASTag dialog & banking portals
+    - `Car check` (Diagnostics, purple accent) -> `/rto`
+    - `Car loan` (Loan & EMI, teal accent) -> `/loan-emi`
+  - **Buy & Sell Car Hub**: 4 quick action cards (`Buy used car`, `Buy new car`, `Sell your car`, `Car loan`).
+  - **Top 10 Trending Used Cars**: Horizontal cards with large watermark ranking numbers `01`, `02`, `03`, `04` (Hyundai Verna, Hyundai Creta, Mahindra Thar, Honda City).
+  - **Explore Used Car by Brand**: Circular brand badges (Maruti, Hyundai, Tata, Honda, Mahindra, Toyota, Kia).
+  - **Offers for You**: Horizontal promotional banners for FASTag and e-Challan penalty alerts.
+  - **Trending Videos & Traffic Rules**: 9:16 vertical video cards with play buttons linking to Road Safety, e-Challan, and Parivahan Sarathi LL exam simulation.
+  - **Trending New Bikes**: Horizontal cards featuring Ola S1 X Electric, Royal Enfield Bullet 350, and Bajaj Pulsar NS200.
+  - **User Testimonials**: Verified ratings and testimonials.
+  - **Parivahan & RTO FAQs Accordion**: Expandable Q&A covering virtual RC validity under CMVR Rule 139, finding RC in Parivahan, and checking paid challans.
+  - **Footer Brand Banner**: `RTO Info` - India's app for complete vehicle management.
+- **100% Pure Flutter/Dart Native Implementation**:
+  - Zero web, HTML, or React dependencies.
+  - Zero authentication guard, instant dashboard access.
+  - All 18 unit tests verified passing.
+
+---
+
 ## [0.2.1] - 2026-11-15
 
 ### Changed & Optimized
