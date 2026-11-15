@@ -8,7 +8,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/app_app_bar.dart';
-import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/empty_state_view.dart';
 import '../../../shared/widgets/premium_card.dart';
 import 'providers/history_provider.dart';

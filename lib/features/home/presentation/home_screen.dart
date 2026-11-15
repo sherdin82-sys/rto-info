@@ -8,9 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/theme/theme_provider.dart';
 import '../../../shared/widgets/premium_card.dart';
-import '../../../shared/widgets/status_badge.dart';
 import '../../../shared/widgets/vehicle_search_bar.dart';
 import '../../history/presentation/providers/history_provider.dart';
 

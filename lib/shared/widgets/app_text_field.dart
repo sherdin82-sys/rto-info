@@ -12,9 +12,11 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
   final String? hint;
+  final String? hintText;
   final String? errorText;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
+  final dynamic prefixIcon; // Supports Widget or IconData
+  final dynamic suffixIcon; // Supports Widget or IconData
+  final String? suffixText;
   final bool obscureText;
   final bool autofocus;
   final TextInputType keyboardType;
@@ -32,9 +34,11 @@ class AppTextField extends StatelessWidget {
     this.controller,
     this.label,
     this.hint,
+    this.hintText,
     this.errorText,
     this.prefixIcon,
     this.suffixIcon,
+    this.suffixText,
     this.obscureText = false,
     this.autofocus = false,
     this.keyboardType = TextInputType.text,
@@ -47,6 +51,15 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.maxLines = 1,
   });
+
+  Widget? _buildIcon(dynamic icon, Color color) {
+    if (icon == null) return null;
+    if (icon is Widget) return icon as Widget;
+    if (icon is IconData) {
+      return Icon(icon as IconData, size: 20, color: color);
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +74,33 @@ class AppTextField extends StatelessWidget {
         ? AppColors.darkSurfaceAlt
         : AppColors.lightSurfaceAlt;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    final resolvedPrefix = _buildIcon(prefixIcon, hintColor);
+    Widget? resolvedSuffix = _buildIcon(suffixIcon, hintColor);
+
+    if (resolvedSuffix == null && suffixText != null) {
+      resolvedSuffix = Padding(
+        padding: const EdgeInsets.only(right: AppSpacing.m),
+        child: Center(
+          mainAxisSize: MainAxisSize.min,
+          child: Text(
+            suffixText!,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: hintColor,
+            ),
+          ),
+        ),
+      );
+    } else if (resolvedSuffix == null &&
+        onClear != null &&
+        (controller?.text.isNotEmpty ?? false)) {
+      resolvedSuffix = IconButton(
+        icon: const Icon(Icons.clear, size: 18),
+        onPressed: onClear,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,22 +137,15 @@ class AppTextField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: fillColor,
-            hintText: hint,
+            hintText: hint ?? hintText,
             hintStyle: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: hintColor,
             ),
             errorText: errorText,
-            prefixIcon: prefixIcon,
-            suffixIcon:
-                suffixIcon ??
-                (onClear != null && (controller?.text.isNotEmpty ?? false)
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, size: 18),
-                        onPressed: onClear,
-                      )
-                    : null),
+            prefixIcon: resolvedPrefix,
+            suffixIcon: resolvedSuffix,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.l,
               vertical: AppSpacing.m,

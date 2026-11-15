@@ -210,8 +210,12 @@ class _MockExamScreenState extends State<MockExamScreen> {
             const SizedBox(height: AppSpacing.xl),
 
             AppButton(
-              text: 'Start Practice Test',
-              icon: Icons.play_arrow_rounded,
+              label: 'Start Practice Test',
+              icon: const Icon(
+                Icons.play_arrow_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
               onPressed: _startExam,
             ),
           ],
@@ -562,12 +566,16 @@ class _MockExamScreenState extends State<MockExamScreen> {
               ),
             ),
             child: AppButton(
-              text: _currentIndex < _questions.length - 1
+              label: _currentIndex < _questions.length - 1
                   ? 'Next Question'
                   : 'View Exam Results',
-              icon: _currentIndex < _questions.length - 1
-                  ? Icons.arrow_forward_rounded
-                  : Icons.assessment_rounded,
+              icon: Icon(
+                _currentIndex < _questions.length - 1
+                    ? Icons.arrow_forward_rounded
+                    : Icons.assessment_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
               onPressed: _nextQuestion,
             ),
           ),
@@ -654,8 +662,8 @@ class _MockExamScreenState extends State<MockExamScreen> {
           children: [
             Expanded(
               child: AppButton(
-                text: 'Retake Test',
-                icon: Icons.refresh_rounded,
+                label: 'Retake Test',
+                icon: const Icon(Icons.refresh_rounded, size: 20),
                 variant: AppButtonVariant.secondary,
                 onPressed: _startExam,
               ),
@@ -663,8 +671,12 @@ class _MockExamScreenState extends State<MockExamScreen> {
             const SizedBox(width: AppSpacing.m),
             Expanded(
               child: AppButton(
-                text: 'Back to Home',
-                icon: Icons.home_rounded,
+                label: 'Back to Home',
+                icon: const Icon(
+                  Icons.home_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),

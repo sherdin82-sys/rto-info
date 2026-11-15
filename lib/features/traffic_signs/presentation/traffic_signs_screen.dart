@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../../../shared/models/traffic_sign_entity.dart';
 import '../../../shared/widgets/app_app_bar.dart';
 import '../../../shared/widgets/app_text_field.dart';
@@ -101,7 +100,7 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
       if (_searchQuery.isEmpty) return true;
       return s.title.toLowerCase().contains(_searchQuery) ||
           s.description.toLowerCase().contains(_searchQuery) ||
-          s.fine.toLowerCase().contains(_searchQuery);
+          (s.fineForViolation?.toLowerCase().contains(_searchQuery) ?? false);
     }).toList();
 
     if (filtered.isEmpty) {

@@ -10,10 +10,11 @@ enum AppButtonVariant { primary, secondary, accent, danger, text }
 /// AppButton is a standardized, high-performance button supporting primary,
 /// secondary, warm orange accent, and danger styles with responsive ink ripple.
 class AppButton extends StatelessWidget {
-  final String label;
+  final String? label;
+  final String? text;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
-  final Widget? icon;
+  final dynamic icon; // Supports Widget or IconData
   final bool isLoading;
   final bool isFullWidth;
   final double height;
@@ -21,7 +22,8 @@ class AppButton extends StatelessWidget {
 
   const AppButton({
     super.key,
-    required this.label,
+    this.label,
+    this.text,
     required this.onPressed,
     this.variant = AppButtonVariant.primary,
     this.icon,
@@ -30,6 +32,17 @@ class AppButton extends StatelessWidget {
     this.height = 48.0,
     this.width,
   });
+
+  String get _buttonText => label ?? text ?? '';
+
+  Widget? _buildIcon(Color fg) {
+    if (icon == null) return null;
+    if (icon is Widget) return icon as Widget;
+    if (icon is IconData) {
+      return Icon(icon as IconData, size: 18, color: fg);
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +80,8 @@ class AppButton extends StatelessWidget {
         break;
     }
 
+    final renderedIcon = _buildIcon(fg);
+
     Widget content = Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,12 +96,12 @@ class AppButton extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.s),
-        ] else if (icon != null) ...[
-          icon!,
+        ] else if (renderedIcon != null) ...[
+          renderedIcon,
           const SizedBox(width: AppSpacing.s),
         ],
         Text(
-          label,
+          _buttonText,
           style: AppTypography.labelLarge(fg)
               .copyWith(fontWeight: FontWeight.w700, fontSize: 14),
         ),
