@@ -4,25 +4,18 @@ import '../../lib/core/constants/app_constants.dart';
 import '../../lib/core/utils/vehicle_number_validator.dart';
 import '../../lib/app/localization/app_strings.dart';
 import '../../lib/features/vehicle_details/domain/models/vehicle_entity.dart';
-import '../../lib/features/vehicle_details/data/datasources/vehicle_mock_datasource.dart';
 import '../../lib/features/vehicle_details/data/datasources/mock_vehicle_data_provider.dart';
-import '../../lib/core/network/api_exceptions.dart';
-import '../../lib/features/challan/domain/models/challan_entity.dart';
 import '../../lib/features/challan/data/datasources/challan_mock_datasource.dart';
 import '../../lib/features/history/domain/models/search_history_entity.dart';
 import '../../lib/features/favourites/domain/models/favourite_vehicle_entity.dart';
 import '../../lib/core/storage/memory_storage_service.dart';
-import '../../lib/features/dl/domain/models/dl_entity.dart';
 import '../../lib/features/dl/data/datasources/dl_mock_datasource.dart';
 import '../../lib/features/fuel/domain/models/fuel_price_entity.dart';
 import '../../lib/features/fuel/data/fuel_mock_datasource.dart';
 import '../../lib/features/resale/domain/models/resale_valuation_model.dart';
 import '../../lib/features/resale/domain/models/loan_emi_model.dart';
-import '../../lib/features/rto_directory/domain/models/rto_office_entity.dart';
 import '../../lib/features/rto_directory/data/rto_directory_data.dart';
-import '../../lib/features/traffic_signs/domain/models/traffic_sign_entity.dart';
 import '../../lib/features/traffic_signs/data/traffic_signs_data.dart';
-import '../../lib/features/mock_exam/domain/models/quiz_question_entity.dart';
 import '../../lib/features/mock_exam/data/quiz_questions_data.dart';
 
 Future<void> main() async {

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../app/localization/app_locale.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../core/widgets/vehicle_search_bar.dart';
 import '../../history/presentation/providers/history_provider.dart';
 

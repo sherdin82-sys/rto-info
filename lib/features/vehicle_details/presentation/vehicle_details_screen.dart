@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../core/widgets/status_badge.dart';
-import '../providers/vehicle_details_provider.dart';
+import 'providers/vehicle_details_provider.dart';
 import '../../history/presentation/providers/history_provider.dart';
 import '../../favourites/presentation/providers/favourites_provider.dart';
-import '../../domain/models/vehicle_entity.dart';
+import '../domain/models/vehicle_entity.dart';
 
 /// VehicleDetailsScreen presents the comprehensive Parivahan Vahan profile
 /// organized into Registration, Vehicle, Owner, and Compliance sections.
@@ -47,7 +47,7 @@ class _VehicleDetailsScreenState extends ConsumerState<VehicleDetailsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final vehicleAsync = ref.watch(vehicleLookupProvider(cleanPlate));
-    final favourites = ref.watch(favouritesProvider);
+    ref.watch(favouritesProvider);
     final isFav = ref.read(favouritesProvider.notifier).isFavourite(cleanPlate);
 
     return Scaffold(
