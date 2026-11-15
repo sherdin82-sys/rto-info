@@ -496,6 +496,6 @@ Future<void> main() async {
   });
 
   print('\n-----------------------------------------------------');
-  print('Result: $totalPassed/17 Unit Tests Passed Successfully! ✓');
+  print('Result: $totalPassed/18 Unit Tests Passed Successfully! ✓');
   print('=====================================================');
 }

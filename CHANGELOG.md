@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.3] - 2026-11-15
+
+### Enhanced & Restored
+- **Homepage Enhancement & Complete Feature Restoration (`HomeScreen`)**:
+  - **Restored Live City Fuel Rates Ticker**:
+    - Real-time display of daily Petrol, Diesel, and CNG rates with daily price change pills (e.g. `▲ +₹0.12`, `▼ -₹0.05`, `▬ 0.00`).
+    - **Dynamic City Sync**: Selecting any of the 14 Indian cities from the top bar dropdown immediately updates the fuel ticker rates for that specific city.
+    - Quick navigation to full Fuel Rates & Trip Calculator screen (`/fuel`).
+  - **Restored Comprehensive 4x2 Core Services Grid (8 Distinct Features)**:
+    - `RC Details` (Electric blue) -> `/rc`
+    - `Pay challan` (Crimson red) -> `/challan`
+    - `DL Verify` (Emerald green) -> `/dl` (Restored)
+    - `Fuel Rates` (Warm orange) -> `/fuel` (Restored)
+    - `Resale Value` (Purple) -> `/resale` (Restored)
+    - `Car Loan EMI` (Teal) -> `/loan-emi`
+    - `RTO Directory` (Sky blue) -> `/rto` (Restored & renamed from "Car check")
+    - `FASTag Manager` (Amber) -> Interactive FASTag services modal
+  - **Restored Driver Utilities & Safety Hub (2x2 Grid)**:
+    - `Mock Exam` (Teal) -> `/exam` (Sarathi Learner Licence practice test simulation)
+    - `Traffic Signs` (Blue) -> `/signs` (100+ road safety signs handbook & fine schedule)
+    - `Trip Cost` (Rose) -> `/trip-calculator` (Distance, mileage, and fuel expense estimator)
+    - `RC Search` (Indigo) -> `/search` (All-India number plate lookup)
+  - **Restored CMVR Section 139 Statutory Compliance Banner**:
+    - Official legal assurance card citing Motor Vehicles Act Section 139 & CMVR Rule 139 for digital RC/DL validity on DigiLocker / mParivahan.
+  - **Enhanced Interactive Components**:
+    - Clickable brand filter badges (Maruti, Hyundai, Tata, Honda, Mahindra, Toyota, Kia) linking directly to vehicle search.
+    - Trending used cars (Verna, Creta, Thar, City) with watermark rankings linking to fair market resale valuation.
+    - Promotional hero carousel expanded with Sarathi DL verification slide.
+  - **Architecture Integrity**:
+    - 100% pure Flutter & Dart native implementation without web, HTML, or React dependencies.
+    - Strict zero-authentication flow preserved.
+    - All 18 unit tests verified passing.
+
+---
+
 ## [0.2.2] - 2026-11-15
 
 ### Added & Redesigned
