@@ -19,7 +19,6 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
   final _distanceController = TextEditingController(text: '120');
   final _mileageController = TextEditingController(text: '18');
   final _fuelPriceController = TextEditingController(text: '94.72');
-  String _fuelType = 'Petrol';
   TripCostResult? _result;
 
   @override
@@ -42,16 +41,11 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
     final price = double.tryParse(_fuelPriceController.text) ?? 94.72;
 
     if (dist > 0 && mileage > 0 && price > 0) {
-      final liters = dist / mileage;
-      final cost = liters * price;
       setState(() {
-        _result = TripCostResult(
+        _result = TripCostResult.calculate(
           distanceKm: dist,
           mileageKmpl: mileage,
-          fuelPricePerLiter: price,
-          fuelConsumedLiters: liters,
-          totalCost: cost,
-          costPerKm: cost / dist,
+          fuelPrice: price,
         );
       });
     }
@@ -158,7 +152,7 @@ class _TripCalculatorScreenState extends ConsumerState<TripCalculatorScreen> {
                       children: [
                         _buildStat(
                           isHindi ? 'ईंधन की खपत' : 'Fuel Needed',
-                          '${_result!.fuelConsumedLiters.toStringAsFixed(1)} L',
+                          '${_result!.litersRequired.toStringAsFixed(1)} L',
                           isDark,
                         ),
                         _buildStat(

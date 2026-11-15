@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
-import '../utils/vehicle_number_formatter.dart';
+import '../../core/utils/vehicle_number_formatter.dart';
 
 /// VehicleSearchBar presents a prominent Indian HSRP-styled number plate search input.
 class VehicleSearchBar extends StatefulWidget {

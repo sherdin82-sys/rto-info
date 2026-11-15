@@ -8,7 +8,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../shared/widgets/premium_card.dart';
 import '../../../shared/widgets/vehicle_search_bar.dart';
-import '../providers/vehicle_search_provider.dart';
 
 class VehicleSearchScreen extends ConsumerWidget {
   const VehicleSearchScreen({super.key});
@@ -27,7 +26,6 @@ class VehicleSearchScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             VehicleSearchBar(
-              autofocus: true,
               onSearch: (plate) {
                 context.push('/rc?plate=$plate');
               },
@@ -74,7 +72,9 @@ class VehicleSearchScreen extends ConsumerWidget {
                           ),
                         ),
                         child: Text(
-                          VehicleNumberFormatter.format(sample['plate']!),
+                          VehicleNumberFormatter.formatForDisplay(
+                            sample['plate']!,
+                          ),
                           style: const TextStyle(
                             fontFamily: 'monospace',
                             fontWeight: FontWeight.w700,

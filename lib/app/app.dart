@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/localization/app_locale.dart';
 import '../core/theme/app_theme.dart';
-import '../core/theme/theme_provider.dart';
 import 'router/app_router.dart';
 
 /// RTOInfoApp is the root widget of the RTO Info Flutter application.
