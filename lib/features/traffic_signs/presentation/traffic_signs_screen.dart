@@ -209,18 +209,21 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
                     height: 1.35,
                   ),
                 ),
-                if (sign.fine.isNotEmpty) ...[
+                if (sign.fineForViolation != null &&
+                    sign.fineForViolation!.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       const Icon(Icons.gavel, size: 13, color: AppColors.error),
                       const SizedBox(width: 4),
-                      Text(
-                        'Fine: ${sign.fine}',
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.error,
+                      Expanded(
+                        child: Text(
+                          'Fine: ${sign.fineForViolation}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.error,
+                          ),
                         ),
                       ),
                     ],
@@ -237,9 +240,11 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
   Widget _buildFinesList() {
     final filtered = TrafficSignsData.fines.where((f) {
       if (_searchQuery.isEmpty) return true;
-      return f['offence']!.toLowerCase().contains(_searchQuery) ||
-          f['section']!.toLowerCase().contains(_searchQuery) ||
-          f['fine']!.toLowerCase().contains(_searchQuery);
+      final query = _searchQuery.toLowerCase();
+      return f.offence.toLowerCase().contains(query) ||
+          f.section.toLowerCase().contains(query) ||
+          f.penalty.toLowerCase().contains(query) ||
+          f.category.toLowerCase().contains(query);
     }).toList();
 
     if (filtered.isEmpty) {
@@ -265,11 +270,12 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
-                      item['offence']!,
+                      item.offence,
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 14,
@@ -277,37 +283,57 @@ class _TrafficSignsScreenState extends State<TrafficSignsScreen>
                       ),
                     ),
                   ),
-                  Text(
-                    item['fine']!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15,
-                      color: AppColors.error,
+                  const SizedBox(width: AppSpacing.s),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.electricBlue.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      item.category,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.electricBlue,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Text(
-                'Motor Vehicles Act ${item['section']!}',
+                item.section,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.electricBlue,
+                  color: AppColors.saffron,
                 ),
               ),
-              if (item['action'] != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  item['action']!,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary,
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.gavel_rounded,
+                    size: 14,
+                    color: AppColors.error,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      item.penalty,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         );

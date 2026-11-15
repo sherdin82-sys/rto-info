@@ -63,7 +63,7 @@ Authority: ${vehicle.registrationAuthority}
 Check more on RTO Info App
 ''';
     NativeBridge.shareVehicleDetails(
-      text: text,
+      text,
       subject: 'RTO Details: ${vehicle.registrationNumber}',
     );
   }
@@ -266,7 +266,7 @@ Check more on RTO Info App
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Engine Displacement',
-                      value: '${vehicle.cubicCapacity} cc',
+                      value: vehicle.engineCapacity,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
@@ -315,12 +315,12 @@ Check more on RTO Info App
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Road Tax Status',
-                      value: vehicle.taxValidity,
+                      value: vehicle.roadTaxPaidUpto,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Emission Norms',
-                      value: vehicle.emissionNorms,
+                      value: vehicle.emissionStandard,
                     ),
                   ],
                 ),
@@ -335,27 +335,29 @@ Check more on RTO Info App
                   children: [
                     _DetailRow(
                       title: 'Owner Name (Sec 6 Privacy)',
-                      value: vehicle.ownerName,
+                      value: vehicle.maskedOwnerName,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Owner Serial / Count',
-                      value: vehicle.ownershipNumber,
+                      value: vehicle.ownershipSerial,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Chassis Number (Masked)',
-                      value: vehicle.chassisNumber,
+                      value: vehicle.maskedChassisNumber,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Engine Number (Masked)',
-                      value: vehicle.engineNumber,
+                      value: vehicle.maskedEngineNumber,
                     ),
                     const Divider(height: 20),
                     _DetailRow(
                       title: 'Hypothecation / Financier',
-                      value: vehicle.financier,
+                      value:
+                          vehicle.hypothecationBank ??
+                          (vehicle.isHypothecated ? 'Hypothecated' : 'None'),
                     ),
                   ],
                 ),

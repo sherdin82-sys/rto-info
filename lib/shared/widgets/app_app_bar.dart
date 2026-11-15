@@ -6,7 +6,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../../core/theme/theme_provider.dart';
 
 /// AppAppBar provides a standardized, premium automotive AppBar with
 /// bilingual language toggle, theme toggle, and optional Indian Tricolor accent.
