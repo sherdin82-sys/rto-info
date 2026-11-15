@@ -429,7 +429,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             ),
                           ),
                           Text(
-                            'Version 0.2.0 (Build 2) • Pure Flutter Native',
+                            'Version ${AppConstants.appVersion} (Build ${AppConstants.buildNumber}) • Pure Flutter Native',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
