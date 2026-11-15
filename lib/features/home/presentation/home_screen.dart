@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return const _HomeScreenContent();
   }
 }
