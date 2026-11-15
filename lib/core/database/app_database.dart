@@ -1,7 +1,7 @@
-/// Database table schema definitions for Drift and SQLite
-///
-/// RTO Info defines structured database schemas for Drift and SQLite persistence,
-/// matching NoteFlow's database architecture.
+// Database table schema definitions for Drift and SQLite
+//
+// RTO Info defines structured database schemas for Drift and SQLite persistence,
+// matching NoteFlow's database architecture.
 
 class SearchHistoryTableDefinition {
   static const String tableName = 'search_history';

@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/localization/app_locale.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/theme/theme_provider.dart';
 
 /// AppAppBar provides a standardized, compact automotive AppBar with
 /// bilingual language toggle, theme toggle, and optional Indian Tricolor accent.
