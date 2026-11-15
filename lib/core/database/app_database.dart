@@ -2,7 +2,6 @@
 ///
 /// RTO Info defines structured database schemas for Drift and SQLite persistence,
 /// matching NoteFlow's database architecture.
-library app_database;
 
 class SearchHistoryTableDefinition {
   static const String tableName = 'search_history';

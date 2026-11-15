@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../shared/models/challan_entity.dart';
 import '../../../shared/widgets/app_app_bar.dart';
@@ -270,7 +269,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
             children: [
               Expanded(
                 child: Text(
-                  c.violationName,
+                  c.violationDescription,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
@@ -279,7 +278,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                 ),
               ),
               StatusBadge(
-                label: c.challanStatus.toUpperCase(),
+                label: c.paymentStatus.toUpperCase(),
                 type: isPending ? BadgeType.expired : BadgeType.active,
               ),
             ],
@@ -301,7 +300,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  c.violationPlace,
+                  c.location,
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -319,7 +318,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
               ),
               const SizedBox(width: 4),
               Text(
-                c.violationDate,
+                c.challanDate,
                 style: const TextStyle(fontSize: 11, color: Colors.grey),
               ),
             ],
@@ -375,7 +374,7 @@ class _ChallanScreenState extends ConsumerState<ChallanScreen> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Paid: ${c.paymentDate ?? 'Settled'}',
+                      'Paid: ${c.paidAt ?? 'Settled'}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.success,

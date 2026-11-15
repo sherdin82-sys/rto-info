@@ -237,7 +237,12 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                       ),
                     ],
                   ),
-                  StatusBadge(label: dl.licenceStatus, type: BadgeType.active),
+                  StatusBadge(
+                    label: dl.status,
+                    type: dl.status == 'ACTIVE'
+                        ? BadgeType.active
+                        : BadgeType.expired,
+                  ),
                 ],
               ),
               const SizedBox(height: AppSpacing.l),
@@ -248,7 +253,7 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        dl.licenceNumber,
+                        dl.dlNumber,
                         style: AppTypography.hsrpPlate(
                           color: Colors.white,
                           fontSize: 18,
@@ -293,13 +298,13 @@ class _DlScreenState extends ConsumerState<DlScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _DlInfoItem(label: 'RTO CODE', value: dl.rtoCode),
-                  _DlInfoItem(label: 'ISSUE DATE', value: dl.firstIssueDate),
+                  _DlInfoItem(label: 'AUTHORITY', value: dl.issuingAuthority),
+                  _DlInfoItem(label: 'ISSUE DATE', value: dl.issueDate),
                   _DlInfoItem(
                     label: 'NON-TRANS',
-                    value: dl.nonTransportValidUpto,
+                    value: dl.validityNonTransport,
                   ),
-                  _DlInfoItem(label: 'TRANSPORT', value: dl.transportValidUpto),
+                  _DlInfoItem(label: 'TRANSPORT', value: dl.validityTransport),
                 ],
               ),
             ],
@@ -351,7 +356,7 @@ class _DlScreenState extends ConsumerState<DlScreen> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      cov,
+                      cov.classCode,
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 13,
@@ -379,7 +384,7 @@ class _DlScreenState extends ConsumerState<DlScreen> {
               const Divider(height: 20),
               _DlDetailRow(
                 title: 'Father / Guardian',
-                value: dl.fatherOrHusbandName,
+                value: dl.maskedFatherName,
               ),
             ],
           ),

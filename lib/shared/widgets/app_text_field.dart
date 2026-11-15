@@ -54,9 +54,9 @@ class AppTextField extends StatelessWidget {
 
   Widget? _buildIcon(dynamic icon, Color color) {
     if (icon == null) return null;
-    if (icon is Widget) return icon as Widget;
+    if (icon is Widget) return icon;
     if (icon is IconData) {
-      return Icon(icon as IconData, size: 20, color: color);
+      return Icon(icon, size: 20, color: color);
     }
     return null;
   }
@@ -82,7 +82,6 @@ class AppTextField extends StatelessWidget {
       resolvedSuffix = Padding(
         padding: const EdgeInsets.only(right: AppSpacing.m),
         child: Center(
-          mainAxisSize: MainAxisSize.min,
           child: Text(
             suffixText!,
             style: TextStyle(
