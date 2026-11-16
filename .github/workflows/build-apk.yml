@@ -7,6 +7,12 @@ on:
   pull_request:
     branches: [ master, main ]
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: 'Publish release assets to GitHub Release'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -21,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java Development Kit (JDK 17)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -55,8 +61,36 @@ jobs:
 
       - name: Build Android Release APK & AAB
         run: |
+          # Build per-ABI APKs for minimal download size
           flutter build apk --release --split-per-abi --android-skip-build-dependency-validation
+          # Build universal APK for all Android architectures
+          flutter build apk --release --android-skip-build-dependency-validation
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal-release.apk
+          # Build Play Store App Bundle
           flutter build appbundle --release --android-skip-build-dependency-validation
+
+      - name: Extract Release Notes from CHANGELOG
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.publish_release)
+        run: |
+          python3 -c "
+          import re, os
+          ref = os.environ.get('GITHUB_REF', '')
+          tag = ref.replace('refs/tags/', '').replace('v', '') if 'refs/tags/' in ref else ''
+          with open('CHANGELOG.md') as f:
+              text = f.read()
+          if tag:
+              pattern = r'## \[' + re.escape(tag) + r'\][^\n]*\n\n(.*?)(?=\n## \[|\Z)'
+              match = re.search(pattern, text, re.DOTALL)
+              if match:
+                  notes = match.group(1).strip()
+              else:
+                  notes = 'Release ' + ref
+          else:
+              match = re.search(r'## \[[^\]]+\][^\n]*\n\n(.*?)(?=\n## \[|\Z)', text, re.DOTALL)
+              notes = match.group(1).strip() if match else text
+          with open('RELEASE_NOTES.md', 'w') as out:
+              out.write(notes + '\n')
+          "
 
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
@@ -64,16 +98,18 @@ jobs:
           name: RTOInfo-release-artifacts
           path: |
             build/app/outputs/flutter-apk/app-*-release.apk
+            build/app/outputs/flutter-apk/app-universal-release.apk
             build/app/outputs/bundle/release/*.aab
           if-no-files-found: error
           retention-days: 30
 
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.publish_release)
         uses: softprops/action-gh-release@v2
         with:
           files: |
             build/app/outputs/flutter-apk/app-*-release.apk
+            build/app/outputs/flutter-apk/app-universal-release.apk
             build/app/outputs/bundle/release/*.aab
-          generate_release_notes: true
-          body_path: CHANGELOG.md
+          generate_release_notes: false
+          body_path: RELEASE_NOTES.md

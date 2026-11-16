@@ -377,13 +377,13 @@ Future<void> main() async {
     assert(gradleContent.contains('applicationId = "com.rtoinfo.app"'));
 
     // Version management verification
-    assert(AppConstants.appVersion == '0.2.6');
-    assert(AppConstants.buildNumber == 8);
+    assert(AppConstants.appVersion == '0.2.7');
+    assert(AppConstants.buildNumber == 9);
     final changelog = File('CHANGELOG.md');
     assert(changelog.existsSync(), 'CHANGELOG.md must exist');
     assert(
-      changelog.readAsStringSync().contains('[0.2.6]'),
-      'CHANGELOG must document 0.2.6',
+      changelog.readAsStringSync().contains('[0.2.7]'),
+      'CHANGELOG must document 0.2.7',
     );
   });
 

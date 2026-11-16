@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.7] - 2026-11-16
+
+### Enhanced & Redesigned
+- **Settings & Preferences Page Complete Overhaul (`SettingsScreen`)**:
+  - **Digital Garage Profile Header**:
+    - High-density automotive card featuring Ashoka Chakra emblem, `CMVR 139` statutory compliance badge, and real-time statistics pills (`My Garage (X)` and `History (Y)`) with direct deep navigation.
+  - **Modern Segmented Theme & Language Selectors**:
+    - Replaced vertical `RadioListTile` widgets with space-efficient, electric blue Segmented Controls for Appearance (`System / Auto`, `Light / Day`, `Dark / Navy`) and Bilingual Language (`English` vs `हिंदी`).
+  - **Regional & Vahan Discovery Preferences**:
+    - Primary Metro City Selector with interactive modal bottom sheet covering 14 Indian cities for live fuel tickers and RTO directories.
+    - Choice chips for Preferred Fuel Type (`Petrol`, `Diesel`, `CNG`, `Electric`) and Default Discovery Class (`Cars`, `Bikes`, `Commercial`).
+  - **Smart Alerts & Reminders**:
+    - Interactive switches for Traffic e-Challan alerts, Insurance policy expiry reminders (30 & 7 days prior), PUCC pollution certificate renewals, and 6:00 AM daily fuel price revisions.
+  - **Parivahan Statutory Compliance Vault**:
+    - Section 139 CMVR / IT Act 2000 legal validity sheet detailing MoRTH Notification RT-11036/64/2017-MVL.
+    - DPDP Act 2023 & Section 6 privacy masking status with offline vehicle smart card cache toggle.
+  - **24x7 Roadside Emergency Directory**:
+    - High-visibility 2x2 grid for Indian emergency services (`112` National, `1033` NHAI Highway, `1073` Accident, `108` Ambulance) with one-tap clipboard copy and dial assistance.
+  - **Granular Storage Management & Diagnostics**:
+    - Independent controls to clear search history without removing saved vehicles.
+    - Clean collapsible Hardware Diagnostics Accordion detailing Android device specifications, Kotlin `MethodChannel` connectivity, battery %, and network status via `NativeBridge`.
+- **CI/CD & GitHub Actions Workflow Optimization**:
+  - Added universal APK build (`app-universal-release.apk`) alongside split-per-abi architecture binaries.
+  - Automated version-specific release notes extraction from `CHANGELOG.md`.
+  - Migrated Java setup to `actions/setup-java@v5`.
+
+---
+
 ## [0.2.6] - 2026-11-16
 
 ### Enhanced & Refined
