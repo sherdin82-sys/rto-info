@@ -377,13 +377,13 @@ Future<void> main() async {
     assert(gradleContent.contains('applicationId = "com.rtoinfo.app"'));
 
     // Version management verification
-    assert(AppConstants.appVersion == '0.2.7');
-    assert(AppConstants.buildNumber == 9);
+    assert(AppConstants.appVersion == '0.2.8');
+    assert(AppConstants.buildNumber == 10);
     final changelog = File('CHANGELOG.md');
     assert(changelog.existsSync(), 'CHANGELOG.md must exist');
     assert(
-      changelog.readAsStringSync().contains('[0.2.7]'),
-      'CHANGELOG must document 0.2.7',
+      changelog.readAsStringSync().contains('[0.2.8]'),
+      'CHANGELOG must document 0.2.8',
     );
   });
 
@@ -555,7 +555,64 @@ Future<void> main() async {
     }
   });
 
+  // 17. Essential RTO Services & CarInfo Pictorial Graphics Verification
+  test('Essential RTO Services 4x2 grid specifications & pictorial graphics verification', () {
+    final graphicsFile = File(
+      'lib/features/home/presentation/widgets/rto_service_graphics.dart',
+    );
+    assert(graphicsFile.existsSync(), 'rto_service_graphics.dart must exist');
+    final content = graphicsFile.readAsStringSync();
+
+    // Verify all 8 custom graphic components exist
+    assert(
+      content.contains('class PosChallanGraphic'),
+      'PosChallanGraphic must exist',
+    );
+    assert(
+      content.contains('class CarInsuranceGraphic'),
+      'CarInsuranceGraphic must exist',
+    );
+    assert(
+      content.contains('class BikeInsuranceGraphic'),
+      'BikeInsuranceGraphic must exist',
+    );
+    assert(
+      content.contains('class VehicleReportGraphic'),
+      'VehicleReportGraphic must exist',
+    );
+    assert(
+      content.contains('class RcSearchGraphic'),
+      'RcSearchGraphic must exist',
+    );
+    assert(content.contains('class FastagGraphic'), 'FastagGraphic must exist');
+    assert(
+      content.contains('class CarCheckGraphic'),
+      'CarCheckGraphic must exist',
+    );
+    assert(
+      content.contains('class CarLoanGraphic'),
+      'CarLoanGraphic must exist',
+    );
+
+    // Verify home_screen.dart references all 8 services and preserved routes
+    final homeFile = File('lib/features/home/presentation/home_screen.dart');
+    assert(homeFile.existsSync(), 'home_screen.dart must exist');
+    final homeContent = homeFile.readAsStringSync();
+    assert(homeContent.contains("context.push('/challan')"));
+    assert(homeContent.contains("context.push('/rc')"));
+    assert(homeContent.contains("context.push('/search')"));
+    assert(homeContent.contains('_showFastagDialog(context, isDark)'));
+    assert(homeContent.contains("context.push('/rto')"));
+    assert(homeContent.contains("context.push('/loan-emi')"));
+    assert(homeContent.contains("context.push('/dl')"));
+    assert(homeContent.contains("context.push('/exam')"));
+    assert(homeContent.contains("context.push('/signs')"));
+    assert(homeContent.contains("context.push('/trip-calculator')"));
+    assert(homeContent.contains("context.push('/fuel')"));
+    assert(homeContent.contains("context.push('/resale')"));
+  });
+
   print('\n-----------------------------------------------------');
-  print('Result: $totalPassed/20 Unit Tests Passed Successfully! ✓');
+  print('Result: $totalPassed/21 Unit Tests Passed Successfully! ✓');
   print('=====================================================');
 }

@@ -11,6 +11,7 @@ import '../../fuel/data/fuel_mock_datasource.dart';
 import '../../fuel/domain/models/fuel_price_entity.dart';
 import '../../history/presentation/providers/history_provider.dart';
 import '../domain/models/new_car_entity.dart';
+import 'widgets/rto_service_graphics.dart';
 
 /// HomeScreen serves as the primary automotive dashboard for RTO Info,
 /// built strictly with native Flutter widgets and modeled after the CarInfo reference.
@@ -1305,70 +1306,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                childAspectRatio: 0.82,
+                childAspectRatio: 0.78,
                 children: [
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.directions_car_rounded,
-                    title: isHindi ? 'आरसी विवरण' : 'RC Details',
-                    color: const Color(0xFF0066FF),
-                    onTap: () => context.push('/rc'),
-                    isDark: isDark,
-                  ),
-                  _buildQuickActionCard(
-                    context: context,
-                    icon: Icons.receipt_long_rounded,
+                    graphic: PosChallanGraphic(isDark: isDark),
                     title: isHindi ? 'ई-चालान' : 'Pay challan',
-                    color: const Color(0xFFEF4444),
                     onTap: () => context.push('/challan'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.badge_outlined,
-                    title: isHindi ? 'डीएल सत्यापन' : 'DL Verify',
-                    color: const Color(0xFF10B981),
-                    onTap: () => context.push('/dl'),
+                    graphic: const CarInsuranceGraphic(),
+                    title: isHindi ? 'कार बीमा' : 'Car insurance',
+                    onTap: () => context.push('/rc'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.local_gas_station_rounded,
-                    title: isHindi ? 'ईंधन दरें' : 'Fuel Rates',
-                    color: const Color(0xFFFF7A00),
-                    onTap: () => context.push('/fuel'),
+                    graphic: const BikeInsuranceGraphic(),
+                    title: isHindi ? 'बाइक बीमा' : 'Bike insurance',
+                    onTap: () => context.push('/rc'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.calculate_outlined,
-                    title: isHindi ? 'पुनर्विक्रय' : 'Resale Value',
-                    color: const Color(0xFF8B5CF6),
-                    onTap: () => context.push('/resale'),
+                    graphic: VehicleReportGraphic(isDark: isDark),
+                    title: isHindi ? 'वाहन रिपोर्ट' : 'Vehicle report',
+                    onTap: () => context.push('/rc'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.payments_rounded,
-                    title: isHindi ? 'कार ऋण' : 'Car Loan EMI',
-                    color: const Color(0xFF14B8A6),
-                    onTap: () => context.push('/loan-emi'),
+                    graphic: RcSearchGraphic(isDark: isDark),
+                    title: isHindi ? 'आरसी खोज' : 'RC search',
+                    onTap: () => context.push('/search'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.account_balance_rounded,
-                    title: isHindi ? 'आरटीओ सूची' : 'RTO Directory',
-                    color: const Color(0xFF0284C7),
+                    graphic: FastagGraphic(isDark: isDark),
+                    title: isHindi ? 'फास्टैग' : 'FASTag Manager',
+                    onTap: () => _showFastagDialog(context, isDark),
+                    isDark: isDark,
+                  ),
+                  _buildQuickActionCard(
+                    context: context,
+                    graphic: CarCheckGraphic(isDark: isDark),
+                    title: isHindi ? 'कार जांच' : 'Car check',
                     onTap: () => context.push('/rto'),
                     isDark: isDark,
                   ),
                   _buildQuickActionCard(
                     context: context,
-                    icon: Icons.toll_rounded,
-                    title: isHindi ? 'फास्टैग' : 'FASTag Manager',
-                    color: const Color(0xFFF59E0B),
-                    onTap: () => _showFastagDialog(context, isDark),
+                    graphic: CarLoanGraphic(isDark: isDark),
+                    title: isHindi ? 'कार लोन' : 'Car loan',
+                    onTap: () => context.push('/loan-emi'),
                     isDark: isDark,
                   ),
                 ],
@@ -1431,13 +1424,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _buildDriverToolTile(
-                      icon: Icons.find_in_page_outlined,
-                      title: isHindi ? 'आरसी खोज' : 'RC Search',
+                      icon: Icons.badge_outlined,
+                      title: isHindi ? 'डीएल सत्यापन' : 'DL Verify',
                       subtitle: isHindi
-                          ? 'अखिल भारतीय खोज'
-                          : 'All-India search',
-                      color: const Color(0xFF6366F1),
-                      onTap: () => context.push('/search'),
+                          ? 'ड्राइविंग लाइसेंस स्थिति'
+                          : 'Driving licence status',
+                      color: const Color(0xFF10B981),
+                      onTap: () => context.push('/dl'),
                       isDark: isDark,
                     ),
                   ),
@@ -2913,9 +2906,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildQuickActionCard({
     required BuildContext context,
-    required IconData icon,
+    required Widget graphic,
     required String title,
-    required Color color,
     required VoidCallback onTap,
     required bool isDark,
   }) {
@@ -2923,19 +2915,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+              width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 4,
+                color: Colors.black.withOpacity(isDark ? 0.22 : 0.04),
+                blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -2943,16 +2936,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: color, size: 20),
-              ),
-              const SizedBox(height: 6),
+              SizedBox(width: 50, height: 44, child: Center(child: graphic)),
+              const SizedBox(height: 5),
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -2962,7 +2947,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   fontSize: 10.5,
                   fontWeight: FontWeight.w700,
                   height: 1.15,
-                  color: isDark ? Colors.white : const Color(0xFF1E293B),
+                  color: isDark
+                      ? const Color(0xFFF1F5F9)
+                      : const Color(0xFF1E293B),
                 ),
               ),
             ],
