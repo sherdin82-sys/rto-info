@@ -170,7 +170,14 @@ class CarBrandEntity {
       origin: 'India / Japan',
       priceRange: '₹ 5.5 - 20.0 Lakh',
       segmentLeader: 'India’s #1 Automobile Maker',
-      topModels: ['Swift', 'Brezza', 'Grand Vitara', 'Baleno', 'Dzire', 'Ertiga'],
+      topModels: [
+        'Swift',
+        'Brezza',
+        'Grand Vitara',
+        'Baleno',
+        'Dzire',
+        'Ertiga',
+      ],
     ),
     CarBrandEntity(
       id: 'hyundai',
@@ -214,7 +221,13 @@ class CarBrandEntity {
       origin: 'Japan',
       priceRange: '₹ 6.7 - 51.5 Lakh',
       segmentLeader: 'Global Hybrid & Durability Leader',
-      topModels: ['Innova Hycross', 'Fortuner', 'Urban Cruiser Hyryder', 'Glanza', 'Hilux'],
+      topModels: [
+        'Innova Hycross',
+        'Fortuner',
+        'Urban Cruiser Hyryder',
+        'Glanza',
+        'Hilux',
+      ],
     ),
     CarBrandEntity(
       id: 'honda',
@@ -302,7 +315,12 @@ class CarBrandEntity {
       origin: 'Germany',
       priceRange: '₹ 45.0 Lakh - 2.5 Cr',
       segmentLeader: 'Sheer Driving Pleasure & Luxury EVs',
-      topModels: ['3 Series Gran Limousine', 'X1 sDrive', 'X5 xDrive', 'i4 eDrive40'],
+      topModels: [
+        '3 Series Gran Limousine',
+        'X1 sDrive',
+        'X5 xDrive',
+        'i4 eDrive40',
+      ],
     ),
     CarBrandEntity(
       id: 'mercedes',
@@ -324,7 +342,13 @@ class CarBrandEntity {
       origin: 'Germany',
       priceRange: '₹ 43.0 Lakh - 2.2 Cr',
       segmentLeader: 'Vorsprung durch Technik & quattro AWD',
-      topModels: ['A4 40 TFSI', 'A6 Matrix', 'Q3 quattro', 'Q5 quattro', 'Q8 e-tron'],
+      topModels: [
+        'A4 40 TFSI',
+        'A6 Matrix',
+        'Q3 quattro',
+        'Q5 quattro',
+        'Q8 e-tron',
+      ],
     ),
   ];
 }

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../app/localization/app_locale.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/theme_provider.dart';
 import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../fuel/data/fuel_mock_datasource.dart';
@@ -342,12 +341,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.location_city, color: AppColors.electricBlue, size: 18),
+                  const Icon(
+                    Icons.location_city,
+                    color: AppColors.electricBlue,
+                    size: 18,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'City: $_selectedCity • Doorstep test drive available.',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -364,7 +370,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF10B981),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             onPressed: () {
               Navigator.pop(ctx);
@@ -450,14 +458,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w800,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                  color: isDark
+                                      ? Colors.white
+                                      : const Color(0xFF0F172A),
                                 ),
                               ),
                               const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF10B981).withOpacity(0.12),
+                                  color: const Color(0xFF10B981)
+                                      .withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -477,7 +491,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white70 : const Color(0xFF475569),
+                              color: isDark
+                                  ? Colors.white70
+                                  : const Color(0xFF475569),
                             ),
                           ),
                           Text(
@@ -508,27 +524,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   runSpacing: 6,
                   children: brand.topModels.isNotEmpty
                       ? brand.topModels
-                          .map(
-                            (model) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                            .map(
+                              (model) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF1E293B)
+                                      : const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? const Color(0xFF334155)
+                                        : const Color(0xFFE2E8F0),
+                                  ),
+                                ),
+                                child: Text(
+                                  model,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDark
+                                        ? Colors.white
+                                        : const Color(0xFF0F172A),
+                                  ),
                                 ),
                               ),
-                              child: Text(
-                                model,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList()
+                            )
+                            .toList()
                       : [
                           Container(
                             padding: const EdgeInsets.all(8),
@@ -557,7 +582,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           Navigator.pop(ctx);
                           context.push('/resale');
                         },
-                        child: Text(isHindi ? 'मूल्यांकन देखें' : 'Resale Value'),
+                        child: Text(
+                          isHindi ? 'मूल्यांकन देखें' : 'Resale Value',
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -1040,7 +1067,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 21,
                                 letterSpacing: 1.5,
-                                color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF0F172A),
                               ),
                               decoration: InputDecoration(
                                 hintText: 'DL 01 AB 1234',
@@ -1048,7 +1077,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   fontFamily: 'monospace',
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
-                                  color: isDark ? Colors.white30 : const Color(0xFF94A3B8),
+                                  color: isDark
+                                      ? Colors.white30
+                                      : const Color(0xFF94A3B8),
                                   letterSpacing: 1.2,
                                 ),
                                 isDense: true,
@@ -1075,11 +1106,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               setState(() {});
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
                               child: Icon(
                                 Icons.clear_rounded,
                                 size: 19,
-                                color: isDark ? Colors.white54 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white54
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ),
@@ -1351,7 +1386,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _buildDriverToolTile(
                       icon: Icons.school_outlined,
                       title: isHindi ? 'आरटीओ परीक्षा' : 'Mock Exam',
-                      subtitle: isHindi ? 'सारथी एलएल अभ्यास' : 'Sarathi LL test',
+                      subtitle: isHindi
+                          ? 'सारथी एलएल अभ्यास'
+                          : 'Sarathi LL test',
                       color: const Color(0xFF0D9488),
                       onTap: () => context.push('/exam'),
                       isDark: isDark,
@@ -1362,7 +1399,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _buildDriverToolTile(
                       icon: Icons.traffic_outlined,
                       title: isHindi ? 'यातायात संकेत' : 'Traffic Signs',
-                      subtitle: isHindi ? 'सड़क नियम व जुर्माना' : 'Road signs & fines',
+                      subtitle: isHindi
+                          ? 'सड़क नियम व जुर्माना'
+                          : 'Road signs & fines',
                       color: const Color(0xFF2563EB),
                       onTap: () => context.push('/signs'),
                       isDark: isDark,
@@ -1381,7 +1420,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _buildDriverToolTile(
                       icon: Icons.route_outlined,
                       title: isHindi ? 'यात्रा खर्च' : 'Trip Cost',
-                      subtitle: isHindi ? 'दूरी व माइलेज अनुमान' : 'Fuel trip estimate',
+                      subtitle: isHindi
+                          ? 'दूरी व माइलेज अनुमान'
+                          : 'Fuel trip estimate',
                       color: const Color(0xFFE11D48),
                       onTap: () => context.push('/trip-calculator'),
                       isDark: isDark,
@@ -1392,7 +1433,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _buildDriverToolTile(
                       icon: Icons.find_in_page_outlined,
                       title: isHindi ? 'आरसी खोज' : 'RC Search',
-                      subtitle: isHindi ? 'अखिल भारतीय खोज' : 'All-India search',
+                      subtitle: isHindi
+                          ? 'अखिल भारतीय खोज'
+                          : 'All-India search',
                       color: const Color(0xFF6366F1),
                       onTap: () => context.push('/search'),
                       isDark: isDark,
@@ -1424,7 +1467,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isHindi ? 'नई कारें खरीदें व खोजें' : 'Buy / Explore New Cars',
+                    isHindi
+                        ? 'नई कारें खरीदें व खोजें'
+                        : 'Buy / Explore New Cars',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -1779,16 +1824,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         _buildTestimonialCard(
-                          quote:
-                              'Found my new Thar ROXX ex-showroom price and verified RC within 10 seconds. Extremely clean and fast experience.',
+                          quote: 'Found my new Thar ROXX ex-showroom price and verified RC within 10 seconds. Extremely clean and fast experience.',
                           name: 'Manish Bhatia',
                           subtitle: 'Verified User • Delhi',
                           isDark: isDark,
                         ),
                         const SizedBox(width: 10),
                         _buildTestimonialCard(
-                          quote:
-                              'Daily fuel prices for Bengaluru are always accurate at 6 AM. Love the instant trip cost calculator!',
+                          quote: 'Daily fuel prices for Bengaluru are always accurate at 6 AM. Love the instant trip cost calculator!',
                           name: 'Priya Sharma',
                           subtitle: 'Verified User • Bengaluru',
                           isDark: isDark,
@@ -1821,44 +1864,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     index: 0,
                     question:
                         'How can I check my vehicle details in mParivahan?',
-                    answer:
-                        'Enter your state registration number (e.g., DL01AB1234) into the search bar. The app securely fetches authenticated public transport details including maker, model, fuel type, fitness, and insurance status.',
+                    answer: 'Enter your state registration number (e.g., DL01AB1234) into the search bar. The app securely fetches authenticated public transport details including maker, model, fuel type, fitness, and insurance status.',
                     isDark: isDark,
                   ),
                   _buildFaqItem(
                     index: 1,
                     question: 'How to find RC in Parivahan?',
-                    answer:
-                        'You can look up the Registration Certificate using either your vehicle registration plate number or chassis/engine credentials through the Parivahan Sewa portal.',
+                    answer: 'You can look up the Registration Certificate using either your vehicle registration plate number or chassis/engine credentials through the Parivahan Sewa portal.',
                     isDark: isDark,
                   ),
                   _buildFaqItem(
                     index: 2,
                     question: 'Is mParivahan virtual RC valid?',
-                    answer:
-                        'Yes. Under Rule 139 of the Central Motor Vehicles Rules (CMVR), virtual RC and Driving Licences on DigiLocker / mParivahan are statutory legal electronic records accepted by traffic police across all Indian states.',
+                    answer: 'Yes. Under Rule 139 of the Central Motor Vehicles Rules (CMVR), virtual RC and Driving Licences on DigiLocker / mParivahan are statutory legal electronic records accepted by traffic police across all Indian states.',
                     isDark: isDark,
                   ),
                   _buildFaqItem(
                     index: 3,
-                    question:
-                        'How to check paid challan in Telangana & other states?',
-                    answer:
-                        'Open the e-Challan section, enter your vehicle number, and filter by "Settled / Paid" to verify past penalty receipts and payment transaction IDs.',
+                    question: 'How to check paid challan in Telangana & other states?',
+                    answer: 'Open the e-Challan section, enter your vehicle number, and filter by "Settled / Paid" to verify past penalty receipts and payment transaction IDs.',
                     isDark: isDark,
                   ),
                   _buildFaqItem(
                     index: 4,
                     question: 'How to check if RC is original or fake?',
-                    answer:
-                        'Match the engine number, chassis number, registration date, and issuing RTO authority displayed in the digital RC card against physical stamps on your vehicle.',
+                    answer: 'Match the engine number, chassis number, registration date, and issuing RTO authority displayed in the digital RC card against physical stamps on your vehicle.',
                     isDark: isDark,
                   ),
                   _buildFaqItem(
                     index: 5,
                     question: 'What is an RC book / Smart Card?',
-                    answer:
-                        'A Registration Certificate (RC) is official proof that a motor vehicle has been registered with the regional transport office of the state government.',
+                    answer: 'A Registration Certificate (RC) is official proof that a motor vehicle has been registered with the regional transport office of the state government.',
                     isDark: isDark,
                   ),
                 ],
@@ -1870,10 +1906,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(14, 24, 14, 24),
-              padding: const EdgeInsets.symmetric(
-                vertical: 20,
-                horizontal: 16,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF0F172A) : Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -1990,7 +2023,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF0F172A),
                         ),
                       ),
                     ],
@@ -2011,7 +2046,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onTap: () => context.push('/fuel'),
                 borderRadius: BorderRadius.circular(6),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
                   child: Row(
                     children: [
                       Text(
@@ -2081,7 +2119,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             border: Border.all(
               color: isHighlight
                   ? const Color(0xFF0066FF)
-                  : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                  : (isDark
+                        ? const Color(0xFF334155)
+                        : const Color(0xFFE2E8F0)),
               width: isHighlight ? 1.4 : 1,
             ),
             boxShadow: [
@@ -2111,13 +2151,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         style: TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF0F172A),
                         ),
                       ),
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1.5,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF10B981).withOpacity(0.12),
                       borderRadius: BorderRadius.circular(4),
@@ -2230,8 +2275,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final changeText = change == 0.0
         ? '0.00'
         : (change > 0
-            ? '+₹${change.toStringAsFixed(2)}'
-            : '-₹${(-change).toStringAsFixed(2)}');
+              ? '+₹${change.toStringAsFixed(2)}'
+              : '-₹${(-change).toStringAsFixed(2)}');
     final changeColor = change > 0
         ? const Color(0xFFEF4444)
         : (change < 0 ? const Color(0xFF10B981) : Colors.grey);
@@ -2406,7 +2451,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             // Vehicle Photograph
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(13),
+              ),
               child: Stack(
                 children: [
                   Image.asset(
@@ -2417,7 +2464,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     errorBuilder: (ctx, err, _) => Container(
                       height: 124,
                       width: 250,
-                      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+                      color: isDark
+                          ? const Color(0xFF0F172A)
+                          : const Color(0xFFE2E8F0),
                       child: const Center(
                         child: Icon(
                           Icons.directions_car_rounded,
@@ -2499,7 +2548,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? Colors.white : const Color(0xFF0F172A),
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF0F172A),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -2564,7 +2615,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isHindi ? 'ब्रांड द्वारा नई कारें देखें' : 'Explore New Cars by Brand',
+                    isHindi
+                        ? 'ब्रांड द्वारा नई कारें देखें'
+                        : 'Explore New Cars by Brand',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -2610,7 +2663,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               return _buildBrandLogoCard(
                 brand: brand,
                 isDark: isDark,
-                onTap: () => _showBrandDetailsSheet(context, brand, isDark, isHindi),
+                onTap: () =>
+                    _showBrandDetailsSheet(context, brand, isDark, isHindi),
               );
             },
           ),
@@ -2641,7 +2695,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                    color: isDark
+                        ? const Color(0xFF334155)
+                        : const Color(0xFFE2E8F0),
                     width: 1.2,
                   ),
                   boxShadow: [
@@ -2715,9 +2771,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF334155)
-                  : const Color(0xFFE2E8F0),
+              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
             ),
           ),
           child: Row(
@@ -2741,9 +2795,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? Colors.white
-                            : const Color(0xFF0F172A),
+                        color: isDark ? Colors.white : const Color(0xFF0F172A),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -2878,9 +2930,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF334155)
-                  : const Color(0xFFE2E8F0),
+              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
             ),
             boxShadow: [
               BoxShadow(
@@ -2941,9 +2991,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF334155)
-                  : const Color(0xFFE2E8F0),
+              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
             ),
           ),
           child: Column(
@@ -3124,9 +3172,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           color: isDark ? const Color(0xFF1E293B) : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isDark
-                ? const Color(0xFF334155)
-                : const Color(0xFFE2E8F0),
+            color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
           ),
         ),
         child: Column(

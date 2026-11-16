@@ -506,7 +506,10 @@ Future<void> main() async {
       assert(car.category.isNotEmpty);
       assert(car.exShowroomPrice.startsWith('₹'));
       assert(car.imageAsset.startsWith('assets/images/cars/'));
-      assert(File(car.imageAsset).existsSync(), 'Car image asset missing: ${car.imageAsset}');
+      assert(
+        File(car.imageAsset).existsSync(),
+        'Car image asset missing: ${car.imageAsset}',
+      );
     }
   });
 
@@ -538,10 +541,16 @@ Future<void> main() async {
       );
       assert(brand.modelCount > 0);
       assert(brand.logoAsset.startsWith('assets/images/brands/'));
-      assert(File(brand.logoAsset).existsSync(), 'Brand logo asset missing: ${brand.logoAsset}');
+      assert(
+        File(brand.logoAsset).existsSync(),
+        'Brand logo asset missing: ${brand.logoAsset}',
+      );
       assert(brand.origin.isNotEmpty, 'Brand origin must be defined');
       assert(brand.priceRange.isNotEmpty, 'Brand price range must be defined');
-      assert(brand.segmentLeader.isNotEmpty, 'Brand segment leader must be defined');
+      assert(
+        brand.segmentLeader.isNotEmpty,
+        'Brand segment leader must be defined',
+      );
       assert(brand.topModels.isNotEmpty, 'Brand top models must be populated');
     }
   });

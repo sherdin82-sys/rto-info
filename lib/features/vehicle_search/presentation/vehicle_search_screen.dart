@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/app_constants.dart';
 import '../../../core/localization/app_locale.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_radius.dart';
-import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../../shared/widgets/app_app_bar.dart';
@@ -22,13 +18,11 @@ import '../../home/domain/models/new_car_entity.dart';
 class VehicleSearchScreen extends ConsumerStatefulWidget {
   final String? initialBrand;
 
-  const VehicleSearchScreen({
-    super.key,
-    this.initialBrand,
-  });
+  const VehicleSearchScreen({super.key, this.initialBrand});
 
   @override
-  ConsumerState<VehicleSearchScreen> createState() => _VehicleSearchScreenState();
+  ConsumerState<VehicleSearchScreen> createState() =>
+      _VehicleSearchScreenState();
 }
 
 class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
@@ -268,14 +262,20 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w800,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                  color: isDark
+                                      ? Colors.white
+                                      : const Color(0xFF0F172A),
                                 ),
                               ),
                               const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF10B981).withOpacity(0.12),
+                                  color: const Color(0xFF10B981)
+                                      .withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -295,7 +295,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white70 : const Color(0xFF475569),
+                              color: isDark
+                                  ? Colors.white70
+                                  : const Color(0xFF475569),
                             ),
                           ),
                           Text(
@@ -326,27 +328,36 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                   runSpacing: 6,
                   children: brand.topModels.isNotEmpty
                       ? brand.topModels
-                          .map(
-                            (model) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                            .map(
+                              (model) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? const Color(0xFF1E293B)
+                                      : const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? const Color(0xFF334155)
+                                        : const Color(0xFFE2E8F0),
+                                  ),
+                                ),
+                                child: Text(
+                                  model,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDark
+                                        ? Colors.white
+                                        : const Color(0xFF0F172A),
+                                  ),
                                 ),
                               ),
-                              child: Text(
-                                model,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList()
+                            )
+                            .toList()
                       : [
                           Container(
                             padding: const EdgeInsets.all(8),
@@ -375,7 +386,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                           Navigator.pop(ctx);
                           context.push('/resale');
                         },
-                        child: Text(isHindi ? 'मूल्यांकन देखें' : 'Resale Value'),
+                        child: Text(
+                          isHindi ? 'मूल्यांकन देखें' : 'Resale Value',
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -395,7 +408,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                             _selectedBrand = brand.id;
                           });
                         },
-                        child: Text(isHindi ? 'ब्रांड मॉडल चुनें' : 'Filter Brand'),
+                        child: Text(
+                          isHindi ? 'ब्रांड मॉडल चुनें' : 'Filter Brand',
+                        ),
                       ),
                     ),
                   ],
@@ -426,8 +441,8 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
     final Color plateBgColor = isCommercial
         ? const Color(0xFFFFD500) // Commercial Taxi / Transport Yellow
         : (isEv
-            ? const Color(0xFF0B6623) // Electric Vehicle MoRTH Green
-            : const Color(0xFFFFFFFF)); // Standard Metallic White
+              ? const Color(0xFF0B6623) // Electric Vehicle MoRTH Green
+              : const Color(0xFFFFFFFF)); // Standard Metallic White
 
     final Color plateTextColor = (isCommercial || (!isEv))
         ? const Color(0xFF0F172A)
@@ -467,10 +482,14 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
+                color: isDark
+                    ? const Color(0xFF1E293B)
+                    : const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                  color: isDark
+                      ? const Color(0xFF334155)
+                      : const Color(0xFFE2E8F0),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -491,22 +510,31 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                           Icon(
                             Icons.verified_outlined,
                             size: 15,
-                            color: isQueryValid ? const Color(0xFF10B981) : const Color(0xFF0066FF),
+                            color: isQueryValid
+                                ? const Color(0xFF10B981)
+                                : const Color(0xFF0066FF),
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            isHindi ? 'लाइव एचएसआरपी प्लेट सिमुलेशन' : 'Live HSRP Plate Preview',
+                            isHindi
+                                ? 'लाइव एचएसआरपी प्लेट सिमुलेशन'
+                                : 'Live HSRP Plate Preview',
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : const Color(0xFF0F172A),
+                              color: isDark
+                                  ? Colors.white
+                                  : const Color(0xFF0F172A),
                             ),
                           ),
                         ],
                       ),
                       if (detectedState != null)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF0066FF).withOpacity(0.12),
                             borderRadius: BorderRadius.circular(6),
@@ -623,7 +651,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                             child: Center(
                               child: Text(
                                 cleanQuery.isNotEmpty
-                                    ? VehicleNumberFormatter.formatForDisplay(cleanQuery)
+                                    ? VehicleNumberFormatter.formatForDisplay(
+                                        cleanQuery,
+                                      )
                                     : 'DL 01 AB 1234',
                                 style: TextStyle(
                                   fontFamily: 'monospace',
@@ -649,14 +679,16 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                       isQueryValid
                           ? '✓ Valid format • Tap Search button to verify RC'
                           : (cleanQuery.isNotEmpty
-                              ? 'Enter full 10-character plate (e.g. MH12DE1433)'
-                              : 'High Security Registration Plate standard (CMVR Rule 50)'),
+                                ? 'Enter full 10-character plate (e.g. MH12DE1433)'
+                                : 'High Security Registration Plate standard (CMVR Rule 50)'),
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: isQueryValid
                             ? const Color(0xFF10B981)
-                            : (cleanQuery.isNotEmpty ? const Color(0xFF0066FF) : Colors.grey),
+                            : (cleanQuery.isNotEmpty
+                                  ? const Color(0xFF0066FF)
+                                  : Colors.grey),
                       ),
                     ),
                   ),
@@ -728,7 +760,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isHindi ? 'निर्माता ब्रांड द्वारा खोजें' : 'Explore by Manufacturer',
+                      isHindi
+                          ? 'निर्माता ब्रांड द्वारा खोजें'
+                          : 'Explore by Manufacturer',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
@@ -751,7 +785,10 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                   InkWell(
                     onTap: () => setState(() => _selectedBrand = null),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEF4444).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
@@ -839,19 +876,26 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                   itemBuilder: (ctx, idx) {
                     final item = historyList[idx];
                     return ActionChip(
-                      backgroundColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+                      backgroundColor: isDark
+                          ? const Color(0xFF1E293B)
+                          : const Color(0xFFF1F5F9),
                       side: BorderSide(
-                        color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1),
+                        color: isDark
+                            ? const Color(0xFF334155)
+                            : const Color(0xFFCBD5E1),
                       ),
                       label: Text(
-                        item.formattedPlate.isNotEmpty ? item.formattedPlate : item.registrationNumber,
+                        item.formattedPlate.isNotEmpty
+                            ? item.formattedPlate
+                            : item.registrationNumber,
                         style: const TextStyle(
                           fontFamily: 'monospace',
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      onPressed: () => _onPlateSelected(item.registrationNumber),
+                      onPressed: () =>
+                          _onPlateSelected(item.registrationNumber),
                     );
                   },
                 ),
@@ -926,10 +970,14 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                             vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF0F172A) : Colors.white,
+                            color: isDark
+                                ? const Color(0xFF0F172A)
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: isDark ? const Color(0xFF334155) : const Color(0xFF0F172A),
+                              color: isDark
+                                  ? const Color(0xFF334155)
+                                  : const Color(0xFF0F172A),
                               width: 1.2,
                             ),
                           ),
@@ -937,7 +985,10 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 1),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 2.5,
+                                  vertical: 1,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF003399),
                                   borderRadius: BorderRadius.circular(2),
@@ -953,12 +1004,16 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                VehicleNumberFormatter.formatForDisplay(sample['plate']!),
+                                VehicleNumberFormatter.formatForDisplay(
+                                  sample['plate']!,
+                                ),
                                 style: TextStyle(
                                   fontFamily: 'monospace',
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                  color: isDark
+                                      ? Colors.white
+                                      : const Color(0xFF0F172A),
                                 ),
                               ),
                             ],
@@ -978,7 +1033,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12.5,
-                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                  color: isDark
+                                      ? Colors.white
+                                      : const Color(0xFF0F172A),
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -991,15 +1048,21 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                        color: isDark
+                                            ? Colors.white60
+                                            : Colors.grey.shade600,
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: 6),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 1,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF0066FF).withOpacity(0.1),
+                                      color: const Color(0xFF0066FF)
+                                          .withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
@@ -1034,10 +1097,14 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF0C1929) : const Color(0xFFEFF6FF),
+                color: isDark
+                    ? const Color(0xFF0C1929)
+                    : const Color(0xFFEFF6FF),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF1E3A5F) : const Color(0xFFBFDBFE),
+                  color: isDark
+                      ? const Color(0xFF1E3A5F)
+                      : const Color(0xFFBFDBFE),
                 ),
               ),
               child: Column(
@@ -1058,7 +1125,9 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? Colors.white : const Color(0xFF1E3A8A),
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF1E3A8A),
                         ),
                       ),
                     ],
@@ -1154,12 +1223,15 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                 height: 64,
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.white, // Pure crisp white tile for authentic logo colors
+                  color: Colors
+                      .white, // Pure crisp white tile for authentic logo colors
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
                         ? const Color(0xFF0066FF)
-                        : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                        : (isDark
+                              ? const Color(0xFF334155)
+                              : const Color(0xFFE2E8F0)),
                     width: isSelected ? 2.0 : 1.2,
                   ),
                   boxShadow: [
