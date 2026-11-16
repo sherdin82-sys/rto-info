@@ -3,8 +3,8 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = 'RTO Info';
-  static const String appVersion = '0.2.5';
-  static const int buildNumber = 7;
+  static const String appVersion = '0.2.6';
+  static const int buildNumber = 8;
   static const String androidPackageName = 'com.rtoinfo.app';
 
   // NoteFlow Design System Spacing & Radius

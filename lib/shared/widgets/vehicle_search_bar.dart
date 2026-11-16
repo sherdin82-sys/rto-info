@@ -92,12 +92,12 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // HSRP Number Plate Container with compact fixed height
+        // HSRP Number Plate Container with comfortable height
         Container(
-          height: 48,
+          height: 54,
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurfaceAlt : Colors.white,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: _errorMessage != null
                   ? AppColors.error
@@ -116,20 +116,20 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
             children: [
               // Blue IND Strip with Ashoka Chakra Dot
               Container(
-                width: 38,
+                width: 42,
                 height: double.infinity,
                 decoration: const BoxDecoration(
                   color: AppColors.hsrpBlueStrip,
                   borderRadius: BorderRadius.horizontal(
-                    left: Radius.circular(8.5),
+                    left: Radius.circular(10.5),
                   ),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 10,
-                      height: 10,
+                      width: 9,
+                      height: 9,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.amber, width: 1.2),
@@ -141,13 +141,13 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 2.5),
                     const Text(
                       'IND',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
-                        fontSize: 8.5,
+                        fontSize: 9,
                         letterSpacing: 0.8,
                         fontFamily: 'monospace',
                       ),
@@ -156,23 +156,28 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                 ),
               ),
 
-              // Number Plate Text Input
+              // Number Plate Text Input directly inside container with NO inner outline
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TextField(
                     controller: _controller,
                     autofocus: widget.autofocus,
                     inputFormatters: [VehicleNumberFormatter()],
                     textCapitalization: TextCapitalization.characters,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.search,
                     autocorrect: false,
                     enableSuggestions: false,
                     textAlignVertical: TextAlignVertical.center,
+                    cursorColor: AppColors.electricBlue,
+                    cursorWidth: 2.0,
+                    cursorRadius: const Radius.circular(1),
                     style: TextStyle(
                       fontFamily: 'monospace',
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
-                      letterSpacing: 1.4,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 21,
+                      letterSpacing: 1.5,
                       color: isDark ? Colors.white : AppColors.lightTextPrimary,
                     ),
                     decoration: InputDecoration(
@@ -180,8 +185,8 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                       hintText: widget.hintText ?? 'DL 01 AB 1234',
                       hintStyle: TextStyle(
                         fontFamily: 'monospace',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13.5,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
                         letterSpacing: 1.2,
                         color: isDark
                             ? AppColors.darkTextMuted
@@ -190,7 +195,11 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      focusedErrorBorder: InputBorder.none,
                       filled: false,
+                      fillColor: Colors.transparent,
                       contentPadding: EdgeInsets.zero,
                     ),
                     onSubmitted: (_) => _submitSearch(),
@@ -208,10 +217,10 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                     });
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Icon(
-                      Icons.clear,
-                      size: 16,
+                      Icons.clear_rounded,
+                      size: 19,
                       color: isDark
                           ? AppColors.darkTextMuted
                           : AppColors.lightTextMuted,
@@ -221,21 +230,21 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
 
               // Perfectly Aligned Compact Search Button
               Padding(
-                padding: const EdgeInsets.only(right: 5),
+                padding: const EdgeInsets.only(right: 6),
                 child: Material(
                   color: AppColors.electricBlue,
-                  borderRadius: BorderRadius.circular(7),
+                  borderRadius: BorderRadius.circular(9),
                   child: InkWell(
                     onTap: widget.isLoading ? null : _submitSearch,
-                    borderRadius: BorderRadius.circular(7),
+                    borderRadius: BorderRadius.circular(9),
                     child: Container(
-                      width: 40,
-                      height: 36,
+                      width: 42,
+                      height: 42,
                       alignment: Alignment.center,
                       child: widget.isLoading
                           ? const SizedBox(
-                              width: 16,
-                              height: 16,
+                              width: 18,
+                              height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: Colors.white,
@@ -244,7 +253,7 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                           : const Icon(
                               Icons.search_rounded,
                               color: Colors.white,
-                              size: 19,
+                              size: 22,
                             ),
                     ),
                   ),

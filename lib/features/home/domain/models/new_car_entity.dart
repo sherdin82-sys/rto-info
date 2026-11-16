@@ -186,7 +186,7 @@ class CarBrandEntity {
     CarBrandEntity(
       id: 'tata',
       name: 'Tata Motors',
-      logoAsset: 'assets/images/brands/tata.png',
+      logoAsset: 'assets/images/brands/tata_motors.png',
       modelCount: 10,
       popularModel: 'Nexon, Punch, Harrier, Safari',
       origin: 'India',
@@ -263,7 +263,7 @@ class CarBrandEntity {
     CarBrandEntity(
       id: 'mg',
       name: 'MG Motor',
-      logoAsset: 'assets/images/brands/mg.png',
+      logoAsset: 'assets/images/brands/mg_motor.png',
       modelCount: 6,
       popularModel: 'Hector, Windsor EV, ZS EV',
       origin: 'United Kingdom / India',
@@ -307,7 +307,7 @@ class CarBrandEntity {
     CarBrandEntity(
       id: 'mercedes',
       name: 'Mercedes-Benz',
-      logoAsset: 'assets/images/brands/mercedes.png',
+      logoAsset: 'assets/images/brands/mercedes_benz.png',
       modelCount: 18,
       popularModel: 'C-Class, E-Class, GLC, GLE',
       origin: 'Germany',

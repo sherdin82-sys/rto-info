@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.6] - 2026-11-16
+
+### Enhanced & Refined
+- **Vehicle Registration Search Input Overhaul (`HomeScreen` & `VehicleSearchBar`)**:
+  - **Typography & Proportions**:
+    - Increased input font size to 21sp with semibold weight (`FontWeight.w600`) and 1.5 letter spacing for optimal readability of Indian High Security Registration Plates.
+    - Set `textAlignVertical: TextAlignVertical.center` to perfectly vertically center registration numbers within the HSRP container.
+    - Matched cursor and selection highlight colors to the electric blue brand theme (`0xFF0066FF`).
+  - **Clean Container Architecture (Removed Inner Borders)**:
+    - Stripped all redundant inner borders, outlines, underlines, and nested backgrounds from `TextField` (`border: InputBorder.none`, `enabledBorder: InputBorder.none`, `focusedBorder: InputBorder.none`, `disabledBorder: InputBorder.none`, `errorBorder: InputBorder.none`, `focusedErrorBorder: InputBorder.none`, `filled: false`, `contentPadding: EdgeInsets.zero`).
+    - Retained the outer HSRP container with authentic blue `IND` strip, Ashoka Chakra dot, and primary action button.
+- **Genuine High-Resolution Manufacturer Logo Integration (`HomeScreen` & `VehicleSearchScreen`)**:
+  - **Standalone Vector-Rendered Transparent Emblems**:
+    - Replaced low-resolution or full-wordmark images with official standalone emblem transparent PNGs for all 15 Indian manufacturers:
+      - Maruti Suzuki (Suzuki "S" symbol), Hyundai (slanted "H" oval), Tata Motors (circular emblem), Mahindra (2021 Twin Peaks emblem), Toyota (triple-oval symbol), Honda ("H" mark), Kia (2021 connected mark), Volkswagen (VW roundel), Skoda (winged arrow), MG Motor (octagonal badge), Renault (2021 geometric diamond), Nissan (2020 illuminated ring), BMW (blue/white roundel), Mercedes-Benz (three-pointed star), Audi (interlocking four rings).
+  - **Standardized Display Dimensions**:
+    - Increased logo display size to 60x54dp within 76x64dp crisp pure-white badge cards with `BoxFit.contain` (12dp radius, high-contrast borders and subtle shadows).
+    - Preserved exact aspect ratios with zero stretching or distortion in both Light and Dark themes.
+    - Standardized across both `HomeScreen` and `VehicleSearchScreen`.
+
+---
+
 ## [0.2.5] - 2026-11-16
 
 ### Enhanced & Refined

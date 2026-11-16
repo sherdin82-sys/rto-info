@@ -777,11 +777,11 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
             const SizedBox(height: 10),
 
             SizedBox(
-              height: 98,
+              height: 112,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: CarBrandEntity.allBrands.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (ctx, idx) {
                   final brand = CarBrandEntity.allBrands[idx];
                   final isSelected = _selectedBrand == brand.id;
@@ -1145,18 +1145,17 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        child: Container(
-          width: 72,
-          padding: const EdgeInsets.symmetric(vertical: 4),
+        child: SizedBox(
+          width: 82,
           child: Column(
             children: [
               Container(
-                width: 56,
-                height: 56,
-                padding: const EdgeInsets.all(7),
+                width: 76,
+                height: 64,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: Colors.white, // Pure crisp white tile for authentic logo colors
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
                         ? const Color(0xFF0066FF)
@@ -1167,40 +1166,47 @@ class _VehicleSearchScreenState extends ConsumerState<VehicleSearchScreen> {
                     BoxShadow(
                       color: isSelected
                           ? const Color(0xFF0066FF).withOpacity(0.3)
-                          : Colors.black.withOpacity(0.04),
-                      blurRadius: isSelected ? 8 : 4,
+                          : Colors.black.withOpacity(isDark ? 0.25 : 0.04),
+                      blurRadius: isSelected ? 8 : 6,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  brand.logoAsset,
-                  fit: BoxFit.contain,
-                  errorBuilder: (ctx, err, _) => const Icon(
-                    Icons.directions_car_rounded,
-                    color: Color(0xFF0066FF),
+                child: Center(
+                  child: SizedBox(
+                    width: 60,
+                    height: 54,
+                    child: Image.asset(
+                      brand.logoAsset,
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, err, _) => const Icon(
+                        Icons.directions_car_rounded,
+                        color: Color(0xFF0066FF),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 6),
               Text(
                 brand.name,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 10.5,
                   fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
                   color: isSelected
                       ? const Color(0xFF0066FF)
-                      : (isDark ? Colors.white70 : Colors.black87),
+                      : (isDark ? Colors.white : const Color(0xFF0F172A)),
                 ),
               ),
               Text(
                 '${brand.modelCount} models',
                 style: TextStyle(
-                  fontSize: 8,
-                  color: isDark ? Colors.white38 : Colors.grey.shade500,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white54 : const Color(0xFF64748B),
                 ),
               ),
             ],

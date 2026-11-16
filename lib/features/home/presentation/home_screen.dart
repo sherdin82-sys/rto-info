@@ -945,57 +945,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 // Floating HSRP Search Box overlapping the hero banner
                 Positioned(
-                  left: 20,
-                  right: 20,
+                  left: 18,
+                  right: 18,
                   bottom: 0,
                   child: Container(
-                    height: 48,
+                    height: 54,
                     decoration: BoxDecoration(
                       color: isDark ? const Color(0xFF1E293B) : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isDark
                             ? const Color(0xFF334155)
                             : const Color(0xFFCBD5E1),
-                        width: 1.2,
+                        width: 1.4,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 10,
+                          color: Colors.black.withOpacity(isDark ? 0.25 : 0.08),
+                          blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Left IND Strip
                         Container(
-                          width: 40,
-                          height: 48,
+                          width: 42,
+                          height: 54,
                           decoration: const BoxDecoration(
                             color: Color(0xFF003399),
                             borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(8.8),
+                              left: Radius.circular(10.5),
                             ),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: 8,
-                                height: 8,
+                                width: 9,
+                                height: 9,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: const Color(0xFFFFD700),
-                                    width: 1,
+                                    width: 1.2,
                                   ),
                                 ),
                                 child: Center(
                                   child: Container(
-                                    width: 2,
-                                    height: 2,
+                                    width: 2.2,
+                                    height: 2.2,
                                     decoration: const BoxDecoration(
                                       color: Color(0xFFFFD700),
                                       shape: BoxShape.circle,
@@ -1003,47 +1004,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              const SizedBox(height: 2.5),
                               const Text(
                                 'IND',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 8.5,
+                                  fontSize: 9,
                                   fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.6,
+                                  letterSpacing: 0.8,
+                                  fontFamily: 'monospace',
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        // Input Field
+                        // Input Field directly inside main container with NO inner outline or border
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: TextField(
                               controller: _searchController,
                               inputFormatters: [VehicleNumberFormatter()],
                               textCapitalization: TextCapitalization.characters,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.search,
                               autocorrect: false,
                               enableSuggestions: false,
+                              textAlignVertical: TextAlignVertical.center,
+                              cursorColor: const Color(0xFF0066FF),
+                              cursorWidth: 2.0,
+                              cursorRadius: const Radius.circular(1),
                               style: TextStyle(
                                 fontFamily: 'monospace',
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13.5,
-                                letterSpacing: 1.2,
-                                color: isDark ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 21,
+                                letterSpacing: 1.5,
+                                color: isDark ? Colors.white : const Color(0xFF0F172A),
                               ),
                               decoration: InputDecoration(
-                                hintText: '(e.g. DL 01 AB 1234)',
+                                hintText: 'DL 01 AB 1234',
                                 hintStyle: TextStyle(
                                   fontFamily: 'monospace',
-                                  fontSize: 12.5,
-                                  color: isDark ? Colors.white38 : Colors.grey,
-                                  letterSpacing: 0.8,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark ? Colors.white30 : const Color(0xFF94A3B8),
+                                  letterSpacing: 1.2,
                                 ),
-                                border: InputBorder.none,
                                 isDense: true,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                filled: false,
+                                fillColor: Colors.transparent,
                                 contentPadding: EdgeInsets.zero,
                               ),
                               onSubmitted: _onSearchSubmit,
@@ -1059,10 +1075,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               setState(() {});
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
                               child: Icon(
                                 Icons.clear_rounded,
-                                size: 18,
+                                size: 19,
                                 color: isDark ? Colors.white54 : Colors.grey.shade600,
                               ),
                             ),
@@ -1070,20 +1086,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                         // Compact HSRP-aligned Search Button
                         Padding(
-                          padding: const EdgeInsets.only(right: 5),
+                          padding: const EdgeInsets.only(right: 6),
                           child: Material(
                             color: const Color(0xFF0066FF),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(9),
                             child: InkWell(
                               onTap: () => _onSearchSubmit(),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(9),
                               child: const SizedBox(
-                                width: 38,
-                                height: 36,
+                                width: 42,
+                                height: 42,
                                 child: Icon(
                                   Icons.search_rounded,
                                   color: Colors.white,
-                                  size: 20,
+                                  size: 22,
                                 ),
                               ),
                             ),
@@ -2583,7 +2599,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 98,
+          height: 112,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -2614,54 +2630,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
         child: SizedBox(
-          width: 74,
+          width: 82,
           child: Column(
             children: [
               Container(
-                width: 58,
-                height: 58,
-                padding: const EdgeInsets.all(7),
+                width: 76,
+                height: 64,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
                     width: 1.2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+                      color: Colors.black.withOpacity(isDark ? 0.25 : 0.04),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: Image.asset(
-                  brand.logoAsset,
-                  fit: BoxFit.contain,
-                  errorBuilder: (ctx, err, _) => const Icon(
-                    Icons.directions_car_rounded,
-                    color: Color(0xFF0066FF),
+                child: Center(
+                  child: SizedBox(
+                    width: 60,
+                    height: 54,
+                    child: Image.asset(
+                      brand.logoAsset,
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, err, _) => const Icon(
+                        Icons.directions_car_rounded,
+                        color: Color(0xFF0066FF),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 6),
               Text(
                 brand.name,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                   color: isDark ? Colors.white : const Color(0xFF0F172A),
                 ),
               ),
+              const SizedBox(height: 1),
               Text(
                 '${brand.modelCount} models',
                 style: TextStyle(
-                  fontSize: 8.5,
-                  color: isDark ? Colors.white38 : Colors.grey.shade500,
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white54 : const Color(0xFF64748B),
                 ),
               ),
             ],
