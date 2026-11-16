@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.5] - 2026-11-16
+
+### Enhanced & Refined
+- **Vehicle Search Refinement & Live HSRP Plate Preview (`VehicleSearchScreen`)**:
+  - **Live HSRP Plate Preview Simulation**:
+    - Real-time animated simulation of Indian High Security Registration Plate (HSRP) conforming to CMVR Rule 50.
+    - Features blue MoRTH IND strip, Ashoka Chakra dot, hot-stamped chromium hologram foil, and embossed typography.
+    - Dynamic color adaptation by vehicle category: Electric Vehicles (MoRTH green background), Commercial transport (taxi yellow background), and Passenger vehicles (standard metallic white).
+    - Intelligent Indian state and RTO territory detection (e.g., `DL` -> Delhi NCR, `MH` -> Maharashtra, `KA` -> Karnataka, `HR` -> Haryana, `UP` -> Uttar Pradesh, `BH` -> Bharat Series).
+  - **Vehicle Category Quick Filters**:
+    - Interactive filter chips for `All Vehicles`, `Cars (LMV)`, `Bikes (2W)`, `Electric (EV)`, and `Commercial`.
+    - Instant dynamic filtering of sample records and live plate styling.
+  - **Explore by Manufacturer Integration**:
+    - Full horizontal catalog of 15 authentic Indian manufacturer logos directly in `VehicleSearchScreen`.
+    - Interactive brand details modal sheet showing brand origin, segment leadership, model count, price ranges, popular model chips, and direct one-tap brand search.
+    - Supports deep linking and query routing (`/search?brand=tata`).
+  - **Curated All-India Sample Vehicles**:
+    - Expanded curated vehicle samples with authentic registrations across Delhi, Maharashtra, Karnataka, Haryana, Uttar Pradesh, and Tamil Nadu.
+    - Quick one-tap plate selection with immediate route execution.
+  - **Statutory MoRTH Parivahan Verification Checklist**:
+    - Visual guide outlining verified fields: Owner, Hypothecation bank, Insurance validity, PUCC emissions, and Virtual Court e-Challan records.
+- **HomeScreen Vehicle Search Enhancements**:
+  - Added auto-formatting via `VehicleNumberFormatter` with uppercase enforcement.
+  - Added interactive clear button (`X`) when text is typed.
+  - Added user validation feedback snackbars on empty or invalid registration plate submissions.
+  - Aligned search action with elevated primary button for optimal thumb reach.
+- **Manufacturer Logo High-Contrast Rendering**:
+  - Upgraded brand logo cards with crisp pure-white badge containers and elevated borders, ensuring 100% brand fidelity, crisp contrast, and accurate colors in both Light and Dark themes.
+  - Enriched `CarBrandEntity` with origin country, price range, segment leader focus, and verified model lineups.
+
+---
+
 ## [0.2.4] - 2026-11-15
 
 ### Added & Enhanced

@@ -154,7 +154,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/search',
         name: 'vehicle_search',
-        builder: (context, state) => const VehicleSearchScreen(),
+        builder: (context, state) {
+          final brand = state.uri.queryParameters['brand'];
+          return VehicleSearchScreen(initialBrand: brand);
+        },
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

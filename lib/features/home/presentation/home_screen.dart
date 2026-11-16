@@ -6,6 +6,7 @@ import '../../../app/localization/app_locale.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/theme_provider.dart';
+import '../../../core/utils/vehicle_number_formatter.dart';
 import '../../../core/utils/vehicle_number_validator.dart';
 import '../../fuel/data/fuel_mock_datasource.dart';
 import '../../fuel/domain/models/fuel_price_entity.dart';
@@ -48,7 +49,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
+  }
+
+  @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     _heroPageController.dispose();
     super.dispose();
@@ -56,11 +68,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _onSearchSubmit([String? input]) {
     final query = (input ?? _searchController.text).trim();
-    if (query.isEmpty) return;
-    final cleaned = VehicleNumberValidator.cleanPlate(query);
-    if (cleaned.isNotEmpty) {
-      context.push('/rc?plate=$cleaned');
+    if (query.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            ref.read(localeProvider).languageCode == 'hi'
+                ? 'कृपया वाहन पंजीकरण संख्या दर्ज करें (जैसे DL 01 AB 1234)'
+                : 'Please enter a vehicle registration number (e.g. DL 01 AB 1234)',
+          ),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
     }
+    final cleaned = VehicleNumberValidator.cleanPlate(query);
+    if (!VehicleNumberValidator.isValid(cleaned)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            ref.read(localeProvider).languageCode == 'hi'
+                ? 'अमान्य वाहन नंबर! उदाहरण: DL01AB1234 या HR26DQ5551'
+                : 'Invalid vehicle number format! Example: DL01AB1234 or HR26DQ5551',
+          ),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    context.push('/rc?plate=$cleaned');
   }
 
   FuelPriceEntity _getFuelPriceForCity(String city) {
@@ -348,19 +387,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       context: context,
       backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
-                    width: 38,
+                    width: 36,
                     height: 4,
                     decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.4),
@@ -372,15 +411,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Row(
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
-                      padding: const EdgeInsets.all(6),
+                      width: 56,
+                      height: 56,
+                      padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                          color: const Color(0xFFE2E8F0),
+                          width: 1.2,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.06),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: Image.asset(
                         brand.logoAsset,
@@ -391,25 +438,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              Text(
+                                brand.name,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF10B981).withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  brand.origin,
+                                  style: const TextStyle(
+                                    fontSize: 9.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF10B981),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 3),
                           Text(
-                            brand.name,
+                            brand.segmentLeader,
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? Colors.white : const Color(0xFF0F172A),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.white70 : const Color(0xFF475569),
                             ),
                           ),
                           Text(
-                            '${brand.modelCount} Models Available in India',
+                            '${brand.modelCount} Models in India • ${brand.priceRange}',
                             style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF10B981),
+                              fontSize: 10.5,
+                              color: Color(0xFF0066FF),
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -417,33 +493,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 Text(
-                  isHindi ? 'लोकप्रिय मॉडल:' : 'Popular Models:',
+                  isHindi ? 'लोकप्रिय मॉडल सूची:' : 'Popular Model Lineup:',
                   style: TextStyle(
-                    fontSize: 11.5,
+                    fontSize: 12,
                     fontWeight: FontWeight.w700,
                     color: isDark ? Colors.white70 : Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    brand.popularModel,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : const Color(0xFF0F172A),
-                    ),
-                  ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: brand.topModels.isNotEmpty
+                      ? brand.topModels
+                          .map(
+                            (model) => Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                                ),
+                              ),
+                              child: Text(
+                                model,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList()
+                      : [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              brand.popularModel,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                color: isDark ? Colors.white70 : Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 18),
                 Row(
                   children: [
                     Expanded(
@@ -474,7 +573,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         onPressed: () {
                           Navigator.pop(ctx);
-                          context.push('/search');
+                          context.push('/search?brand=${brand.id}');
                         },
                         child: Text(isHindi ? 'मॉडल खोजें' : 'Explore Models'),
                       ),
@@ -924,7 +1023,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: TextField(
                               controller: _searchController,
+                              inputFormatters: [VehicleNumberFormatter()],
                               textCapitalization: TextCapitalization.characters,
+                              autocorrect: false,
+                              enableSuggestions: false,
                               style: TextStyle(
                                 fontFamily: 'monospace',
                                 fontWeight: FontWeight.w800,
@@ -949,14 +1051,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
 
-                        // Search Button
-                        IconButton(
-                          icon: const Icon(
-                            Icons.search_rounded,
-                            color: Color(0xFF0066FF),
-                            size: 22,
+                        // Clear Button when text entered
+                        if (_searchController.text.isNotEmpty)
+                          GestureDetector(
+                            onTap: () {
+                              _searchController.clear();
+                              setState(() {});
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: Icon(
+                                Icons.clear_rounded,
+                                size: 18,
+                                color: isDark ? Colors.white54 : Colors.grey.shade600,
+                              ),
+                            ),
                           ),
-                          onPressed: () => _onSearchSubmit(),
+
+                        // Compact HSRP-aligned Search Button
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Material(
+                            color: const Color(0xFF0066FF),
+                            borderRadius: BorderRadius.circular(8),
+                            child: InkWell(
+                              onTap: () => _onSearchSubmit(),
+                              borderRadius: BorderRadius.circular(8),
+                              child: const SizedBox(
+                                width: 38,
+                                height: 36,
+                                child: Icon(
+                                  Icons.search_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -2489,17 +2620,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Container(
                 width: 58,
                 height: 58,
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                    width: 1.2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
-                      blurRadius: 4,
+                      color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+                      blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
                   ],
@@ -2522,7 +2654,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white70 : Colors.black87,
+                  color: isDark ? Colors.white : const Color(0xFF0F172A),
                 ),
               ),
               Text(

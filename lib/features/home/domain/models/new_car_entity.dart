@@ -143,6 +143,10 @@ class CarBrandEntity {
   final String logoAsset;
   final int modelCount;
   final String popularModel;
+  final String origin;
+  final String priceRange;
+  final String segmentLeader;
+  final List<String> topModels;
 
   const CarBrandEntity({
     required this.id,
@@ -150,6 +154,10 @@ class CarBrandEntity {
     required this.logoAsset,
     required this.modelCount,
     required this.popularModel,
+    this.origin = 'India',
+    this.priceRange = '₹ 6.0 - 30.0 Lakh',
+    this.segmentLeader = 'Passenger Vehicles',
+    this.topModels = const [],
   });
 
   static const List<CarBrandEntity> allBrands = [
@@ -159,6 +167,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/maruti_suzuki.png',
       modelCount: 16,
       popularModel: 'Swift, Brezza, Grand Vitara',
+      origin: 'India / Japan',
+      priceRange: '₹ 5.5 - 20.0 Lakh',
+      segmentLeader: 'India’s #1 Automobile Maker',
+      topModels: ['Swift', 'Brezza', 'Grand Vitara', 'Baleno', 'Dzire', 'Ertiga'],
     ),
     CarBrandEntity(
       id: 'hyundai',
@@ -166,6 +178,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/hyundai.png',
       modelCount: 12,
       popularModel: 'Creta, Venue, Verna',
+      origin: 'South Korea',
+      priceRange: '₹ 6.0 - 46.0 Lakh',
+      segmentLeader: 'India’s #2 Passenger Vehicle Maker',
+      topModels: ['Creta', 'Venue', 'Verna', 'Exter', 'Tucson', 'i20'],
     ),
     CarBrandEntity(
       id: 'tata',
@@ -173,6 +189,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/tata.png',
       modelCount: 10,
       popularModel: 'Nexon, Punch, Harrier, Safari',
+      origin: 'India',
+      priceRange: '₹ 6.0 - 27.0 Lakh',
+      segmentLeader: 'Pioneer of 5★ Safe Indian Cars',
+      topModels: ['Nexon', 'Punch', 'Harrier', 'Safari', 'Tiago EV', 'Curvv'],
     ),
     CarBrandEntity(
       id: 'mahindra',
@@ -180,6 +200,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/mahindra.png',
       modelCount: 9,
       popularModel: 'Thar ROXX, Scorpio-N, XUV700',
+      origin: 'India',
+      priceRange: '₹ 7.5 - 29.0 Lakh',
+      segmentLeader: 'India’s Leading 4x4 & Authentic SUV Maker',
+      topModels: ['Thar ROXX', 'Scorpio-N', 'XUV700', 'XUV 3XO', 'Bolero Neo'],
     ),
     CarBrandEntity(
       id: 'toyota',
@@ -187,6 +211,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/toyota.png',
       modelCount: 8,
       popularModel: 'Innova Hycross, Fortuner, Hyryder',
+      origin: 'Japan',
+      priceRange: '₹ 6.7 - 51.5 Lakh',
+      segmentLeader: 'Global Hybrid & Durability Leader',
+      topModels: ['Innova Hycross', 'Fortuner', 'Urban Cruiser Hyryder', 'Glanza', 'Hilux'],
     ),
     CarBrandEntity(
       id: 'honda',
@@ -194,6 +222,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/honda.png',
       modelCount: 4,
       popularModel: 'Elevate, City, Amaze',
+      origin: 'Japan',
+      priceRange: '₹ 7.2 - 20.5 Lakh',
+      segmentLeader: 'i-VTEC Engineering & Premium Sedans',
+      topModels: ['Elevate', 'City 5th Gen', 'City e:HEV', 'Amaze'],
     ),
     CarBrandEntity(
       id: 'kia',
@@ -201,6 +233,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/kia.png',
       modelCount: 5,
       popularModel: 'Seltos, Sonet, Carens, EV6',
+      origin: 'South Korea',
+      priceRange: '₹ 8.0 - 65.0 Lakh',
+      segmentLeader: 'Design-Led Connected Tech SUVs',
+      topModels: ['Seltos', 'Sonet', 'Carens', 'EV6', 'Carnival'],
     ),
     CarBrandEntity(
       id: 'volkswagen',
@@ -208,6 +244,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/volkswagen.png',
       modelCount: 3,
       popularModel: 'Virtus, Taigun, Tiguan',
+      origin: 'Germany',
+      priceRange: '₹ 11.5 - 35.0 Lakh',
+      segmentLeader: 'German TSI Performance & 5★ Safety',
+      topModels: ['Virtus GT', 'Taigun GT', 'Tiguan'],
     ),
     CarBrandEntity(
       id: 'skoda',
@@ -215,6 +255,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/skoda.png',
       modelCount: 4,
       popularModel: 'Slavia, Kushaq, Kodiaq',
+      origin: 'Czech Republic',
+      priceRange: '₹ 11.6 - 40.0 Lakh',
+      segmentLeader: 'Simply Clever European Engineering',
+      topModels: ['Slavia', 'Kushaq', 'Kodiaq', 'Kylaq'],
     ),
     CarBrandEntity(
       id: 'mg',
@@ -222,6 +266,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/mg.png',
       modelCount: 6,
       popularModel: 'Hector, Windsor EV, ZS EV',
+      origin: 'United Kingdom / India',
+      priceRange: '₹ 7.0 - 39.0 Lakh',
+      segmentLeader: 'Smart Connected Cars & New-Age EVs',
+      topModels: ['Windsor EV', 'Hector', 'ZS EV', 'Comet EV', 'Gloster'],
     ),
     CarBrandEntity(
       id: 'renault',
@@ -229,6 +277,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/renault.png',
       modelCount: 3,
       popularModel: 'Kiger, Triber, Kwid',
+      origin: 'France',
+      priceRange: '₹ 4.7 - 11.2 Lakh',
+      segmentLeader: 'Smart Modular Urban Vehicles',
+      topModels: ['Kiger Turbo', 'Triber 7-Seater', 'Kwid'],
     ),
     CarBrandEntity(
       id: 'nissan',
@@ -236,6 +288,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/nissan.png',
       modelCount: 2,
       popularModel: 'Magnite, X-Trail',
+      origin: 'Japan',
+      priceRange: '₹ 6.0 - 50.0 Lakh',
+      segmentLeader: 'Japanese Engineering & Innovation',
+      topModels: ['Magnite Facelift', 'X-Trail e-POWER'],
     ),
     CarBrandEntity(
       id: 'bmw',
@@ -243,6 +299,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/bmw.png',
       modelCount: 14,
       popularModel: '3 Series, X1, X5, i4',
+      origin: 'Germany',
+      priceRange: '₹ 45.0 Lakh - 2.5 Cr',
+      segmentLeader: 'Sheer Driving Pleasure & Luxury EVs',
+      topModels: ['3 Series Gran Limousine', 'X1 sDrive', 'X5 xDrive', 'i4 eDrive40'],
     ),
     CarBrandEntity(
       id: 'mercedes',
@@ -250,6 +310,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/mercedes.png',
       modelCount: 18,
       popularModel: 'C-Class, E-Class, GLC, GLE',
+      origin: 'Germany',
+      priceRange: '₹ 46.0 Lakh - 3.5 Cr',
+      segmentLeader: 'The Best or Nothing - Luxury Standard',
+      topModels: ['C-Class', 'E-Class LWB', 'GLC SUV', 'GLE SUV', 'EQS Sedan'],
     ),
     CarBrandEntity(
       id: 'audi',
@@ -257,6 +321,10 @@ class CarBrandEntity {
       logoAsset: 'assets/images/brands/audi.png',
       modelCount: 11,
       popularModel: 'A4, A6, Q3, Q5, e-tron',
+      origin: 'Germany',
+      priceRange: '₹ 43.0 Lakh - 2.2 Cr',
+      segmentLeader: 'Vorsprung durch Technik & quattro AWD',
+      topModels: ['A4 40 TFSI', 'A6 Matrix', 'Q3 quattro', 'Q5 quattro', 'Q8 e-tron'],
     ),
   ];
 }

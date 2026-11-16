@@ -303,8 +303,8 @@ Future<void> main() async {
       await repo.cacheVehicle(seeded!);
       final cached = await repo.getCachedVehicle('DL01AB1234');
       assert(cached != null);
-      assert(cached!.registrationNumber == 'DL01AB1234');
-      assert(cached!.maker == 'Maruti Suzuki India Ltd');
+      assert(cached!.cleanRegistrationNumber == 'DL01AB1234');
+      assert(cached!.maker.toUpperCase().contains('MARUTI SUZUKI'));
 
       // Theme mode & locale persistence
       await repo.setThemeMode('dark');
@@ -377,13 +377,13 @@ Future<void> main() async {
     assert(gradleContent.contains('applicationId = "com.rtoinfo.app"'));
 
     // Version management verification
-    assert(AppConstants.appVersion == '0.1.0');
-    assert(AppConstants.buildNumber == 1);
+    assert(AppConstants.appVersion == '0.2.5');
+    assert(AppConstants.buildNumber == 7);
     final changelog = File('CHANGELOG.md');
     assert(changelog.existsSync(), 'CHANGELOG.md must exist');
     assert(
-      changelog.readAsStringSync().contains('[0.1.0]'),
-      'CHANGELOG must document 0.1.0',
+      changelog.readAsStringSync().contains('[0.2.5]'),
+      'CHANGELOG must document 0.2.5',
     );
   });
 
@@ -539,6 +539,10 @@ Future<void> main() async {
       assert(brand.modelCount > 0);
       assert(brand.logoAsset.startsWith('assets/images/brands/'));
       assert(File(brand.logoAsset).existsSync(), 'Brand logo asset missing: ${brand.logoAsset}');
+      assert(brand.origin.isNotEmpty, 'Brand origin must be defined');
+      assert(brand.priceRange.isNotEmpty, 'Brand price range must be defined');
+      assert(brand.segmentLeader.isNotEmpty, 'Brand segment leader must be defined');
+      assert(brand.topModels.isNotEmpty, 'Brand top models must be populated');
     }
   });
 

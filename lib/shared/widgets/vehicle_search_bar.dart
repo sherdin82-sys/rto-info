@@ -8,12 +8,18 @@ class VehicleSearchBar extends StatefulWidget {
   final ValueChanged<String> onSearch;
   final String? initialValue;
   final bool isLoading;
+  final ValueChanged<String>? onChanged;
+  final bool autofocus;
+  final String? hintText;
 
   const VehicleSearchBar({
     super.key,
     required this.onSearch,
     this.initialValue,
     this.isLoading = false,
+    this.onChanged,
+    this.autofocus = false,
+    this.hintText,
   });
 
   @override
@@ -31,8 +37,19 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
     _controller.addListener(_onTextChanged);
   }
 
+  @override
+  void didUpdateWidget(VehicleSearchBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != null &&
+        widget.initialValue != oldWidget.initialValue &&
+        widget.initialValue != _controller.text) {
+      _controller.text = widget.initialValue!;
+    }
+  }
+
   void _onTextChanged() {
     setState(() {});
+    widget.onChanged?.call(_controller.text);
   }
 
   @override
@@ -145,6 +162,7 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextField(
                     controller: _controller,
+                    autofocus: widget.autofocus,
                     inputFormatters: [VehicleNumberFormatter()],
                     textCapitalization: TextCapitalization.characters,
                     autocorrect: false,
@@ -159,7 +177,7 @@ class _VehicleSearchBarState extends State<VehicleSearchBar> {
                     ),
                     decoration: InputDecoration(
                       isDense: true,
-                      hintText: 'DL 01 AB 1234',
+                      hintText: widget.hintText ?? 'DL 01 AB 1234',
                       hintStyle: TextStyle(
                         fontFamily: 'monospace',
                         fontWeight: FontWeight.w600,
