@@ -555,49 +555,32 @@ Future<void> main() async {
     }
   });
 
-  // 17. Essential RTO Services & CarInfo Pictorial Graphics Verification
-  test('Essential RTO Services 4x2 grid specifications & pictorial graphics verification', () {
-    final graphicsFile = File(
-      'lib/features/home/presentation/widgets/rto_service_graphics.dart',
-    );
-    assert(graphicsFile.existsSync(), 'rto_service_graphics.dart must exist');
-    final content = graphicsFile.readAsStringSync();
+  // 17. Essential RTO Services & Image-Based 4-Column Layout Verification
+  test('Essential RTO Services 12-item image-based grid specifications verification', () {
+    final serviceImages = [
+      'assets/images/services/rc_details.png',
+      'assets/images/services/pay_challan.png',
+      'assets/images/services/dl_verify.png',
+      'assets/images/services/fuel_rates.png',
+      'assets/images/services/resale_value.png',
+      'assets/images/services/car_loan.png',
+      'assets/images/services/rto_directory.png',
+      'assets/images/services/fastag_manager.png',
+      'assets/images/services/mock_exam.png',
+      'assets/images/services/traffic_signs.png',
+      'assets/images/services/trip_cost.png',
+      'assets/images/services/rc_search.png',
+    ];
 
-    // Verify all 8 custom graphic components exist
-    assert(
-      content.contains('class PosChallanGraphic'),
-      'PosChallanGraphic must exist',
-    );
-    assert(
-      content.contains('class CarInsuranceGraphic'),
-      'CarInsuranceGraphic must exist',
-    );
-    assert(
-      content.contains('class BikeInsuranceGraphic'),
-      'BikeInsuranceGraphic must exist',
-    );
-    assert(
-      content.contains('class VehicleReportGraphic'),
-      'VehicleReportGraphic must exist',
-    );
-    assert(
-      content.contains('class RcSearchGraphic'),
-      'RcSearchGraphic must exist',
-    );
-    assert(content.contains('class FastagGraphic'), 'FastagGraphic must exist');
-    assert(
-      content.contains('class CarCheckGraphic'),
-      'CarCheckGraphic must exist',
-    );
-    assert(
-      content.contains('class CarLoanGraphic'),
-      'CarLoanGraphic must exist',
-    );
+    for (final img in serviceImages) {
+      assert(File(img).existsSync(), 'Service image must exist: $img');
+    }
 
-    // Verify home_screen.dart references all 8 services and preserved routes
     final homeFile = File('lib/features/home/presentation/home_screen.dart');
     assert(homeFile.existsSync(), 'home_screen.dart must exist');
     final homeContent = homeFile.readAsStringSync();
+
+    // Verify all 12 services routes are wired
     assert(homeContent.contains("context.push('/challan')"));
     assert(homeContent.contains("context.push('/rc')"));
     assert(homeContent.contains("context.push('/search')"));
@@ -610,6 +593,12 @@ Future<void> main() async {
     assert(homeContent.contains("context.push('/trip-calculator')"));
     assert(homeContent.contains("context.push('/fuel')"));
     assert(homeContent.contains("context.push('/resale')"));
+
+    // Verify sample vehicle numbers row is removed from Home Screen
+    assert(
+      !homeContent.contains("isHindi ? 'नमूना:' : 'Sample:'"),
+      'Sample vehicles row must be removed from HomeScreen',
+    );
   });
 
   print('\n-----------------------------------------------------');

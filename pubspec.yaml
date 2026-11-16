@@ -30,3 +30,4 @@ flutter:
   assets:
     - assets/images/cars/
     - assets/images/brands/
+    - assets/images/services/

@@ -1149,73 +1149,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
 
-          // 3. VEHICLE REGISTRATION NUMBER SEARCH (SAMPLE CHIPS & RECENT SEARCHES)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-              child: Row(
-                children: [
-                  Text(
-                    isHindi ? 'नमूना:' : 'Sample:',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? Colors.white54 : Colors.grey.shade600,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: SizedBox(
-                      height: 24,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: AppConstants.sampleVehicles.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 6),
-                        itemBuilder: (ctx, idx) {
-                          final s = AppConstants.sampleVehicles[idx];
-                          return InkWell(
-                            onTap: () {
-                              _searchController.text = s['plate']!;
-                              _onSearchSubmit(s['plate']!);
-                            },
-                            borderRadius: BorderRadius.circular(6),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 7,
-                                vertical: 2,
-                              ),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? const Color(0xFF1E293B)
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                  color: isDark
-                                      ? const Color(0xFF334155)
-                                      : const Color(0xFFE2E8F0),
-                                ),
-                              ),
-                              child: Text(
-                                s['label']!,
-                                style: TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark ? Colors.white : Colors.black87,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
           // RECENT SEARCHES (IF ANY)
           if (historyItems.isNotEmpty)
             SliverToBoxAdapter(
@@ -1296,7 +1229,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
 
-          // 4. ESSENTIAL RTO QUICK SERVICES (PRIMARY 4x2 GRID & DRIVER UTILITIES)
+          // 4. ESSENTIAL RTO QUICK SERVICES (IMAGE-BASED 4-COLUMN CARINFO-STYLE GRID)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
@@ -1304,135 +1237,98 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 crossAxisCount: 4,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 10,
+                mainAxisSpacing: 14,
                 crossAxisSpacing: 10,
-                childAspectRatio: 0.78,
+                childAspectRatio: 0.74,
                 children: [
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: PosChallanGraphic(isDark: isDark),
-                    title: isHindi ? 'ई-चालान' : 'Pay challan',
+                    imageAsset: 'assets/images/services/rc_details.png',
+                    title: isHindi ? 'आरसी विवरण' : 'RC Details',
+                    onTap: () => context.push('/rc'),
+                    isDark: isDark,
+                    fallbackWidget: RcSearchGraphic(isDark: isDark),
+                  ),
+                  _buildImageServiceItem(
+                    context: context,
+                    imageAsset: 'assets/images/services/pay_challan.png',
+                    title: isHindi ? 'ई-चालान' : 'Pay Challan',
                     onTap: () => context.push('/challan'),
                     isDark: isDark,
+                    fallbackWidget: PosChallanGraphic(isDark: isDark),
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: const CarInsuranceGraphic(),
-                    title: isHindi ? 'कार बीमा' : 'Car insurance',
-                    onTap: () => context.push('/rc'),
+                    imageAsset: 'assets/images/services/dl_verify.png',
+                    title: isHindi ? 'डीएल सत्यापन' : 'DL Verify',
+                    onTap: () => context.push('/dl'),
                     isDark: isDark,
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: const BikeInsuranceGraphic(),
-                    title: isHindi ? 'बाइक बीमा' : 'Bike insurance',
-                    onTap: () => context.push('/rc'),
+                    imageAsset: 'assets/images/services/fuel_rates.png',
+                    title: isHindi ? 'ईंधन दरें' : 'Fuel Rates',
+                    onTap: () => context.push('/fuel'),
                     isDark: isDark,
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: VehicleReportGraphic(isDark: isDark),
-                    title: isHindi ? 'वाहन रिपोर्ट' : 'Vehicle report',
-                    onTap: () => context.push('/rc'),
+                    imageAsset: 'assets/images/services/resale_value.png',
+                    title: isHindi ? 'पुनर्विक्रय मूल्य' : 'Resale Value',
+                    onTap: () => context.push('/resale'),
                     isDark: isDark,
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: RcSearchGraphic(isDark: isDark),
-                    title: isHindi ? 'आरसी खोज' : 'RC search',
-                    onTap: () => context.push('/search'),
+                    imageAsset: 'assets/images/services/car_loan.png',
+                    title: isHindi ? 'कार ऋण' : 'Car Loan EMI',
+                    onTap: () => context.push('/loan-emi'),
                     isDark: isDark,
+                    fallbackWidget: CarLoanGraphic(isDark: isDark),
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: FastagGraphic(isDark: isDark),
-                    title: isHindi ? 'फास्टैग' : 'FASTag Manager',
-                    onTap: () => _showFastagDialog(context, isDark),
-                    isDark: isDark,
-                  ),
-                  _buildQuickActionCard(
-                    context: context,
-                    graphic: CarCheckGraphic(isDark: isDark),
-                    title: isHindi ? 'कार जांच' : 'Car check',
+                    imageAsset: 'assets/images/services/rto_directory.png',
+                    title: isHindi ? 'आरटीओ सूची' : 'RTO Directory',
                     onTap: () => context.push('/rto'),
                     isDark: isDark,
                   ),
-                  _buildQuickActionCard(
+                  _buildImageServiceItem(
                     context: context,
-                    graphic: CarLoanGraphic(isDark: isDark),
-                    title: isHindi ? 'कार लोन' : 'Car loan',
-                    onTap: () => context.push('/loan-emi'),
+                    imageAsset: 'assets/images/services/fastag_manager.png',
+                    title: isHindi ? 'फास्टैग' : 'FASTag Manager',
+                    onTap: () => _showFastagDialog(context, isDark),
+                    isDark: isDark,
+                    fallbackWidget: FastagGraphic(isDark: isDark),
+                  ),
+                  _buildImageServiceItem(
+                    context: context,
+                    imageAsset: 'assets/images/services/mock_exam.png',
+                    title: isHindi ? 'आरटीओ परीक्षा' : 'Mock Exam',
+                    onTap: () => context.push('/exam'),
                     isDark: isDark,
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // DRIVER UTILITIES STRIP (2x2 Grid)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildDriverToolTile(
-                      icon: Icons.school_outlined,
-                      title: isHindi ? 'आरटीओ परीक्षा' : 'Mock Exam',
-                      subtitle: isHindi
-                          ? 'सारथी एलएल अभ्यास'
-                          : 'Sarathi LL test',
-                      color: const Color(0xFF0D9488),
-                      onTap: () => context.push('/exam'),
-                      isDark: isDark,
-                    ),
+                  _buildImageServiceItem(
+                    context: context,
+                    imageAsset: 'assets/images/services/traffic_signs.png',
+                    title: isHindi ? 'यातायात संकेत' : 'Traffic Signs',
+                    onTap: () => context.push('/signs'),
+                    isDark: isDark,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildDriverToolTile(
-                      icon: Icons.traffic_outlined,
-                      title: isHindi ? 'यातायात संकेत' : 'Traffic Signs',
-                      subtitle: isHindi
-                          ? 'सड़क नियम व जुर्माना'
-                          : 'Road signs & fines',
-                      color: const Color(0xFF2563EB),
-                      onTap: () => context.push('/signs'),
-                      isDark: isDark,
-                    ),
+                  _buildImageServiceItem(
+                    context: context,
+                    imageAsset: 'assets/images/services/trip_cost.png',
+                    title: isHindi ? 'यात्रा खर्च' : 'Trip Cost',
+                    onTap: () => context.push('/trip-calculator'),
+                    isDark: isDark,
                   ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildDriverToolTile(
-                      icon: Icons.route_outlined,
-                      title: isHindi ? 'यात्रा खर्च' : 'Trip Cost',
-                      subtitle: isHindi
-                          ? 'दूरी व माइलेज अनुमान'
-                          : 'Fuel trip estimate',
-                      color: const Color(0xFFE11D48),
-                      onTap: () => context.push('/trip-calculator'),
-                      isDark: isDark,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _buildDriverToolTile(
-                      icon: Icons.badge_outlined,
-                      title: isHindi ? 'डीएल सत्यापन' : 'DL Verify',
-                      subtitle: isHindi
-                          ? 'ड्राइविंग लाइसेंस स्थिति'
-                          : 'Driving licence status',
-                      color: const Color(0xFF10B981),
-                      onTap: () => context.push('/dl'),
-                      isDark: isDark,
-                    ),
+                  _buildImageServiceItem(
+                    context: context,
+                    imageAsset: 'assets/images/services/rc_search.png',
+                    title: isHindi ? 'आरसी खोज' : 'RC Search',
+                    onTap: () => context.push('/search'),
+                    isDark: isDark,
+                    fallbackWidget: RcSearchGraphic(isDark: isDark),
                   ),
                 ],
               ),
@@ -2904,56 +2800,82 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildQuickActionCard({
+  Widget _buildImageServiceItem({
     required BuildContext context,
-    required Widget graphic,
+    required String imageAsset,
     required String title,
     required VoidCallback onTap,
     required bool isDark,
+    Widget? fallbackWidget,
   }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-              width: 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(isDark ? 0.22 : 0.04),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(width: 50, height: 44, child: Center(child: graphic)),
-              const SizedBox(height: 5),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w700,
-                  height: 1.15,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: 1.35,
+              child: Container(
+                decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFFF1F5F9)
-                      : const Color(0xFF1E293B),
+                      ? const Color(0xFF1E293B)
+                      : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: isDark
+                        ? const Color(0xFF334155)
+                        : const Color(0xFFE2E8F0),
+                    width: 1.0,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(13),
+                  child: Image.asset(
+                    imageAsset,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (ctx, err, stack) =>
+                        fallbackWidget ??
+                        Center(
+                          child: Icon(
+                            Icons.directions_car_rounded,
+                            size: 28,
+                            color: isDark ? Colors.white38 : Colors.black38,
+                          ),
+                        ),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 6),
+            SizedBox(
+              height: 40,
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      height: 1.18,
+                      color: isDark
+                          ? const Color(0xFFF1F5F9)
+                          : const Color(0xFF1E293B),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

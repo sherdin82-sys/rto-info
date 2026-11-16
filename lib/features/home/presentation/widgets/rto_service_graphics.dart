@@ -448,7 +448,7 @@ class _CarInsurancePainter extends CustomPainter {
         end: Alignment.bottomRight,
         colors: [Color(0xFFFFFFFF), Color(0xFFE2E8F0)],
       ).createShader(bodyPath.getBounds());
-    canvas.drawPath(carPath, carPaint);
+    canvas.drawPath(bodyPath, carPaint);
 
     final carBorder = Paint()
       ..color = const Color(0xFF94A3B8)

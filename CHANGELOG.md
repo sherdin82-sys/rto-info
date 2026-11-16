@@ -10,23 +10,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.8] - 2026-11-16
 
 ### Enhanced & Redesigned
-- **CarInfo-Inspired Essential RTO Services 4x2 Grid (`HomeScreen`)**:
-  - Completely redesigned the primary services section directly below the floating HSRP number plate search container into a high-density 4x2 grid matching CarInfo.
-  - Implemented 8 dedicated, rich, layered Flutter vector pictorial graphic components in `lib/features/home/presentation/widgets/rto_service_graphics.dart`:
-    1. **Pay challan**: Handheld electronic POS swipe terminal with printed serrated challan receipt, LCD amount screen, tactile keypad, and crimson card swipe accent (`/challan`).
-    2. **Car insurance**: Modern silver-white car front fascia paired with a glowing cyan/emerald security shield and checkmark (`/rc`).
-    3. **Bike insurance**: Detailed sports motorcycle silhouette with dual alloy wheels, blue fuel tank, and glowing cyan/emerald security shield (`/rc`).
-    4. **Vehicle report**: Amber clipboard backboard with metallic clamp, white inspection document checklist with green verification ticks, and sharpened yellow inspection pencil (`/rc`).
-    5. **RC search**: Official Indian HSRP plate with blue IND strip, embossed monospace registration markings, and angled metallic cyan magnifying glass with lens glare and search badge (`/search`).
-    6. **FASTag Manager**: Authentic NETC FASTag RFID windshield sticker with deep saffron and green stripes, white center band with stylized FASTag typography, RFID broadcast waves, and metallic hologram (`_showFastagDialog`).
-    7. **Car check**: Silver-white vehicle with front hood propped open on a support strut, exposing the engine bay, cylinder block, battery, and diagnostic inspection chrome wrench with sparkles (`/rto`).
-    8. **Car loan**: Stack of 3 golden Indian Rupee coins embossed with bold relief `₹` symbol, layered with an emerald Reserve Bank currency note and vehicle remote key fob (`/loan-emi`).
-  - **Modern Card Container Styling**:
-    - Pure white tile in Light mode, elevated dark slate container (`0xFF1E293B`) in Dark mode.
-    - 14dp rounded border corners, subtle 1dp border (`0xFFE2E8F0` / `0xFF334155`), soft drop shadow, and centered 2-line high-contrast semibold typography.
-  - **Preserved Feature Architecture & Secondary Utilities**:
-    - Relocated Driver Utilities into a clean 2x2 strip featuring **Mock Exam** (`/exam`), **Traffic Signs** (`/signs`), **Trip Cost** (`/trip-calculator`), and **DL Verify** (`/dl`).
-    - 100% preservation of all existing navigation routes, Daily Fuel Rates, Buy & Explore New Cars hub, Top New Cars catalogue, and 15 Manufacturer Brands.
+- **CarInfo-Inspired Image-Based Essential RTO Services 4-Column Grid (`HomeScreen`)**:
+  - Replaced card-enclosed icon buttons with a clean, high-density 4-column image-based service layout modeled directly after the CarInfo reference design.
+  - Removed enclosing card borders, colored icon backgrounds, and outer card drop shadows so that large rectangular image thumbnails are the primary visual element.
+  - Implemented 12 dedicated, high-resolution service image thumbnails (`540x400`, ~1.35:1 aspect ratio, `BoxFit.cover`, 14px rounded corners, subtle 1px border, and clean light background) organized in `assets/images/services/`:
+    1. **RC Details** (`assets/images/services/rc_details.png`): Indian Smart Card Certificate of Registration with gold EMV chip, IND number plate, and government header.
+    2. **Pay Challan** (`assets/images/services/pay_challan.png`): Handheld electronic POS payment terminal with printed e-challan receipt and green LCD status screen.
+    3. **DL Verify** (`assets/images/services/dl_verify.png`): Indian Union Driving Licence smart card with driver photo box, biometric seal, and verification badge.
+    4. **Fuel Rates** (`assets/images/services/fuel_rates.png`): Modern digital fuel dispenser station with dual orange/green nozzles and digital rate displays.
+    5. **Resale Value** (`assets/images/services/resale_value.png`): Used car valuation illustration with trending upward growth chart and golden value badge.
+    6. **Car Loan EMI** (`assets/images/services/car_loan.png`): Automotive financing visual with car profile, stacked golden Rupee ₹ coins, and currency note.
+    7. **RTO Directory** (`assets/images/services/rto_directory.png`): Classical Government Transport Bhavan building with Indian tricolour flag and GPS pin marker.
+    8. **FASTag Manager** (`assets/images/services/fastag_manager.png`): Car windshield with authentic NETC FASTag RFID toll tag sticker and broadcast radio waves.
+    9. **Mock Exam** (`assets/images/services/mock_exam.png`): Driving learner exam tablet with multiple-choice quiz and official red 'L' learner plate.
+    10. **Traffic Signs** (`assets/images/services/traffic_signs.png`): Realistic Indian regulatory and cautionary road signs (Octagonal STOP, triangular warning, circular speed limit).
+    11. **Trip Cost** (`assets/images/services/trip_cost.png`): Highway road with lane markings, travelling car, GPS route waypoint, and mileage calculator tag.
+    12. **RC Search** (`assets/images/services/rc_search.png`): High Security Registration Plate (HSRP) with blue IND strip and magnifying glass scanner.
+  - Centered service names displayed underneath each image with readable typography (`fontSize: 16`, semibold `w600`, 2-line auto-wrap with scale-down overflow protection).
+  - Both image thumbnail and service label are clickable as a unified `InkWell` touch target.
+  - Integrated rich Flutter vector fallback components in `lib/features/home/presentation/widgets/rto_service_graphics.dart`.
+  - **Removed Example Vehicle Numbers Row**: Completely eliminated the demo registration plate chips row below the vehicle search bar for a cleaner, modern layout.
+  - 100% preservation of all existing navigation routes, Daily Fuel Rates, Buy & Explore New Cars hub, and Top New Cars catalogue.
 
 ---
 
